@@ -144,6 +144,7 @@ namespace NetworkTablesCore.Native
             else
             {
                 string str = ReadUTF8String(ret, stringSize);
+                NT_FreeCharArray(ret);
                 return str;
             }
         }
@@ -162,6 +163,7 @@ namespace NetworkTablesCore.Native
             else
             {
                 string str = ReadUTF8String(ret, stringSize);
+                NT_FreeCharArray(ret);
                 return str;
             }
         }
@@ -260,6 +262,7 @@ namespace NetworkTablesCore.Native
             else
             {
                 string str = ReadUTF8String(ret, stringSize);
+                NT_FreeCharArray(ret);
                 return str;
             }
         }
@@ -278,6 +281,7 @@ namespace NetworkTablesCore.Native
             else
             {
                 string str = ReadUTF8String(ret, stringSize);
+                NT_FreeCharArray(ret);
                 return str;
             }
         }

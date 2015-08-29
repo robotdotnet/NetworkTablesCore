@@ -41,7 +41,7 @@ namespace NetworkTablesCore.Native
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct NT_String_Read : IDisposable
+    internal struct NT_String_Read
     {
         private readonly IntPtr str;
         private readonly UIntPtr len;
@@ -51,11 +51,6 @@ namespace NetworkTablesCore.Native
             byte[] arr = new byte[len.ToUInt64()];
             Marshal.Copy(str, arr, 0, (int)len.ToUInt64());
             return Encoding.UTF8.GetString(arr);
-        }
-
-        public void Dispose()
-        {
-            NT_DisposeString(ref this);
         }
     }
 
