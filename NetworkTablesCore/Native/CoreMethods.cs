@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Configuration;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 using NetworkTablesCore.Native.Exceptions;
-using NetworkTablesCore.Tables;
 using static NetworkTablesCore.Native.Interop;
 
 namespace NetworkTablesCore.Native
@@ -38,7 +34,6 @@ namespace NetworkTablesCore.Native
             UIntPtr stringSize;
             byte[] stringPtr = CreateUTF8String(value, out stringSize);
             int retVal = NT_SetEntryString(namePtr, size, stringPtr, stringSize, force ? 1 : 0);
-            //str.Dispose();
             return retVal != 0;
         }
 
@@ -637,12 +632,14 @@ namespace NetworkTablesCore.Native
 
         private static bool[] GetBooleanArrayFromPtr(IntPtr ptr, UIntPtr size)
         {
+            int iSize = (int)size.ToUInt64();
             int[] arr = new int[size.ToUInt64()];
-            Marshal.Copy(ptr, arr, 0, arr.Length);
-            bool[] bArr = new bool[arr.Length];
-            for (int i = 0; i < arr.Length; i++)
+
+            bool[] bArr = new bool[iSize];
+            for (int i = 0; i < iSize; i++)
             {
-                bArr[i] = arr[i] != 0;
+                IntPtr data = new IntPtr(ptr.ToInt64() + sizeof(int) * i);
+                bArr[i] = ((int)Marshal.PtrToStructure(data, typeof(int))) != 0;
             }
             return bArr;
         }
