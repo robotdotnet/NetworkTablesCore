@@ -408,22 +408,27 @@ namespace NetworkTablesCore.Native
                     case NT_Type.NT_STRING:
                         ptr = NT_GetValueString(value, ref lastChange, ref size);
                         obj = ReadUTF8String(ptr, size);
+                        NT_FreeCharArray(ptr);
                         break;
                     case NT_Type.NT_RAW:
                         ptr = NT_GetValueRaw(value, ref lastChange, ref size);
                         obj = ReadUTF8String(ptr, size);
+                        NT_FreeCharArray(ptr);
                         break;
                     case NT_Type.NT_BOOLEAN_ARRAY:
                         ptr = NT_GetValueBooleanArray(value, ref lastChange, ref size);
                         obj = GetBooleanArrayFromPtr(ptr, size);
+                        NT_FreeBooleanArray(ptr);
                         break;
                     case NT_Type.NT_DOUBLE_ARRAY:
                         ptr = NT_GetValueDoubleArray(value, ref lastChange, ref size);
                         obj = GetDoubleArrayFromPtr(ptr, size);
+                        NT_FreeDoubleArray(ptr);
                         break;
                     case NT_Type.NT_STRING_ARRAY:
                         ptr = NT_GetValueStringArray(value, ref lastChange, ref size);
                         obj = GetStringArrayFromPtr(ptr, size);
+                        NT_FreeStringArray(ptr, size);
                         break;
                     case NT_Type.NT_RPC:
                         obj = null;
