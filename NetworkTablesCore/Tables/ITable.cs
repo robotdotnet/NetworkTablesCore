@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,6 +30,27 @@ namespace NetworkTablesCore.Tables
         /// <returns>A sub table relative to this one</returns>
         ITable GetSubTable(string key);
 
+        HashSet<string> GetKeys(int types);
+
+        HashSet<string> GetKeys();
+
+        HashSet<string> GetSubTables();  
+
+        void SetPersistent(string key);
+
+        void ClearPersistent(string key);
+
+        bool IsPersistent(string key);
+
+        void SetFlags(string key, int flags);
+
+        void ClearFlags(string key, int flags);
+
+        int GetFlags(string key);
+
+        void Delete(string key);
+
+
         /// <summary>
         /// Gets the value associated with a key as an object
         /// </summary>
@@ -41,14 +63,16 @@ namespace NetworkTablesCore.Tables
         /// </summary>
         /// <param name="key">The key to be assigned to</param>
         /// <param name="value">The value that will be assigned</param>
-        void PutValue(string key, object value);
+        /// <returns>False if the table key already exists with a different type</returns>
+        bool PutValue(string key, object value);
 
         /// <summary>
         /// Put a number in the table.
         /// </summary>
         /// <param name="key">The key to be assigned to</param>
         /// <param name="value">The value that will be assigned</param>
-        void PutNumber(string key, double value);
+        /// <returns>False if the table key already exists with a different type</returns>
+        bool PutNumber(string key, double value);
 
         /// <summary>
         /// Gets the number associated with the given name.
@@ -65,7 +89,8 @@ namespace NetworkTablesCore.Tables
         /// </summary>
         /// <param name="key">The key to be assigned to</param>
         /// <param name="value">The value that will be assigned</param>
-        void PutString(string key, string value);
+        /// <returns>False if the table key already exists with a different type</returns>
+        bool PutString(string key, string value);
 
         /// <summary>
         /// Gets the string associated with the given name.
@@ -82,7 +107,8 @@ namespace NetworkTablesCore.Tables
         /// </summary>
         /// <param name="key">The key to be assigned to</param>
         /// <param name="value">The value that will be assigned</param>
-        void PutBoolean(string key, bool value);
+        /// <returns>False if the table key already exists with a different type</returns>
+        bool PutBoolean(string key, bool value);
 
         /// <summary>
         /// Gets the boolean associated with the given name.
@@ -94,7 +120,19 @@ namespace NetworkTablesCore.Tables
 
         bool GetBoolean(string key);
 
-        //TODO: Add Arrays
+        //TODO: Add Commenting to Array Types
+
+        bool PutBooleanArray(string key, bool[] value);
+        bool[] GetBooleanArray(string key);
+        bool[] GetBooleanArray(string key, bool[] defaultValue);
+
+        bool PutNumberArray(string key, double[] value);
+        double[] GetNumberArray(string key);
+        double[] GetNumberArray(string key, double[] defaultValue);
+
+        bool PutStringArray(string key, string[] value);
+        string[] GetStringArray(string key);
+        string[] GetStringArray(string key, string[] defaultValue);
 
         /// <summary>
         /// Add a listener to changes to the table.

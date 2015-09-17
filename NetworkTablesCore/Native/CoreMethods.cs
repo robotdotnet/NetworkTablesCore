@@ -332,13 +332,12 @@ namespace NetworkTablesCore.Native
 
         #region EntryInfo
 
-        public static EntryInfo[] GetEntryInfo(string prefix, int types)
+        public static EntryInfo[] GetEntries(string prefix, int types)
         {
             UIntPtr size;
             byte[] str = CreateUTF8String(prefix, out size);
             UIntPtr arrSize = UIntPtr.Zero;
             IntPtr arr = NT_GetEntryInfo(str, size, (uint)types, ref arrSize);
-
             int entryInfoSize = Marshal.SizeOf(typeof(NT_EntryInfo));
             int arraySize = (int)arrSize.ToUInt64();
             EntryInfo[] entryArray = new EntryInfo[arraySize];
@@ -360,7 +359,6 @@ namespace NetworkTablesCore.Native
         {
             UIntPtr count = UIntPtr.Zero;
             IntPtr connections = NT_GetConnections(ref count);
-
             int connectionInfoSize = Marshal.SizeOf(typeof(NT_ConnectionInfo));
             int arraySize = (int)count.ToUInt64();
 

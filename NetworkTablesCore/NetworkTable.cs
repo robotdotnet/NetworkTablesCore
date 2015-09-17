@@ -30,7 +30,8 @@ namespace NetworkTablesCore
 
         public static void Initialize()
         {
-            CheckInit();
+            if (running)
+                Shutdown();
             if (client)
             {
                 StartClient(s_ipAddress, Port);
@@ -45,7 +46,7 @@ namespace NetworkTablesCore
         public static void Shutdown()
         {
             if (!running)
-                throw new InvalidOperationException("Network Table has not yet been initialized");
+                return;
             if (client)
             {
                 StopClient();
@@ -59,12 +60,16 @@ namespace NetworkTablesCore
 
         public static void SetClientMode()
         {
+            if (client)
+                return;
             CheckInit();
             client = true;
         }
 
         public static void SetServerMode()
         {
+            if (!client)
+                return;
             CheckInit();
             client = false;
         }
@@ -76,6 +81,8 @@ namespace NetworkTablesCore
 
         public static void SetIPAddress(string address)
         {
+            if (s_ipAddress == address)
+                return;
             CheckInit();
             s_ipAddress = address;
         }
@@ -88,10 +95,17 @@ namespace NetworkTablesCore
             return new NetworkTable(PATH_SEPERATOR_CHAR + key);
         }
 
-        public static void SetPort(uint port)
+        public static void SetPort(int port)
         {
+            if (port == Port)
+                return;
             CheckInit();
-            Port = port;
+            Port = (uint)port;
+        }
+
+        public static void SetNetworkIdentity(string name)
+        {
+            CoreMethods.SetNetworkIdentity(name);
         }
 
         private readonly string path;
@@ -106,7 +120,6 @@ namespace NetworkTablesCore
             return $"NetworkTable: {path}";
         }
 
-
         public bool ContainsKey(string key)
         {
             return CoreMethods.ContainsKey(key);
@@ -114,14 +127,43 @@ namespace NetworkTablesCore
 
         public bool ContainsSubTable(string key)
         {
-            string subtablePrefix = path + key + PATH_SEPERATOR_CHAR;
-            var array = GetEntryInfo(subtablePrefix, 0);
+            EntryInfo[] array = GetEntries(path + PATH_SEPERATOR_CHAR + key + PATH_SEPERATOR_CHAR, 0);
             return array.Length != 0;
-            /*
-            The issue with implementing this, is you can create the subtable, but nothing shows up until
-            you actually assign something to the table. This will probably be changed at some point.
-            */
         }
+
+        public HashSet<string> GetKeys(int types)
+        {
+            HashSet<string> keys = new HashSet<string>();
+            int prefixLen = path.Length + 1;
+            foreach (EntryInfo entry in GetEntries(path + PATH_SEPERATOR_CHAR, types))
+            {
+                string relativeKey = entry.Name.Substring(prefixLen);
+                if (relativeKey.IndexOf(PATH_SEPERATOR_CHAR) != -1)
+                    continue;
+                keys.Add(relativeKey);
+            }
+            return keys;
+        }
+
+        public HashSet<string> GetKeys()
+        {
+            return GetKeys(0);
+        }
+
+        public HashSet<string> GetSubTables()
+        {
+            HashSet<string> keys = new HashSet<string>();
+            int prefixLen = path.Length + 1;
+            foreach (EntryInfo entry in GetEntries(path + PATH_SEPERATOR_CHAR, 0))
+            {
+                string relativeKey = entry.Name.Substring(prefixLen);
+                int endSubTable = relativeKey.IndexOf(PATH_SEPERATOR_CHAR);
+                if (endSubTable == -1)
+                    continue;
+                keys.Add(relativeKey.Substring(0, endSubTable));
+            }
+            return keys;
+        } 
 
         public ITable GetSubTable(string key)
         {
@@ -130,16 +172,66 @@ namespace NetworkTablesCore
 
         public const int PERSISTENT = 1;
 
+        public void SetPersistent(string key)
+        {
+            SetFlags(key, PERSISTENT);
+        }
+
+        public void ClearPersistent(string key)
+        {
+            ClearFlags(key, PERSISTENT);
+        }
+
+        public bool IsPersistent(string key)
+        {
+            return (GetFlags(key) & PERSISTENT) != 0;
+        }
+
         public void SetFlags(string key, int flags)
         {
-            SetEntryFlags(path + PATH_SEPERATOR_CHAR + key, flags);
+            SetEntryFlags(path + PATH_SEPERATOR_CHAR + key, GetFlags(key) | flags);
+        }
+
+        public void ClearFlags(string key, int flags)
+        {
+            SetEntryFlags(path + PATH_SEPERATOR_CHAR + key, GetFlags(key) & ~flags);
         }
 
         public int GetFlags(string key)
         {
             return GetEntryFlags(path + PATH_SEPERATOR_CHAR + key);
         }
-        
+
+        public void Delete(string key)
+        {
+            DeleteEntry(path + PATH_SEPERATOR_CHAR + key);
+        }
+
+        public static void GlobalDeleteAll()
+        {
+            DeleteAllEntries();
+        }
+
+        public static void Flush()
+        {
+            CoreMethods.Flush();
+        }
+
+        public static void SetUpdateRate(double interval)
+        {
+            CoreMethods.SetUpdateRate(interval);
+        }
+
+        public static void SavePersistent(string filename)
+        {
+            CoreMethods.SavePersistent(filename);
+        }
+
+        public static string[] LoadPersistent(string filename)
+        {
+            return CoreMethods.LoadPersistent(filename);
+        }
+
         public object GetValue(string key)
         {
             string localPath = path + PATH_SEPERATOR_CHAR + key;
@@ -196,23 +288,23 @@ namespace NetworkTablesCore
             }
         }
 
-        public void PutValue(string key, object value)
+        public bool PutValue(string key, object value)
         {
             key = path + PATH_SEPERATOR_CHAR + key;
-            if (value is double) PutNumber(key, (double)value);
-            else if (value is string) PutString(key, (string)value);
-            else if (value is bool) PutBoolean(key, (bool)value);
+            if (value is double) return PutNumber(key, (double)value);
+            else if (value is string) return PutString(key, (string)value);
+            else if (value is bool) return PutBoolean(key, (bool)value);
             else if (value is double[])
             {
-                SetEntryDoubleArray(key, (double[])value);
+                return SetEntryDoubleArray(key, (double[])value);
             }
             else if (value is bool[])
             {
-                SetEntryBooleanArray(key, (bool[])value);
+                return SetEntryBooleanArray(key, (bool[])value);
             }
             else if (value is string[])
             {
-                SetEntryStringArray(key, (string[])value);
+                return SetEntryStringArray(key, (string[])value);
             }
             else
             {
@@ -220,9 +312,9 @@ namespace NetworkTablesCore
             }
         }
 
-        public void PutNumber(string key, double value)
+        public bool PutNumber(string key, double value)
         {
-            SetEntryDouble(path + PATH_SEPERATOR_CHAR + key, value);
+            return SetEntryDouble(path + PATH_SEPERATOR_CHAR + key, value);
         }
 
         public double GetNumber(string key, double defaultValue)
@@ -235,9 +327,9 @@ namespace NetworkTablesCore
             return GetEntryDouble(path + PATH_SEPERATOR_CHAR + key);
         }
 
-        public void PutString(string key, string value)
+        public bool PutString(string key, string value)
         {
-            SetEntryString(path + PATH_SEPERATOR_CHAR + key, value);
+            return SetEntryString(path + PATH_SEPERATOR_CHAR + key, value);
         }
 
         public string GetString(string key, string defaultValue)
@@ -250,9 +342,9 @@ namespace NetworkTablesCore
             return GetEntryString(path + PATH_SEPERATOR_CHAR + key);
         }
 
-        public void PutBoolean(string key, bool value)
+        public bool PutBoolean(string key, bool value)
         {
-            SetEntryBoolean(path + PATH_SEPERATOR_CHAR + key, value);
+            return SetEntryBoolean(path + PATH_SEPERATOR_CHAR + key, value);
         }
 
         public bool GetBoolean(string key, bool defaultValue)
@@ -265,9 +357,9 @@ namespace NetworkTablesCore
             return GetEntryBoolean(path + PATH_SEPERATOR_CHAR + key);
         }
 
-        public void PutStringArray(string key, string[] value)
+        public bool PutStringArray(string key, string[] value)
         {
-            SetEntryStringArray(path + PATH_SEPERATOR_CHAR + key, value);
+            return SetEntryStringArray(path + PATH_SEPERATOR_CHAR + key, value);
         }
 
         public string[] GetStringArray(string key)
@@ -275,14 +367,39 @@ namespace NetworkTablesCore
             return GetEntryStringArray(path + PATH_SEPERATOR_CHAR + key);
         }
 
+        public string[] GetStringArray(string key, string[] defaultValue)
+        {
+            return GetEntryStringArray(path + PATH_SEPERATOR_CHAR + key, defaultValue);
+        }
+
+        public bool PutNumberArray(string key, double[] val)
+        {
+            return SetEntryDoubleArray(path + PATH_SEPERATOR_CHAR + key, val);
+        }
+
         public double[] GetNumberArray(string key)
         {
             return GetEntryDoubleArray(path + PATH_SEPERATOR_CHAR + key);
         }
 
-        public void PutNumberArray(string key, double[] val)
+        public double[] GetNumberArray(string key, double[] defaultValue)
         {
-            SetEntryDoubleArray(path + PATH_SEPERATOR_CHAR + key, val);
+            return GetEntryDoubleArray(path + PATH_SEPERATOR_CHAR + key, defaultValue);
+        }
+
+        public bool PutBooleanArray(string key, bool[] val)
+        {
+            return SetEntryBooleanArray(path + PATH_SEPERATOR_CHAR + key, val);
+        }
+
+        public bool[] GetBooleanArray(string key)
+        {
+            return GetEntryBooleanArray(path + PATH_SEPERATOR_CHAR + key);
+        }
+
+        public bool[] GetBooleanArray(string key, bool[] defaultValue)
+        {
+            return GetEntryBooleanArray(path + PATH_SEPERATOR_CHAR + key, defaultValue);
         }
 
         private readonly Dictionary<ITableListener, List<int>> m_listenerMap = new Dictionary<ITableListener, List<int>>();
@@ -407,6 +524,11 @@ namespace NetworkTablesCore
         {
             ConnectionInfo[] conns = GetConnections();
             return conns.Length > 0;
+        }
+
+        public static ConnectionInfo[] Connections()
+        {
+            return GetConnections();
         }
 
         public bool IsServer() => !client;
