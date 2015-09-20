@@ -506,8 +506,8 @@ namespace NetworkTablesCore.Native
         public static void StartServer(string fileName, string listenAddress, uint port)
         {
             UIntPtr size = UIntPtr.Zero;
-            byte[] fileNamePtr = CreateUTF8String(fileName, out size);
-            byte[] listenAddressPtr = CreateUTF8String(listenAddress, out size);
+            var fileNamePtr = string.IsNullOrEmpty(fileName) ? new []{(byte)0} : CreateUTF8String(fileName, out size);
+            var listenAddressPtr = string.IsNullOrEmpty(fileName) ? new[] { (byte)0 } : CreateUTF8String(listenAddress, out size);
             NT_StartServer(fileNamePtr, listenAddressPtr, port);
         }
 

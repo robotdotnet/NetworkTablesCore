@@ -38,7 +38,7 @@ namespace NetworkTablesCore
             }
             else
             {
-                StartServer(s_persistentFilename, s_ipAddress, Port);
+                StartServer(s_persistentFilename, "", Port);
             }
             running = true;
         }
