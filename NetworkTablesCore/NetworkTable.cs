@@ -103,6 +103,14 @@ namespace NetworkTablesCore
             Port = (uint)port;
         }
 
+        public static void SetPersistentFilename(string filename)
+        {
+            if (s_persistentFilename == filename)
+                return;
+            CheckInit();
+            s_persistentFilename = filename;
+        }
+
         public static void SetNetworkIdentity(string name)
         {
             CoreMethods.SetNetworkIdentity(name);
