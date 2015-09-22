@@ -48,6 +48,7 @@
     <Compile Include="EntryInfo.cs" />
     <Compile Include="Native\CoreMethods.cs" />
     <Compile Include="Native\Delegates.cs" />
+    <Compile Include="Native\DLLUtils.cs" />
     <Compile Include="Native\Exceptions\PersistentException.cs" />
     <Compile Include="Native\Exceptions\TableKeyNotDefinedException.cs" />
     <Compile Include="Native\Interop.cs" />

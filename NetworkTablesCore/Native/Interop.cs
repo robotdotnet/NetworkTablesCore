@@ -1,13 +1,86 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
 
 namespace NetworkTablesCore.Native
 {
+
     [SuppressUnmanagedCodeSecurity]
     internal class Interop
     {
         internal const string NTSharedFile = "ntcore";
+
+        private static bool libraryLoaded = false;
+
+        static Interop()
+        {
+            if (!libraryLoaded)
+            {
+                try
+                {
+                    //Figure Out OS
+                    bool windows = true;
+                    var platform = (int) Environment.OSVersion.Platform;
+                    if (platform == 4 || platform == 6 || platform == 128)
+                    {
+                        windows = false;
+                    }
+
+                    //Check for 64 bit
+
+                    bool x64 = Environment.Is64BitProcess;
+
+                    IDllLoader loader = null;
+                    IntPtr libraryHandle = IntPtr.Zero;
+
+                    string exeLocation = System.Reflection.Assembly.GetExecutingAssembly().Location + Path.DirectorySeparatorChar + "Native" + Path.DirectorySeparatorChar;
+
+                    if (windows)
+                    {
+                        if (x64)
+                        {
+                            exeLocation += "ntcore64.dll";
+                        }
+                        else
+                        {
+                            exeLocation += "ntcore32.dll";
+                        }
+                        if (!File.Exists(exeLocation))
+                        {
+                            throw new FileNotFoundException("Dll File Not Found");
+                        }
+                        loader = (IDllLoader)new WindowsDllLoader();
+                        libraryHandle = loader.LoadLibrary(exeLocation);
+                    }
+                    else
+                    {
+                        if (x64)
+                        {
+                            throw new InvalidOperationException("64 Bit Linux Not Supported");
+                        }
+                        else
+                        {
+                            exeLocation += "libntcore32.so";
+                        }
+                        if (!File.Exists(exeLocation))
+                        {
+                            throw new FileNotFoundException("Shared Library File Not Found");
+                        }
+                        loader = (IDllLoader)new LinuxDllLoader();
+                        libraryHandle = loader.LoadLibrary(exeLocation);
+                    }
+
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.StackTrace);
+                    Environment.Exit(1);
+                }
+                libraryLoaded = true;
+            }
+        }
 
         //Callback Typedefs
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
