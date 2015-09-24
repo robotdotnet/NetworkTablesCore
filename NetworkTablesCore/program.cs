@@ -17,7 +17,7 @@ namespace NetworkTablesCore
             {
                 Console.Error.WriteLine(message);
             }), 0);
-
+            Console.WriteLine(Environment.Is64BitProcess);
             NetworkTable.SetIPAddress("127.0.0.1");
             NetworkTable.SetPort(10000);
             NetworkTable.SetServerMode();
@@ -32,7 +32,7 @@ namespace NetworkTablesCore
             catch (TableKeyNotDefinedException)
             {
             }
-
+            /*
             nt.PutBoolean("bar", false);
             nt.SetFlags("bar", NetworkTable.PERSISTENT);
             nt.PutBoolean("bar2", true);
@@ -59,7 +59,7 @@ namespace NetworkTablesCore
             {
                 Console.WriteLine(s);
             }
-
+            */
             Console.ReadKey();
         }
     }
