@@ -21,6 +21,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -48,9 +49,11 @@
     <Compile Include="EntryInfo.cs" />
     <Compile Include="Native\CoreMethods.cs" />
     <Compile Include="Native\Delegates.cs" />
+    <Compile Include="Native\LibraryLoader.cs" />
     <Compile Include="Native\Exceptions\PersistentException.cs" />
     <Compile Include="Native\Exceptions\TableKeyNotDefinedException.cs" />
     <Compile Include="Native\Interop.cs" />
+    <Compile Include="Native\LoaderUtilities.cs" />
     <Compile Include="Native\RpcMethods.cs" />
     <Compile Include="Native\RpcStructs.cs" />
     <Compile Include="Native\Rpc\Leb128.cs" />
@@ -64,6 +67,10 @@
     <Compile Include="Tables\IRemoteConnectionListener.cs" />
     <Compile Include="Tables\ITable.cs" />
     <Compile Include="Tables\ITableListener.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ntcore32.dll" />
+    <EmbeddedResource Include="ntcore64.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

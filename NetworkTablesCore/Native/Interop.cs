@@ -1,13 +1,45 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
 
 namespace NetworkTablesCore.Native
 {
+
     [SuppressUnmanagedCodeSecurity]
     internal class Interop
     {
         internal const string NTSharedFile = "ntcore";
+
+        private static readonly bool libraryLoaded = false;
+        private static readonly IntPtr library;
+
+        static Interop()
+        {
+            if (!libraryLoaded)
+            {
+                try
+                {
+                    OsType type = LoaderUtilities.GetOsType();
+                    if (!LoaderUtilities.CheckOsValid(type))
+                        throw new InvalidOperationException("OS Not Supported");
+
+                    string loadedPath = LoaderUtilities.ExtractLibrary(type);
+                    if (string.IsNullOrEmpty(loadedPath)) throw new FileNotFoundException("Library file could not be found in the resorces. Please contact RobotDotNet for support for this issue");
+
+                    library = LoaderUtilities.LoadLibrary(loadedPath, type);
+
+                    if (library == IntPtr.Zero) throw new BadImageFormatException($"Library file {loadedPath} could not be loaded successfully.");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e.StackTrace);
+                    Environment.Exit(1);
+                }
+                libraryLoaded = true;
+            }
+        }
 
         //Callback Typedefs
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
