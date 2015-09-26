@@ -11,7 +11,8 @@ namespace NetworkTablesCore.Native
     {
         internal const string NTSharedFile = "ntcore";
 
-        private static bool libraryLoaded = false;
+        private static readonly bool libraryLoaded = false;
+        private static readonly IntPtr library;
 
         static Interop()
         {
@@ -23,15 +24,16 @@ namespace NetworkTablesCore.Native
                     if (!LoaderUtilities.CheckOsValid(type))
                         throw new InvalidOperationException("OS Not Supported");
 
-                    string loadedPath = LoaderUtilities.ExtractDLL(type);
-                    if (loadedPath == null) throw new FileNotFoundException("Stream not found");
+                    string loadedPath = LoaderUtilities.ExtractLibrary(type);
+                    if (string.IsNullOrEmpty(loadedPath)) throw new FileNotFoundException("Library file could not be found in the resorces. Please contact RobotDotNet for support for this issue");
 
-                    IntPtr handle = LoaderUtilities.LoadDll(loadedPath, type);
+                    library = LoaderUtilities.LoadLibrary(loadedPath, type);
 
-                    if (handle == IntPtr.Zero) throw new InvalidOperationException("Dll unable to be loaded");
+                    if (library == IntPtr.Zero) throw new BadImageFormatException($"Library file {loadedPath} could not be loaded successfully.");
                 }
                 catch (Exception e)
                 {
+                    Console.WriteLine(e.Message);
                     Console.WriteLine(e.StackTrace);
                     Environment.Exit(1);
                 }

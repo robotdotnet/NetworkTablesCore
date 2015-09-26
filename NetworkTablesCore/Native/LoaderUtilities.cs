@@ -61,7 +61,7 @@ namespace NetworkTablesCore.Native
             }
         }
 
-        internal static string ExtractDLL(OsType type)
+        internal static string ExtractLibrary(OsType type)
         {
             string inputName = "";
             string outputName = "";
@@ -69,11 +69,11 @@ namespace NetworkTablesCore.Native
             {
                 case OsType.Windows32:
                     inputName = "NetworkTablesCore.ntcore32.dll";
-                    outputName = "ntcore.dll";
+                    outputName = "ntcore.dlln";
                     break;
                 case OsType.Windows64:
                     inputName = "NetworkTablesCore.ntcore64.dll";
-                    outputName = "ntcore.dll";
+                    outputName = "ntcore.dlln";
                     break;
                 case OsType.Linux32:
                     return null;
@@ -104,19 +104,19 @@ namespace NetworkTablesCore.Native
 
         }
 
-        internal static IntPtr LoadDll(string dllLoc, OsType type)
+        internal static IntPtr LoadLibrary(string dllLoc, OsType type)
         {
-            IDllLoader loader = null;
+            ILibraryLoader loader = null;
             switch (type)
             {
                 case OsType.Windows32:
                 case OsType.Windows64:
-                    loader = new WindowsDllLoader();
+                    loader = new WindowsLibraryLoader();
                     return loader.LoadLibrary(dllLoc);
                 case OsType.Linux32:
                 case OsType.Linux64:
                 case OsType.RoboRIO:
-                    loader = new LinuxDllLoader();
+                    loader = new RoboRIOLibraryLoader();
                     return loader.LoadLibrary(dllLoc);
                 default:
                     return IntPtr.Zero;
