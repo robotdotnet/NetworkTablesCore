@@ -10,7 +10,7 @@ namespace NetworkTablesCore.Native
     {
         public delegate void LoggerFunction(int level, string file, int line, string message);
 
-        public delegate void EntryListenerFunction(int uid, string key, object value, bool isNew);
+        public delegate void EntryListenerFunction(int uid, string key, object value, NotifyFlags flags);
 
         public delegate void ConnectionListenerFunction(int uid, bool connected, ConnectionInfo conn);
 

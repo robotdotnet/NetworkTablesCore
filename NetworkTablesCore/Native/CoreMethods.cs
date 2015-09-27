@@ -346,7 +346,7 @@ namespace NetworkTablesCore.Native
             {
                 IntPtr data = new IntPtr(arr.ToInt64() + entryInfoSize * i);
                 NT_EntryInfo info = (NT_EntryInfo)Marshal.PtrToStructure(data, typeof(NT_EntryInfo));
-                entryArray[i] = new EntryInfo(info.name.ToString(), info.type, (int)info.flags, (long)info.last_change);
+                entryArray[i] = new EntryInfo(info.name.ToString(), info.type, (EntryFlags)info.flags, (long)info.last_change);
             }
             NT_DisposeEntryInfoArray(arr, arrSize);
             return entryArray;
@@ -379,9 +379,9 @@ namespace NetworkTablesCore.Native
         private static readonly Dictionary<int, NT_EntryListenerCallback> s_entryCallbacks =
             new Dictionary<int, NT_EntryListenerCallback>();
 
-        public static int AddEntryListener(string prefix, Delegates.EntryListenerFunction listener, bool immediateNotify, bool localNotify)
+        public static int AddEntryListener(string prefix, Delegates.EntryListenerFunction listener, NotifyFlags flags)
         {
-            NT_EntryListenerCallback modCallback = (uid, data, name, len, value, isNew) =>
+            NT_EntryListenerCallback modCallback = (uid, data, name, len, value, flags_) =>
             {
                 NT_Type type = NT_GetValueType(value);
                 object obj;
@@ -436,11 +436,11 @@ namespace NetworkTablesCore.Native
                         break;
                 }
                 string key = ReadUTF8String(name, len);
-                listener((int)uid, key, obj, isNew != 0);
+                listener((int)uid, key, obj, (NotifyFlags)flags_);
             };
             UIntPtr prefixSize;
             byte[] prefixStr = CreateUTF8String(prefix, out prefixSize);
-            int retVal = (int)NT_AddEntryListener(prefixStr, prefixSize, IntPtr.Zero, modCallback, immediateNotify ? 1 : 0, localNotify ? 1 : 0);
+            int retVal = (int)NT_AddEntryListener(prefixStr, prefixSize, IntPtr.Zero, modCallback, (uint)flags);
             s_entryCallbacks.Add(retVal, modCallback);
             return retVal;
         }
@@ -552,19 +552,19 @@ namespace NetworkTablesCore.Native
         #endregion
 
         #region Flags
-        public static void SetEntryFlags(string name, int flags)
+        public static void SetEntryFlags(string name, EntryFlags flags)
         {
             UIntPtr size;
             byte[] str = CreateUTF8String(name, out size);
             NT_SetEntryFlags(str, size, (uint)flags);
         }
 
-        public static int GetEntryFlags(string name)
+        public static EntryFlags GetEntryFlags(string name)
         {
             UIntPtr size;
             byte[] str = CreateUTF8String(name, out size);
             uint flags = NT_GetEntryFlags(str, size);
-            return (int)flags;
+            return (EntryFlags)flags;
         }
         #endregion
 
@@ -610,7 +610,7 @@ namespace NetworkTablesCore.Native
 
         private static NT_LogFunc nativeLog;
 
-        public static void SetLogger(Delegates.LoggerFunction func, int minLevel)
+        public static void SetLogger(Delegates.LoggerFunction func, LogLevel minLevel)
         {
             nativeLog = (level, file, line, msg) =>
             {

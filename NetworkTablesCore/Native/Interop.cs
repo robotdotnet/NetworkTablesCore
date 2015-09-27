@@ -12,7 +12,7 @@ namespace NetworkTablesCore.Native
         //Callback Typedefs
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void NT_EntryListenerCallback(
-            uint uid, IntPtr data, IntPtr name, UIntPtr name_len, IntPtr value, int is_new);
+            uint uid, IntPtr data, IntPtr name, UIntPtr name_len, IntPtr value, uint flags);
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void NT_ConnectionListenerCallback(
@@ -35,7 +35,7 @@ namespace NetworkTablesCore.Native
         //Callback Functions
         [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
         public static extern uint NT_AddEntryListener(byte[] prefix, UIntPtr prefix_len, IntPtr data,
-            NT_EntryListenerCallback callback, int immediate_notify, int local_notify);
+            NT_EntryListenerCallback callback, uint flags);
         [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
         public static extern void NT_RemoveEntryListener(uint entry_listener_uid);
         [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]

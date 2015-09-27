@@ -11,10 +11,10 @@ namespace NetworkTablesCore
     {
         public string Name { get; }
         public NT_Type Type { get; }
-        public int Flags { get; }
+        public EntryFlags Flags { get; }
         public long LastChange { get; }
 
-        public EntryInfo(string name, NT_Type type, int flags, long lastChange)
+        public EntryInfo(string name, NT_Type type, EntryFlags flags, long lastChange)
         {
             this.Name = name;
             this.Type = type;

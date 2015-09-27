@@ -182,30 +182,30 @@ namespace NetworkTablesCore
 
         public void SetPersistent(string key)
         {
-            SetFlags(key, PERSISTENT);
+            SetFlags(key, EntryFlags.PERSISTENT);
         }
 
         public void ClearPersistent(string key)
         {
-            ClearFlags(key, PERSISTENT);
+            ClearFlags(key, EntryFlags.PERSISTENT);
         }
 
         public bool IsPersistent(string key)
         {
-            return (GetFlags(key) & PERSISTENT) != 0;
+            return (GetFlags(key) & EntryFlags.PERSISTENT) != 0;
         }
 
-        public void SetFlags(string key, int flags)
+        public void SetFlags(string key, EntryFlags flags)
         {
             SetEntryFlags(path + PATH_SEPERATOR_CHAR + key, GetFlags(key) | flags);
         }
 
-        public void ClearFlags(string key, int flags)
+        public void ClearFlags(string key, EntryFlags flags)
         {
             SetEntryFlags(path + PATH_SEPERATOR_CHAR + key, GetFlags(key) & ~flags);
         }
 
-        public int GetFlags(string key)
+        public EntryFlags GetFlags(string key)
         {
             return GetEntryFlags(path + PATH_SEPERATOR_CHAR + key);
         }
@@ -412,7 +412,7 @@ namespace NetworkTablesCore
 
         private readonly Dictionary<ITableListener, List<int>> m_listenerMap = new Dictionary<ITableListener, List<int>>();
 
-        public void AddTableListener(ITableListener listener, bool immediateNotify, bool localNotify)
+        public void AddTableListenerEx(ITableListener listener, NotifyFlags flags)
         {
             List<int> adapters;
             if (!m_listenerMap.TryGetValue(listener, out adapters))
@@ -421,22 +421,22 @@ namespace NetworkTablesCore
                 m_listenerMap.Add(listener, adapters);
             }
 
-            Delegates.EntryListenerFunction func = (uid, key, value, isNew) =>
+            Delegates.EntryListenerFunction func = (uid, key, value, flags_) =>
             {
                 string relativeKey = key.Substring(path.Length + 1);
                 if (relativeKey.IndexOf(PATH_SEPERATOR_CHAR) != -1)
                 {
                     return;
                 }
-                listener.ValueChanged(this, relativeKey, value, isNew);
+                listener.ValueChanged(this, relativeKey, value, flags_);
             };
 
-            int id = AddEntryListener(path + PATH_SEPERATOR_CHAR, func, immediateNotify, localNotify);
+            int id = AddEntryListener(path + PATH_SEPERATOR_CHAR, func, flags);
 
             adapters.Add(id);
         }
 
-        public void AddTableListener(string key, ITableListener listener, bool immediateNotify, bool localNotify)
+        public void AddTableListenerEx(string key, ITableListener listener, NotifyFlags flags)
         {
             List<int> adapters;
             if (!m_listenerMap.TryGetValue(listener, out adapters))
@@ -445,14 +445,14 @@ namespace NetworkTablesCore
                 m_listenerMap.Add(listener, adapters);
             }
             string fullKey = path + PATH_SEPERATOR_CHAR + key;
-            Delegates.EntryListenerFunction func = (uid, funcKey, value, isNew) =>
+            Delegates.EntryListenerFunction func = (uid, funcKey, value, flags_) =>
             {
                 if (!funcKey.Equals(fullKey))
                     return;
-                listener.ValueChanged(this, key, value, isNew);
+                listener.ValueChanged(this, key, value, flags_);
             };
 
-            int id = AddEntryListener(fullKey, func, immediateNotify, localNotify);
+            int id = AddEntryListener(fullKey, func, flags);
 
             adapters.Add(id);
         }
@@ -466,7 +466,7 @@ namespace NetworkTablesCore
                 m_listenerMap.Add(listener, adapters);
             }
             HashSet<string> notifiedTables = new HashSet<string>();
-            Delegates.EntryListenerFunction func = (uid, key, value, isNew) =>
+            Delegates.EntryListenerFunction func = (uid, key, value, flags_) =>
             {
                 string relativeKey = key.Substring(path.Length + 1);
                 int endSubTable = relativeKey.IndexOf(PATH_SEPERATOR_CHAR);
@@ -476,21 +476,30 @@ namespace NetworkTablesCore
                 if (notifiedTables.Contains(subTableKey))
                     return;
                 notifiedTables.Add(subTableKey);
-                listener.ValueChanged(this, subTableKey, GetSubTable(subTableKey), true);
+                listener.ValueChanged(this, subTableKey, GetSubTable(subTableKey), flags_);
             };
-            int id = AddEntryListener(path + PATH_SEPERATOR_CHAR, func, true, localNotify);
+            NotifyFlags flags = NotifyFlags.NOTIFY_NEW | NotifyFlags.NOTIFY_UPDATE;
+            if (localNotify)
+                flags |= NotifyFlags.NOTIFY_LOCAL;
+            int id = AddEntryListener(path + PATH_SEPERATOR_CHAR, func, flags);
 
             adapters.Add(id);
         }
 
          public void AddTableListener(ITableListener listener, bool immediateNotify = false)
         {
-            AddTableListener(listener, immediateNotify, false);
+            NotifyFlags flags = NotifyFlags.NOTIFY_NEW | NotifyFlags.NOTIFY_UPDATE;
+            if (immediateNotify)
+                flags |= NotifyFlags.NOTIFY_IMMEDIATE;
+            AddTableListenerEx(listener, flags);
         }
 
         public void AddTableListener(string key, ITableListener listener, bool immediateNotify = false)
         {
-            AddTableListener(key, listener, immediateNotify, false);
+            NotifyFlags flags = NotifyFlags.NOTIFY_NEW | NotifyFlags.NOTIFY_UPDATE;
+            if (immediateNotify)
+                flags |= NotifyFlags.NOTIFY_IMMEDIATE;
+            AddTableListenerEx(key, listener, flags);
         }
 
         public void AddSubTableListener(ITableListener listener)

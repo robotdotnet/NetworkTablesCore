@@ -33,7 +33,7 @@ namespace NetworkTablesCore.Test
             }
 
             nt.PutBoolean("bar", false);
-            nt.SetFlags("bar", NetworkTable.PERSISTENT);
+            nt.SetFlags("bar", EntryFlags.PERSISTENT);
             nt.PutBoolean("bar2", true);
             nt.PutBoolean("bar2", false);
             nt.PutBoolean("bar2", true);

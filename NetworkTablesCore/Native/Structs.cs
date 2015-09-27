@@ -20,25 +20,7 @@ namespace NetworkTablesCore.Native
         NT_DOUBLE_ARRAY = 0x20,
         NT_STRING_ARRAY = 0x40,
         NT_RPC = 0x80
-    }
-
-    public enum NT_EntryFlags
-    {
-        NT_PERSISTENT = 0x01
-    }
-
-    public enum NT_LogLevel
-    {
-        NT_LOG_CRITICAL = 50,
-        NT_LOG_ERROR = 40,
-        NT_LOG_WARNING = 30,
-        NT_LOG_INFO = 20,
-        NT_LOG_DEBUG = 10,
-        NT_LOG_DEBUG1 = 9,
-        NT_LOG_DEBUG2 = 8,
-        NT_LOG_DEBUG3 = 7,
-        NT_LOG_DEBUG4 = 6
-    }
+    }  
 
     [StructLayout(LayoutKind.Sequential)]
     internal struct NT_String_Read
@@ -63,7 +45,7 @@ namespace NetworkTablesCore.Native
         public NT_String_Write(string v_str)
         {
             int bytes = Encoding.UTF8.GetByteCount(v_str);
-            str = Marshal.AllocHGlobal(bytes * sizeof (byte));
+            str = Marshal.AllocHGlobal(bytes * sizeof(byte));
             byte[] buffer = new byte[bytes];
             Encoding.UTF8.GetBytes(v_str, 0, v_str.Length, buffer, 0);
             Marshal.Copy(buffer, 0, str, bytes);

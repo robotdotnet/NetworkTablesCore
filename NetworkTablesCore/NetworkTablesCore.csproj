@@ -5,12 +5,13 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{7BD949DB-C15F-436B-BDD4-2A47AE80A832}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NetworkTablesCore</RootNamespace>
     <AssemblyName>NetworkTablesCore</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,9 +31,11 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>NetworkTablesCore.program</StartupObject>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -46,6 +50,7 @@
   <ItemGroup>
     <Compile Include="ConnectionInfo.cs" />
     <Compile Include="EntryInfo.cs" />
+    <Compile Include="Enumerations.cs" />
     <Compile Include="Native\CoreMethods.cs" />
     <Compile Include="Native\Delegates.cs" />
     <Compile Include="Native\Exceptions\PersistentException.cs" />
@@ -58,7 +63,6 @@
     <Compile Include="Native\Rpc\RpcEncoder.cs" />
     <Compile Include="Native\Structs.cs" />
     <Compile Include="NetworkTable.cs" />
-    <Compile Include="program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tables\IRemote.cs" />
     <Compile Include="Tables\IRemoteConnectionListener.cs" />

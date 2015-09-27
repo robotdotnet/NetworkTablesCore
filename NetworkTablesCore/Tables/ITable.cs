@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using NetworkTablesCore.Native;
 
 namespace NetworkTablesCore.Tables
 {
@@ -42,11 +42,11 @@ namespace NetworkTablesCore.Tables
 
         bool IsPersistent(string key);
 
-        void SetFlags(string key, int flags);
+        void SetFlags(string key, EntryFlags flags);
 
-        void ClearFlags(string key, int flags);
+        void ClearFlags(string key, EntryFlags flags);
 
-        int GetFlags(string key);
+        EntryFlags GetFlags(string key);
 
         void Delete(string key);
 
@@ -139,7 +139,7 @@ namespace NetworkTablesCore.Tables
          /// </summary>
          /// <param name="listener">The listener to add</param>
          /// <param name="immediateNotify">If true then this listener will be notified of all current entries (marked as new)</param>
-         void AddTableListener(ITableListener listener, bool immediateNotify, bool localNotify);
+         void AddTableListenerEx(ITableListener listener, NotifyFlags flags);
  
          /// <summary>
          /// Add a listener for changes to a specific key in the table.
@@ -147,7 +147,7 @@ namespace NetworkTablesCore.Tables
          /// <param name="key">The key to listen for</param>
          /// <param name="listener">The listener to add</param>
          /// <param name="immediateNotify">If true then this listener will be notified of all current entries (marked as new)</param>
-         void AddTableListener(string key, ITableListener listener, bool immediateNotify, bool localNotify);
+         void AddTableListenerEx(string key, ITableListener listener, NotifyFlags flags);
  
          void AddSubTableListener(ITableListener listener, bool localNotify);
 
