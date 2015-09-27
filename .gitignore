@@ -23,9 +23,6 @@ bld/
 [Oo]bj/
 [Oo]utput/
 
-# Native Libraries
-NetworkTablesCore/NativeLibraries/
-
 # Visual Studio 2015 cache/options directory
 .vs/
 
