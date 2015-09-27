@@ -64,11 +64,11 @@ namespace NetworkTables.Native
             switch (type)
             {
                 case OsType.Windows32:
-                    inputName = "NetworkTablesCore.ntcore32.dll";
+                    inputName = "NetworkTables.NativeLibraries.ntcore32.dll";
                     outputName = "ntcore.dlln";
                     break;
                 case OsType.Windows64:
-                    inputName = "NetworkTablesCore.ntcore64.dll";
+                    inputName = "NetworkTables.NativeLibraries.ntcore64.dll";
                     outputName = "ntcore.dlln";
                     break;
                 case OsType.Linux32:
@@ -78,8 +78,8 @@ namespace NetworkTables.Native
                     return null;
                     break;
                 case OsType.RoboRIO:
-                    inputName = "NetworkTablesCore.libntcorerio.so";
-                    outputName = "libntcore.so";
+                    inputName = "NetworkTables.NativeLibraries.libntcorerio.so";
+                    outputName = "ntcore.dlln";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);

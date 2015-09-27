@@ -9,7 +9,7 @@ namespace NetworkTables.Native
     [SuppressUnmanagedCodeSecurity]
     internal class Interop
     {
-        internal const string NTSharedFile = "ntcore";
+        internal const string NTSharedFile = "ntcore.dlln";
 
         private static readonly bool libraryLoaded = false;
         private static readonly IntPtr library;
@@ -30,6 +30,7 @@ namespace NetworkTables.Native
                     library = LoaderUtilities.LoadLibrary(loadedPath, type);
 
                     if (library == IntPtr.Zero) throw new BadImageFormatException($"Library file {loadedPath} could not be loaded successfully.");
+                    ;
                 }
                 catch (Exception e)
                 {

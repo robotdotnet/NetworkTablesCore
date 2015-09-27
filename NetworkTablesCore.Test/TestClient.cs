@@ -13,6 +13,8 @@ namespace NetworkTablesCore.Test
         [Test]
         public void Client()
         {
+            NetworkTable.Shutdown();
+
             CoreMethods.SetLogger(((level, file, line, message) =>
             {
                 Console.Error.WriteLine(message);
@@ -43,7 +45,11 @@ namespace NetworkTablesCore.Test
             nt.PutNumberArray("numarray", nums);
 
             string[] strs = new[] {"Hello", "World"};
+            nt.PutStringArray("strarray", strs);
 
+            Thread.Sleep(1000);
+
+            
         }
     }
 }
