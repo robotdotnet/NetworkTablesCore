@@ -35,7 +35,7 @@ namespace NetworkTablesCore.Native
         //Callback Functions
         [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
         public static extern uint NT_AddEntryListener(byte[] prefix, UIntPtr prefix_len, IntPtr data,
-            NT_EntryListenerCallback callback, int immediate_notify);
+            NT_EntryListenerCallback callback, int immediate_notify, int local_notify);
         [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
         public static extern void NT_RemoveEntryListener(uint entry_listener_uid);
         [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]

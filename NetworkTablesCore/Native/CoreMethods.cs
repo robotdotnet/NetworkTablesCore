@@ -379,7 +379,7 @@ namespace NetworkTablesCore.Native
         private static readonly Dictionary<int, NT_EntryListenerCallback> s_entryCallbacks =
             new Dictionary<int, NT_EntryListenerCallback>();
 
-        public static int AddEntryListener(string prefix, Delegates.EntryListenerFunction listener, bool immediateNotify)
+        public static int AddEntryListener(string prefix, Delegates.EntryListenerFunction listener, bool immediateNotify, bool localNotify)
         {
             NT_EntryListenerCallback modCallback = (uid, data, name, len, value, isNew) =>
             {
@@ -440,7 +440,7 @@ namespace NetworkTablesCore.Native
             };
             UIntPtr prefixSize;
             byte[] prefixStr = CreateUTF8String(prefix, out prefixSize);
-            int retVal = (int)NT_AddEntryListener(prefixStr, prefixSize, IntPtr.Zero, modCallback, immediateNotify ? 1 : 0);
+            int retVal = (int)NT_AddEntryListener(prefixStr, prefixSize, IntPtr.Zero, modCallback, immediateNotify ? 1 : 0, localNotify ? 1 : 0);
             s_entryCallbacks.Add(retVal, modCallback);
             return retVal;
         }

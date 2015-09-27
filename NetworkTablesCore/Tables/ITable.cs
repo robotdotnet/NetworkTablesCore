@@ -134,6 +134,23 @@ namespace NetworkTablesCore.Tables
         string[] GetStringArray(string key);
         string[] GetStringArray(string key, string[] defaultValue);
 
+         /// <summary>
+         /// Add a listener to changes to the table.
+         /// </summary>
+         /// <param name="listener">The listener to add</param>
+         /// <param name="immediateNotify">If true then this listener will be notified of all current entries (marked as new)</param>
+         void AddTableListener(ITableListener listener, bool immediateNotify, bool localNotify);
+ 
+         /// <summary>
+         /// Add a listener for changes to a specific key in the table.
+         /// </summary>
+         /// <param name="key">The key to listen for</param>
+         /// <param name="listener">The listener to add</param>
+         /// <param name="immediateNotify">If true then this listener will be notified of all current entries (marked as new)</param>
+         void AddTableListener(string key, ITableListener listener, bool immediateNotify, bool localNotify);
+ 
+         void AddSubTableListener(ITableListener listener, bool localNotify);
+
         /// <summary>
         /// Add a listener to changes to the table.
         /// </summary>

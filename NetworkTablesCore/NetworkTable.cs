@@ -412,7 +412,7 @@ namespace NetworkTablesCore
 
         private readonly Dictionary<ITableListener, List<int>> m_listenerMap = new Dictionary<ITableListener, List<int>>();
 
-        public void AddTableListener(ITableListener listener, bool immediateNotify = false)
+        public void AddTableListener(ITableListener listener, bool immediateNotify, bool localNotify)
         {
             List<int> adapters;
             if (!m_listenerMap.TryGetValue(listener, out adapters))
@@ -431,12 +431,12 @@ namespace NetworkTablesCore
                 listener.ValueChanged(this, relativeKey, value, isNew);
             };
 
-            int id = AddEntryListener(path + PATH_SEPERATOR_CHAR, func, immediateNotify);
+            int id = AddEntryListener(path + PATH_SEPERATOR_CHAR, func, immediateNotify, localNotify);
 
             adapters.Add(id);
         }
 
-        public void AddTableListener(string key, ITableListener listener, bool immediateNotify)
+        public void AddTableListener(string key, ITableListener listener, bool immediateNotify, bool localNotify)
         {
             List<int> adapters;
             if (!m_listenerMap.TryGetValue(listener, out adapters))
@@ -452,12 +452,12 @@ namespace NetworkTablesCore
                 listener.ValueChanged(this, key, value, isNew);
             };
 
-            int id = AddEntryListener(fullKey, func, immediateNotify);
+            int id = AddEntryListener(fullKey, func, immediateNotify, localNotify);
 
             adapters.Add(id);
         }
 
-        public void AddSubTableListener(ITableListener listener)
+        public void AddSubTableListener(ITableListener listener, bool localNotify)
         {
             List<int> adapters;
             if (!m_listenerMap.TryGetValue(listener, out adapters))
@@ -478,9 +478,24 @@ namespace NetworkTablesCore
                 notifiedTables.Add(subTableKey);
                 listener.ValueChanged(this, subTableKey, GetSubTable(subTableKey), true);
             };
-            int id = AddEntryListener(path + PATH_SEPERATOR_CHAR, func, true);
+            int id = AddEntryListener(path + PATH_SEPERATOR_CHAR, func, true, localNotify);
 
             adapters.Add(id);
+        }
+
+         public void AddTableListener(ITableListener listener, bool immediateNotify = false)
+        {
+            AddTableListener(listener, immediateNotify, false);
+        }
+
+        public void AddTableListener(string key, ITableListener listener, bool immediateNotify = false)
+        {
+            AddTableListener(key, listener, immediateNotify, false);
+        }
+
+        public void AddSubTableListener(ITableListener listener)
+        {
+            AddSubTableListener(listener, false);
         }
 
         public void RemoveTableListener(ITableListener listener)
