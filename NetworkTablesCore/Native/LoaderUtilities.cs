@@ -12,7 +12,7 @@ namespace NetworkTables.Native
         Linux64,
         RoboRIO
     }
-    static class LoaderUtilities
+    internal static class LoaderUtilities
     {
         internal static OsType GetOsType()
         {

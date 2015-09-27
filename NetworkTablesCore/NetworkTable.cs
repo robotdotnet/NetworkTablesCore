@@ -414,7 +414,7 @@ namespace NetworkTables
                 m_listenerMap.Add(listener, adapters);
             }
 
-            Delegates.EntryListenerFunction func = (uid, key, value, flags_) =>
+            EntryListenerFunction func = (uid, key, value, flags_) =>
             {
                 string relativeKey = key.Substring(path.Length + 1);
                 if (relativeKey.IndexOf(PATH_SEPERATOR_CHAR) != -1)
@@ -438,7 +438,7 @@ namespace NetworkTables
                 m_listenerMap.Add(listener, adapters);
             }
             string fullKey = path + PATH_SEPERATOR_CHAR + key;
-            Delegates.EntryListenerFunction func = (uid, funcKey, value, flags_) =>
+            EntryListenerFunction func = (uid, funcKey, value, flags_) =>
             {
                 if (!funcKey.Equals(fullKey))
                     return;
@@ -459,7 +459,7 @@ namespace NetworkTables
                 m_listenerMap.Add(listener, adapters);
             }
             HashSet<string> notifiedTables = new HashSet<string>();
-            Delegates.EntryListenerFunction func = (uid, key, value, flags_) =>
+            EntryListenerFunction func = (uid, key, value, flags_) =>
             {
                 string relativeKey = key.Substring(path.Length + 1);
                 int endSubTable = relativeKey.IndexOf(PATH_SEPERATOR_CHAR);
@@ -524,7 +524,7 @@ namespace NetworkTables
                 throw new ArgumentException("Cannot add the same listener twice", nameof(listener));
             }
 
-            Delegates.ConnectionListenerFunction func = (uid, connected, conn) =>
+            ConnectionListenerFunction func = (uid, connected, conn) =>
             {
                 if (connected) listener.Connected(this);
                 else listener.Disconnected(this);

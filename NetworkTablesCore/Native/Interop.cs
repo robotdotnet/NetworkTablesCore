@@ -30,7 +30,6 @@ namespace NetworkTables.Native
                     library = LoaderUtilities.LoadLibrary(loadedPath, type);
 
                     if (library == IntPtr.Zero) throw new BadImageFormatException($"Library file {loadedPath} could not be loaded successfully.");
-                    ;
                 }
                 catch (Exception e)
                 {
