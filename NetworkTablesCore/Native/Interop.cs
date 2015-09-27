@@ -3,7 +3,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
 
-namespace NetworkTablesCore.Native
+namespace NetworkTables.Native
 {
 
     [SuppressUnmanagedCodeSecurity]

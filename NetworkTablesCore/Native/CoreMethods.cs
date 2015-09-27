@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
-using NetworkTablesCore.Native.Exceptions;
-using static NetworkTablesCore.Native.Interop;
+using NetworkTables.Native.Exceptions;
 
-namespace NetworkTablesCore.Native
+namespace NetworkTables.Native
 {
     public static class CoreMethods
     {
@@ -15,7 +14,7 @@ namespace NetworkTablesCore.Native
         {
             UIntPtr size;
             byte[] namePtr = CreateUTF8String(name, out size);
-            int retVal = NT_SetEntryBoolean(namePtr, size, value ? 1 : 0, force ? 1 : 0);
+            int retVal = Interop.NT_SetEntryBoolean(namePtr, size, value ? 1 : 0, force ? 1 : 0);
             return retVal != 0;
         }
 
@@ -23,7 +22,7 @@ namespace NetworkTablesCore.Native
         {
             UIntPtr size;
             byte[] namePtr = CreateUTF8String(name, out size);
-            int retVal = NT_SetEntryDouble(namePtr, size, value, force ? 1 : 0);
+            int retVal = Interop.NT_SetEntryDouble(namePtr, size, value, force ? 1 : 0);
             return retVal != 0;
         }
 
@@ -33,7 +32,7 @@ namespace NetworkTablesCore.Native
             byte[] namePtr = CreateUTF8String(name, out size);
             UIntPtr stringSize;
             byte[] stringPtr = CreateUTF8String(value, out stringSize);
-            int retVal = NT_SetEntryString(namePtr, size, stringPtr, stringSize, force ? 1 : 0);
+            int retVal = Interop.NT_SetEntryString(namePtr, size, stringPtr, stringSize, force ? 1 : 0);
             return retVal != 0;
         }
 
@@ -43,7 +42,7 @@ namespace NetworkTablesCore.Native
             byte[] namePtr = CreateUTF8String(name, out size);
             UIntPtr stringSize;
             byte[] stringPtr = CreateUTF8String(name, out stringSize);
-            int retVal = NT_SetEntryRaw(namePtr, size, stringPtr, stringSize, force ? 1 : 0);
+            int retVal = Interop.NT_SetEntryRaw(namePtr, size, stringPtr, stringSize, force ? 1 : 0);
             return retVal != 0;
         }
 
@@ -58,7 +57,7 @@ namespace NetworkTablesCore.Native
                 valueIntArr[i] = value[i] ? 1 : 0;
             }
 
-            int retVal = NT_SetEntryBooleanArray(namePtr, size, valueIntArr, (UIntPtr)valueIntArr.Length, force ? 1 : 0);
+            int retVal = Interop.NT_SetEntryBooleanArray(namePtr, size, valueIntArr, (UIntPtr)valueIntArr.Length, force ? 1 : 0);
 
             return retVal != 0;
         }
@@ -68,7 +67,7 @@ namespace NetworkTablesCore.Native
             UIntPtr size;
             byte[] namePtr = CreateUTF8String(name, out size);
 
-            int retVal = NT_SetEntryDoubleArray(namePtr, size, value, (UIntPtr)value.Length, force ? 1 : 0);
+            int retVal = Interop.NT_SetEntryDoubleArray(namePtr, size, value, (UIntPtr)value.Length, force ? 1 : 0);
 
             return retVal != 0;
         }
@@ -84,7 +83,7 @@ namespace NetworkTablesCore.Native
                 ntStrings[i] = new NT_String_Write(value[i]);
             }
 
-            int retVal = NT_SetEntryStringArray(namePtr, size, ntStrings, (UIntPtr)ntStrings.Length, force ? 1 : 0);
+            int retVal = Interop.NT_SetEntryStringArray(namePtr, size, ntStrings, (UIntPtr)ntStrings.Length, force ? 1 : 0);
 
             foreach (var ntString in ntStrings)
             {
@@ -103,7 +102,7 @@ namespace NetworkTablesCore.Native
             byte[] namePtr = CreateUTF8String(name, out size);
             int boolean = 0;
             ulong lc = 0;
-            int status = NT_GetEntryBoolean(namePtr, size, ref lc, ref boolean);
+            int status = Interop.NT_GetEntryBoolean(namePtr, size, ref lc, ref boolean);
             if (status == 0)
             {
                 return defaultValue;
@@ -117,7 +116,7 @@ namespace NetworkTablesCore.Native
             byte[] namePtr = CreateUTF8String(name, out size);
             double retVal = 0;
             ulong last_change = 0;
-            int status = NT_GetEntryDouble(namePtr, size, ref last_change, ref retVal);
+            int status = Interop.NT_GetEntryDouble(namePtr, size, ref last_change, ref retVal);
             if (status == 0)
             {
                 return defaultValue;
@@ -131,7 +130,7 @@ namespace NetworkTablesCore.Native
             byte[] namePtr = CreateUTF8String(name, out size);
             UIntPtr stringSize = UIntPtr.Zero;
             ulong last_change = 0;
-            IntPtr ret = NT_GetEntryString(namePtr, size, ref last_change, ref stringSize);
+            IntPtr ret = Interop.NT_GetEntryString(namePtr, size, ref last_change, ref stringSize);
             if (ret == IntPtr.Zero)
             {
                 return defaultValue;
@@ -139,7 +138,7 @@ namespace NetworkTablesCore.Native
             else
             {
                 string str = ReadUTF8String(ret, stringSize);
-                NT_FreeCharArray(ret);
+                Interop.NT_FreeCharArray(ret);
                 return str;
             }
         }
@@ -150,7 +149,7 @@ namespace NetworkTablesCore.Native
             byte[] namePtr = CreateUTF8String(name, out size);
             UIntPtr stringSize = UIntPtr.Zero;
             ulong last_change = 0;
-            IntPtr ret = NT_GetEntryRaw(namePtr, size, ref last_change, ref stringSize);
+            IntPtr ret = Interop.NT_GetEntryRaw(namePtr, size, ref last_change, ref stringSize);
             if (ret == IntPtr.Zero)
             {
                 return defaultValue;
@@ -158,7 +157,7 @@ namespace NetworkTablesCore.Native
             else
             {
                 string str = ReadUTF8String(ret, stringSize);
-                NT_FreeCharArray(ret);
+                Interop.NT_FreeCharArray(ret);
                 return str;
             }
         }
@@ -169,13 +168,13 @@ namespace NetworkTablesCore.Native
             byte[] namePtr = CreateUTF8String(name, out size);
             UIntPtr arrSize = UIntPtr.Zero;
             ulong last_change = 0;
-            IntPtr arrPtr = NT_GetEntryDoubleArray(namePtr, size, ref last_change, ref arrSize);
+            IntPtr arrPtr = Interop.NT_GetEntryDoubleArray(namePtr, size, ref last_change, ref arrSize);
             if (arrPtr == IntPtr.Zero)
             {
                 return defaultValue;
             }
             double[] arr = GetDoubleArrayFromPtr(arrPtr, arrSize);
-            NT_FreeDoubleArray(arrPtr);
+            Interop.NT_FreeDoubleArray(arrPtr);
             return arr;
         }
 
@@ -185,13 +184,13 @@ namespace NetworkTablesCore.Native
             byte[] namePtr = CreateUTF8String(name, out size);
             UIntPtr arrSize = UIntPtr.Zero;
             ulong last_change = 0;
-            IntPtr arrPtr = NT_GetEntryBooleanArray(namePtr, size, ref last_change, ref arrSize);
+            IntPtr arrPtr = Interop.NT_GetEntryBooleanArray(namePtr, size, ref last_change, ref arrSize);
             if (arrPtr == IntPtr.Zero)
             {
                 return defaultValue;
             }
             bool[] arr = GetBooleanArrayFromPtr(arrPtr, arrSize);
-            NT_FreeBooleanArray(arrPtr);
+            Interop.NT_FreeBooleanArray(arrPtr);
             return arr;
         }
 
@@ -202,13 +201,13 @@ namespace NetworkTablesCore.Native
             UIntPtr arrSize = UIntPtr.Zero;
             IntPtr strLen = IntPtr.Zero;
             ulong last_change = 0;
-            IntPtr arrPtr = NT_GetEntryStringArray(namePtr, size, ref last_change, ref arrSize);
+            IntPtr arrPtr = Interop.NT_GetEntryStringArray(namePtr, size, ref last_change, ref arrSize);
             if (arrPtr == IntPtr.Zero)
             {
                 return defaultValue;
             }
             string[] arr = GetStringArrayFromPtr(arrPtr, arrSize);
-            NT_FreeStringArray(arrPtr, arrSize);
+            Interop.NT_FreeStringArray(arrPtr, arrSize);
             return arr;
         }
         #endregion
@@ -221,7 +220,7 @@ namespace NetworkTablesCore.Native
             byte[] namePtr = CreateUTF8String(name, out size);
             int boolean = 0;
             ulong lc = 0;
-            int status = NT_GetEntryBoolean(namePtr, size, ref lc, ref boolean);
+            int status = Interop.NT_GetEntryBoolean(namePtr, size, ref lc, ref boolean);
             if (status == 0)
             {
                 throw new TableKeyNotDefinedException(name);//Change this to GetTableKeyNotDefined
@@ -235,7 +234,7 @@ namespace NetworkTablesCore.Native
             byte[] namePtr = CreateUTF8String(name, out size);
             double retVal = 0;
             ulong last_change = 0;
-            int status = NT_GetEntryDouble(namePtr, size, ref last_change, ref retVal);
+            int status = Interop.NT_GetEntryDouble(namePtr, size, ref last_change, ref retVal);
             if (status == 0)
             {
                 throw new TableKeyNotDefinedException(name);//Change this to GetTableKeyNotDefined
@@ -249,7 +248,7 @@ namespace NetworkTablesCore.Native
             byte[] namePtr = CreateUTF8String(name, out size);
             UIntPtr stringSize = UIntPtr.Zero;
             ulong last_change = 0;
-            IntPtr ret = NT_GetEntryString(namePtr, size, ref last_change, ref stringSize);
+            IntPtr ret = Interop.NT_GetEntryString(namePtr, size, ref last_change, ref stringSize);
             if (ret == IntPtr.Zero)
             {
                 throw new TableKeyNotDefinedException(name);
@@ -257,7 +256,7 @@ namespace NetworkTablesCore.Native
             else
             {
                 string str = ReadUTF8String(ret, stringSize);
-                NT_FreeCharArray(ret);
+                Interop.NT_FreeCharArray(ret);
                 return str;
             }
         }
@@ -268,7 +267,7 @@ namespace NetworkTablesCore.Native
             byte[] namePtr = CreateUTF8String(name, out size);
             UIntPtr stringSize = UIntPtr.Zero;
             ulong last_change = 0;
-            IntPtr ret = NT_GetEntryRaw(namePtr, size, ref last_change, ref stringSize);
+            IntPtr ret = Interop.NT_GetEntryRaw(namePtr, size, ref last_change, ref stringSize);
             if (ret == IntPtr.Zero)
             {
                 throw new TableKeyNotDefinedException(name);
@@ -276,7 +275,7 @@ namespace NetworkTablesCore.Native
             else
             {
                 string str = ReadUTF8String(ret, stringSize);
-                NT_FreeCharArray(ret);
+                Interop.NT_FreeCharArray(ret);
                 return str;
             }
         }
@@ -287,13 +286,13 @@ namespace NetworkTablesCore.Native
             byte[] namePtr = CreateUTF8String(name, out size);
             UIntPtr arrSize = UIntPtr.Zero;
             ulong last_change = 0;
-            IntPtr arrPtr = NT_GetEntryDoubleArray(namePtr, size, ref last_change, ref arrSize);
+            IntPtr arrPtr = Interop.NT_GetEntryDoubleArray(namePtr, size, ref last_change, ref arrSize);
             if (arrPtr == IntPtr.Zero)
             {
                 throw new TableKeyNotDefinedException(name);//TODO: Change this to not defined exception
             }
             double[] arr = GetDoubleArrayFromPtr(arrPtr, arrSize);
-            NT_FreeDoubleArray(arrPtr);
+            Interop.NT_FreeDoubleArray(arrPtr);
             return arr;
         }
 
@@ -303,13 +302,13 @@ namespace NetworkTablesCore.Native
             byte[] namePtr = CreateUTF8String(name, out size);
             UIntPtr arrSize = UIntPtr.Zero;
             ulong last_change = 0;
-            IntPtr arrPtr = NT_GetEntryBooleanArray(namePtr, size, ref last_change, ref arrSize);
+            IntPtr arrPtr = Interop.NT_GetEntryBooleanArray(namePtr, size, ref last_change, ref arrSize);
             if (arrPtr == IntPtr.Zero)
             {
                 throw new TableKeyNotDefinedException(name);//TODO: Change this to not defined exception
             }
             bool[] arr = GetBooleanArrayFromPtr(arrPtr, arrSize);
-            NT_FreeBooleanArray(arrPtr);
+            Interop.NT_FreeBooleanArray(arrPtr);
             return arr;
         }
 
@@ -319,13 +318,13 @@ namespace NetworkTablesCore.Native
             byte[] namePtr = CreateUTF8String(name, out size);
             UIntPtr arrSize = UIntPtr.Zero;
             ulong last_change = 0;
-            IntPtr arrPtr = NT_GetEntryStringArray(namePtr, size, ref last_change, ref arrSize);
+            IntPtr arrPtr = Interop.NT_GetEntryStringArray(namePtr, size, ref last_change, ref arrSize);
             if (arrPtr == IntPtr.Zero)
             {
                 throw new TableKeyNotDefinedException(name);//TODO: Change this to not defined exception
             }
             string[] arr = GetStringArrayFromPtr(arrPtr, arrSize);
-            NT_FreeStringArray(arrPtr, arrSize);
+            Interop.NT_FreeStringArray(arrPtr, arrSize);
             return arr;
         }
         #endregion
@@ -337,7 +336,7 @@ namespace NetworkTablesCore.Native
             UIntPtr size;
             byte[] str = CreateUTF8String(prefix, out size);
             UIntPtr arrSize = UIntPtr.Zero;
-            IntPtr arr = NT_GetEntryInfo(str, size, (uint)types, ref arrSize);
+            IntPtr arr = Interop.NT_GetEntryInfo(str, size, (uint)types, ref arrSize);
             int entryInfoSize = Marshal.SizeOf(typeof(NT_EntryInfo));
             int arraySize = (int)arrSize.ToUInt64();
             EntryInfo[] entryArray = new EntryInfo[arraySize];
@@ -348,7 +347,7 @@ namespace NetworkTablesCore.Native
                 NT_EntryInfo info = (NT_EntryInfo)Marshal.PtrToStructure(data, typeof(NT_EntryInfo));
                 entryArray[i] = new EntryInfo(info.name.ToString(), info.type, (EntryFlags)info.flags, (long)info.last_change);
             }
-            NT_DisposeEntryInfoArray(arr, arrSize);
+            Interop.NT_DisposeEntryInfoArray(arr, arrSize);
             return entryArray;
         }
         #endregion
@@ -358,7 +357,7 @@ namespace NetworkTablesCore.Native
         public static ConnectionInfo[] GetConnections()
         {
             UIntPtr count = UIntPtr.Zero;
-            IntPtr connections = NT_GetConnections(ref count);
+            IntPtr connections = Interop.NT_GetConnections(ref count);
             int connectionInfoSize = Marshal.SizeOf(typeof(NT_ConnectionInfo));
             int arraySize = (int)count.ToUInt64();
 
@@ -370,20 +369,20 @@ namespace NetworkTablesCore.Native
                 var con = (NT_ConnectionInfo)Marshal.PtrToStructure(data, typeof(NT_ConnectionInfo));
                 connectionsArray[i] = new ConnectionInfo(con.remote_id.ToString(), ReadUTF8String(con.remote_name), (int)con.remote_port, (long)con.last_update, (int)con.protocol_version);
             }
-            NT_DisposeConnectionInfoArray(connections, count);
+            Interop.NT_DisposeConnectionInfoArray(connections, count);
             return connectionsArray;
         }
         #endregion
 
         #region EntryListeners
-        private static readonly Dictionary<int, NT_EntryListenerCallback> s_entryCallbacks =
-            new Dictionary<int, NT_EntryListenerCallback>();
+        private static readonly Dictionary<int, Interop.NT_EntryListenerCallback> s_entryCallbacks =
+            new Dictionary<int, Interop.NT_EntryListenerCallback>();
 
         public static int AddEntryListener(string prefix, Delegates.EntryListenerFunction listener, NotifyFlags flags)
         {
-            NT_EntryListenerCallback modCallback = (uid, data, name, len, value, flags_) =>
+            Interop.NT_EntryListenerCallback modCallback = (uid, data, name, len, value, flags_) =>
             {
-                NT_Type type = NT_GetValueType(value);
+                NT_Type type = Interop.NT_GetValueType(value);
                 object obj;
                 ulong lastChange = 0;
                 UIntPtr size = UIntPtr.Zero;
@@ -395,38 +394,38 @@ namespace NetworkTablesCore.Native
                         break;
                     case NT_Type.NT_BOOLEAN:
                         int boolean = 0;
-                        NT_GetValueBoolean(value, ref lastChange, ref boolean);
+                        Interop.NT_GetValueBoolean(value, ref lastChange, ref boolean);
                         obj = boolean != 0;
                         break;
                     case NT_Type.NT_DOUBLE:
                         double val = 0;
-                        NT_GetValueDouble(value, ref lastChange, ref val);
+                        Interop.NT_GetValueDouble(value, ref lastChange, ref val);
                         obj = val;
                         break;
                     case NT_Type.NT_STRING:
-                        ptr = NT_GetValueString(value, ref lastChange, ref size);
+                        ptr = Interop.NT_GetValueString(value, ref lastChange, ref size);
                         obj = ReadUTF8String(ptr, size);
-                        NT_FreeCharArray(ptr);
+                        Interop.NT_FreeCharArray(ptr);
                         break;
                     case NT_Type.NT_RAW:
-                        ptr = NT_GetValueRaw(value, ref lastChange, ref size);
+                        ptr = Interop.NT_GetValueRaw(value, ref lastChange, ref size);
                         obj = ReadUTF8String(ptr, size);
-                        NT_FreeCharArray(ptr);
+                        Interop.NT_FreeCharArray(ptr);
                         break;
                     case NT_Type.NT_BOOLEAN_ARRAY:
-                        ptr = NT_GetValueBooleanArray(value, ref lastChange, ref size);
+                        ptr = Interop.NT_GetValueBooleanArray(value, ref lastChange, ref size);
                         obj = GetBooleanArrayFromPtr(ptr, size);
-                        NT_FreeBooleanArray(ptr);
+                        Interop.NT_FreeBooleanArray(ptr);
                         break;
                     case NT_Type.NT_DOUBLE_ARRAY:
-                        ptr = NT_GetValueDoubleArray(value, ref lastChange, ref size);
+                        ptr = Interop.NT_GetValueDoubleArray(value, ref lastChange, ref size);
                         obj = GetDoubleArrayFromPtr(ptr, size);
-                        NT_FreeDoubleArray(ptr);
+                        Interop.NT_FreeDoubleArray(ptr);
                         break;
                     case NT_Type.NT_STRING_ARRAY:
-                        ptr = NT_GetValueStringArray(value, ref lastChange, ref size);
+                        ptr = Interop.NT_GetValueStringArray(value, ref lastChange, ref size);
                         obj = GetStringArrayFromPtr(ptr, size);
-                        NT_FreeStringArray(ptr, size);
+                        Interop.NT_FreeStringArray(ptr, size);
                         break;
                     case NT_Type.NT_RPC:
                         obj = null;
@@ -440,14 +439,14 @@ namespace NetworkTablesCore.Native
             };
             UIntPtr prefixSize;
             byte[] prefixStr = CreateUTF8String(prefix, out prefixSize);
-            int retVal = (int)NT_AddEntryListener(prefixStr, prefixSize, IntPtr.Zero, modCallback, (uint)flags);
+            int retVal = (int)Interop.NT_AddEntryListener(prefixStr, prefixSize, IntPtr.Zero, modCallback, (uint)flags);
             s_entryCallbacks.Add(retVal, modCallback);
             return retVal;
         }
 
         public static void RemoveEntryListener(int uid)
         {
-            NT_RemoveEntryListener((uint)uid);
+            Interop.NT_RemoveEntryListener((uint)uid);
             if (s_entryCallbacks.ContainsKey(uid))
             {
                 s_entryCallbacks.Remove(uid);
@@ -456,12 +455,12 @@ namespace NetworkTablesCore.Native
         #endregion
 
         #region Connection Listeners
-        private static readonly Dictionary<int, NT_ConnectionListenerCallback> s_connectionCallbacks =
-            new Dictionary<int, NT_ConnectionListenerCallback>();
+        private static readonly Dictionary<int, Interop.NT_ConnectionListenerCallback> s_connectionCallbacks =
+            new Dictionary<int, Interop.NT_ConnectionListenerCallback>();
 
         public static int AddConnectionListener(Delegates.ConnectionListenerFunction callback, bool immediateNotify)
         {
-            NT_ConnectionListenerCallback modCallback =
+            Interop.NT_ConnectionListenerCallback modCallback =
                 (uint uid, IntPtr data, int connected, ref NT_ConnectionInfo conn) =>
                 {
                     string remoteName = ReadUTF8String(conn.remote_name);
@@ -469,14 +468,14 @@ namespace NetworkTablesCore.Native
                     callback((int)uid, connected != 0, info);
                 };
 
-            int retVal = (int)NT_AddConnectionListener(IntPtr.Zero, modCallback, immediateNotify ? 1 : 0);
+            int retVal = (int)Interop.NT_AddConnectionListener(IntPtr.Zero, modCallback, immediateNotify ? 1 : 0);
             s_connectionCallbacks.Add(retVal, modCallback);
             return retVal;
         }
 
         public static void RemoveConnectionListener(int uid)
         {
-            NT_RemoveConnectionListener((uint)uid);
+            Interop.NT_RemoveConnectionListener((uint)uid);
             if (s_connectionCallbacks.ContainsKey(uid))
             {
                 s_connectionCallbacks.Remove(uid);
@@ -490,7 +489,7 @@ namespace NetworkTablesCore.Native
         {
             UIntPtr size;
             byte[] namePtr = CreateUTF8String(name, out size);
-            NT_SetNetworkIdentity(namePtr, size);
+            Interop.NT_SetNetworkIdentity(namePtr, size);
         }
         public static void StartClient(string serverName, uint port)
         {
@@ -500,7 +499,7 @@ namespace NetworkTablesCore.Native
             }
             UIntPtr size;
             byte[] serverNamePtr = CreateUTF8String(serverName, out size);
-            NT_StartClient(serverNamePtr, port);
+            Interop.NT_StartClient(serverNamePtr, port);
         }
 
         public static void StartServer(string fileName, string listenAddress, uint port)
@@ -508,22 +507,22 @@ namespace NetworkTablesCore.Native
             UIntPtr size = UIntPtr.Zero;
             var fileNamePtr = string.IsNullOrEmpty(fileName) ? new []{(byte)0} : CreateUTF8String(fileName, out size);
             var listenAddressPtr = string.IsNullOrEmpty(fileName) ? new[] { (byte)0 } : CreateUTF8String(listenAddress, out size);
-            NT_StartServer(fileNamePtr, listenAddressPtr, port);
+            Interop.NT_StartServer(fileNamePtr, listenAddressPtr, port);
         }
 
         public static void StopClient()
         {
-            NT_StopClient();
+            Interop.NT_StopClient();
         }
 
         public static void StopServer()
         {
-            NT_StopServer();
+            Interop.NT_StopServer();
         }
 
         public static void SetUpdateRate(double interval)
         {
-            NT_SetUpdateRate(interval);
+            Interop.NT_SetUpdateRate(interval);
         }
         #endregion
 
@@ -533,7 +532,7 @@ namespace NetworkTablesCore.Native
         {
             UIntPtr size;
             byte[] name = CreateUTF8String(filename, out size);
-            IntPtr err = NT_SavePersistent(name);
+            IntPtr err = Interop.NT_SavePersistent(name);
             if (err != IntPtr.Zero) throw new Exception();//TODO: Figure out this exception
         }
 
@@ -542,7 +541,7 @@ namespace NetworkTablesCore.Native
             UIntPtr size;
             byte[] name = CreateUTF8String(filename, out size);
             List<string> warns = new List<string>();
-            IntPtr err = NT_LoadPersistent(name, (line, msg) =>
+            IntPtr err = Interop.NT_LoadPersistent(name, (line, msg) =>
             {
                 warns.Add($"{line.ToString()}: {ReadUTF8String(msg)}");
             });
@@ -556,14 +555,14 @@ namespace NetworkTablesCore.Native
         {
             UIntPtr size;
             byte[] str = CreateUTF8String(name, out size);
-            NT_SetEntryFlags(str, size, (uint)flags);
+            Interop.NT_SetEntryFlags(str, size, (uint)flags);
         }
 
         public static EntryFlags GetEntryFlags(string name)
         {
             UIntPtr size;
             byte[] str = CreateUTF8String(name, out size);
-            uint flags = NT_GetEntryFlags(str, size);
+            uint flags = Interop.NT_GetEntryFlags(str, size);
             return (EntryFlags)flags;
         }
         #endregion
@@ -574,24 +573,24 @@ namespace NetworkTablesCore.Native
         {
             UIntPtr size;
             byte[] str = CreateUTF8String(name, out size);
-            NT_DeleteEntry(str, size);
+            Interop.NT_DeleteEntry(str, size);
         }
 
         public static void DeleteAllEntries()
         {
-            NT_DeleteAllEntries();
+            Interop.NT_DeleteAllEntries();
         }
 
         public static void Flush()
         {
-            NT_Flush();
+            Interop.NT_Flush();
         }
 
         public static NT_Type GetType(string name)
         {
             UIntPtr size;
             byte[] str = CreateUTF8String(name, out size);
-            NT_Type retVal = NT_GetType(str, size);
+            NT_Type retVal = Interop.NT_GetType(str, size);
             return retVal;
         }
 
@@ -602,13 +601,13 @@ namespace NetworkTablesCore.Native
 
         public static long Now()
         {
-            return (long)NT_Now();
+            return (long)Interop.NT_Now();
         }
         #endregion
 
         #region Logger
 
-        private static NT_LogFunc nativeLog;
+        private static Interop.NT_LogFunc nativeLog;
 
         public static void SetLogger(Delegates.LoggerFunction func, LogLevel minLevel)
         {
@@ -620,7 +619,7 @@ namespace NetworkTablesCore.Native
                 func((int)level, fileName, (int)line, message);
             };
 
-            NT_SetLogger(nativeLog, (uint)minLevel);
+            Interop.NT_SetLogger(nativeLog, (uint)minLevel);
         }
 
         #endregion

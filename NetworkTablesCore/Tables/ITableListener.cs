@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NetworkTablesCore.Native;
-
-namespace NetworkTablesCore.Tables
+﻿namespace NetworkTables.Tables
 {
     public interface ITableListener
     {

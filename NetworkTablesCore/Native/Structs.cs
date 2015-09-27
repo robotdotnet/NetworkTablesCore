@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
-using static NetworkTablesCore.Native.Interop;
 
-namespace NetworkTablesCore.Native
+namespace NetworkTables.Native
 {
     public enum NT_Type
     {

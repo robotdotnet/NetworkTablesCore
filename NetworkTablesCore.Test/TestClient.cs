@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading;
-using NetworkTablesCore.Native;
-using NetworkTablesCore.Native.Exceptions;
+using NetworkTables;
+using NetworkTables.Native;
+using NetworkTables.Native.Exceptions;
 using NUnit.Framework;
 
 namespace NetworkTablesCore.Test

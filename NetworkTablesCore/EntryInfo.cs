@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NetworkTablesCore.Native;
+﻿using NetworkTables.Native;
 
-namespace NetworkTablesCore
+namespace NetworkTables
 {
     public class EntryInfo
     {

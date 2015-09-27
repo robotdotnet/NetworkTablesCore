@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NetworkTablesCore")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("NetworkTables")]
+[assembly: AssemblyDescription("FRC NetworkTables using the new ntcore library")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("NetworkTablesCore")]
+[assembly: AssemblyCompany("RobotDotNet")]
+[assembly: AssemblyProduct("NetworkTables")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
