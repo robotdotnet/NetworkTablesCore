@@ -8,7 +8,7 @@ The program uses C# 6.0 features, and comes precompiled for .NET 4.5. However, a
 Currently support Windows 32 and 64 bit, and the RoboRIO. The native library is not currently compiled for linux, but it probably could be without too much hastle.
 
 
-.. note:: NetworkTables is a protocol used for robot communication in the
+Please note that NetworkTables is a protocol used for robot communication in the
           FIRST Robotics Competition, and can be used to talk to
           SmartDashboard/SFX. It does not have any security, and should never
           be used on untrusted networks.
