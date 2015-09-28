@@ -79,11 +79,12 @@ namespace NetworkTables.Native
                     break;
                 case OsType.RoboRIO:
                     inputName = "NetworkTables.NativeLibraries.libntcorerio.so";
-                    outputName = "ntcore.dlln";
+                    outputName = "/home/lvuser/libntcore.so";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
+            Console.WriteLine(outputName);
             byte[] bytes = null;
             using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(inputName))
             {
@@ -100,9 +101,8 @@ namespace NetworkTables.Native
 
         }
 
-        internal static IntPtr LoadLibrary(string dllLoc, OsType type)
+        internal static IntPtr LoadLibrary(string dllLoc, OsType type, out ILibraryLoader loader)
         {
-            ILibraryLoader loader = null;
             switch (type)
             {
                 case OsType.Windows32:
@@ -115,6 +115,7 @@ namespace NetworkTables.Native
                     loader = new RoboRIOLibraryLoader();
                     return loader.LoadLibrary(dllLoc);
                 default:
+                    loader = null;
                     return IntPtr.Zero;
             }
         }

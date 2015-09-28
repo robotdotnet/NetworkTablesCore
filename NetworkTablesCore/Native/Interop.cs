@@ -9,10 +9,9 @@ namespace NetworkTables.Native
     [SuppressUnmanagedCodeSecurity]
     internal class Interop
     {
-        internal const string NTSharedFile = "ntcore.dlln";
-
         private static readonly bool libraryLoaded = false;
         private static readonly IntPtr library;
+        private static ILibraryLoader loader;
 
         static Interop()
         {
@@ -27,9 +26,11 @@ namespace NetworkTables.Native
                     string loadedPath = LoaderUtilities.ExtractLibrary(type);
                     if (string.IsNullOrEmpty(loadedPath)) throw new FileNotFoundException("Library file could not be found in the resorces. Please contact RobotDotNet for support for this issue");
 
-                    library = LoaderUtilities.LoadLibrary(loadedPath, type);
+                    library = LoaderUtilities.LoadLibrary(loadedPath, type, out loader);
 
                     if (library == IntPtr.Zero) throw new BadImageFormatException($"Library file {loadedPath} could not be loaded successfully.");
+
+                    InitializeDelegates(library, loader);
                 }
                 catch (Exception e)
                 {
@@ -40,6 +41,71 @@ namespace NetworkTables.Native
                 libraryLoaded = true;
             }
         }
+        
+        private static void InitializeDelegates(IntPtr library, ILibraryLoader loader)
+        {
+            NT_SetEntryFlags = (NT_SetEntryFlagsDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_SetEntryFlags"), typeof(NT_SetEntryFlagsDelegate));
+            NT_GetEntryFlags = (NT_GetEntryFlagsDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_GetEntryFlags"), typeof(NT_GetEntryFlagsDelegate));
+            NT_DeleteEntry = (NT_DeleteEntryDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_DeleteEntry"), typeof(NT_DeleteEntryDelegate));
+            NT_DeleteAllEntries = (NT_DeleteAllEntriesDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_DeleteAllEntries"), typeof(NT_DeleteAllEntriesDelegate));
+            NT_GetEntryInfo = (NT_GetEntryInfoDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "_Z15NT_GetEntryInfoPKcjiPj"), typeof(NT_GetEntryInfoDelegate));
+            NT_Flush = (NT_FlushDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_Flush"), typeof(NT_FlushDelegate));
+            NT_AddEntryListener = (NT_AddEntryListenerDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_AddEntryListener"), typeof(NT_AddEntryListenerDelegate));
+            NT_RemoveEntryListener = (NT_RemoveEntryListenerDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_RemoveEntryListener"), typeof(NT_RemoveEntryListenerDelegate));
+            NT_AddConnectionListener = (NT_AddConnectionListenerDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_AddConnectionListener"), typeof(NT_AddConnectionListenerDelegate));
+            NT_RemoveConnectionListener = (NT_RemoveConnectionListenerDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_RemoveConnectionListener"), typeof(NT_RemoveConnectionListenerDelegate));
+            NT_SetNetworkIdentity = (NT_SetNetworkIdentityDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_SetNetworkIdentity"), typeof(NT_SetNetworkIdentityDelegate));
+            NT_StartServer = (NT_StartServerDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_StartServer"), typeof(NT_StartServerDelegate));
+            NT_StopServer = (NT_StopServerDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_StopServer"), typeof(NT_StopServerDelegate));
+            NT_StartClient = (NT_StartClientDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_StartClient"), typeof(NT_StartClientDelegate));
+            NT_StopClient = (NT_StopClientDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_StopClient"), typeof(NT_StopClientDelegate));
+            NT_SetUpdateRate = (NT_SetUpdateRateDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_SetUpdateRate"), typeof(NT_SetUpdateRateDelegate));
+            NT_GetConnections = (NT_GetConnectionsDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_GetConnections"), typeof(NT_GetConnectionsDelegate));
+            NT_SavePersistent = (NT_SavePersistentDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_SavePersistent"), typeof(NT_SavePersistentDelegate));
+            NT_LoadPersistent = (NT_LoadPersistentDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_LoadPersistent"), typeof(NT_LoadPersistentDelegate));
+            NT_DisposeValue = (NT_DisposeValueDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_DisposeValue"), typeof(NT_DisposeValueDelegate));
+            NT_InitValue = (NT_InitValueDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_InitValue"), typeof(NT_InitValueDelegate));
+            NT_DisposeString = (NT_DisposeStringDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_DisposeString"), typeof(NT_DisposeStringDelegate));
+            NT_GetType = (NT_GetTypeDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_GetType"), typeof(NT_GetTypeDelegate));
+            NT_DisposeConnectionInfoArray = (NT_DisposeConnectionInfoArrayDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_DisposeConnectionInfoArray"), typeof(NT_DisposeConnectionInfoArrayDelegate));
+            NT_DisposeEntryInfoArray = (NT_DisposeEntryInfoArrayDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_DisposeEntryInfoArray"), typeof(NT_DisposeEntryInfoArrayDelegate));
+            NT_Now = (NT_NowDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_Now"), typeof(NT_NowDelegate));
+            NT_SetLogger = (NT_SetLoggerDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_SetLogger"), typeof(NT_SetLoggerDelegate));
+            NT_AllocateCharArray = (NT_AllocateCharArrayDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_AllocateCharArray"), typeof(NT_AllocateCharArrayDelegate));
+            NT_FreeBooleanArray = (NT_FreeBooleanArrayDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_FreeBooleanArray"), typeof(NT_FreeBooleanArrayDelegate));
+            NT_FreeDoubleArray = (NT_FreeDoubleArrayDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_FreeDoubleArray"), typeof(NT_FreeDoubleArrayDelegate));
+            NT_FreeCharArray = (NT_FreeCharArrayDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_FreeCharArray"), typeof(NT_FreeCharArrayDelegate));
+            NT_FreeStringArray = (NT_FreeStringArrayDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_FreeStringArray"), typeof(NT_FreeStringArrayDelegate));
+            NT_GetValueType = (NT_GetValueTypeDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_GetValueType"), typeof(NT_GetValueTypeDelegate));
+            NT_GetValueBoolean = (NT_GetValueBooleanDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_GetValueBoolean"), typeof(NT_GetValueBooleanDelegate));
+            NT_GetValueDouble = (NT_GetValueDoubleDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_GetValueDouble"), typeof(NT_GetValueDoubleDelegate));
+            NT_GetValueString = (NT_GetValueStringDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_GetValueString"), typeof(NT_GetValueStringDelegate));
+            NT_GetValueRaw = (NT_GetValueRawDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_GetValueRaw"), typeof(NT_GetValueRawDelegate));
+            NT_GetValueBooleanArray = (NT_GetValueBooleanArrayDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_GetValueBooleanArray"), typeof(NT_GetValueBooleanArrayDelegate));
+            NT_GetValueDoubleArray = (NT_GetValueDoubleArrayDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_GetValueDoubleArray"), typeof(NT_GetValueDoubleArrayDelegate));
+            NT_GetValueStringArray = (NT_GetValueStringArrayDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_GetValueStringArray"), typeof(NT_GetValueStringArrayDelegate));
+            NT_GetEntryBoolean = (NT_GetEntryBooleanDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_GetEntryBoolean"), typeof(NT_GetEntryBooleanDelegate));
+            NT_GetEntryDouble = (NT_GetEntryDoubleDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_GetEntryDouble"), typeof(NT_GetEntryDoubleDelegate));
+            NT_GetEntryString = (NT_GetEntryStringDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_GetEntryString"), typeof(NT_GetEntryStringDelegate));
+            NT_GetEntryRaw = (NT_GetEntryRawDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_GetEntryRaw"), typeof(NT_GetEntryRawDelegate));
+            NT_GetEntryBooleanArray = (NT_GetEntryBooleanArrayDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_GetEntryBooleanArray"), typeof(NT_GetEntryBooleanArrayDelegate));
+            NT_GetEntryDoubleArray = (NT_GetEntryDoubleArrayDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_GetEntryDoubleArray"), typeof(NT_GetEntryDoubleArrayDelegate));
+            NT_GetEntryStringArray = (NT_GetEntryStringArrayDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_GetEntryStringArray"), typeof(NT_GetEntryStringArrayDelegate));
+            NT_SetEntryBoolean = (NT_SetEntryBooleanDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_SetEntryBoolean"), typeof(NT_SetEntryBooleanDelegate));
+            NT_SetEntryDouble = (NT_SetEntryDoubleDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_SetEntryDouble"), typeof(NT_SetEntryDoubleDelegate));
+            NT_SetEntryString = (NT_SetEntryStringDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_SetEntryString"), typeof(NT_SetEntryStringDelegate));
+            NT_SetEntryRaw = (NT_SetEntryRawDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_SetEntryRaw"), typeof(NT_SetEntryRawDelegate));
+            NT_SetEntryBooleanArray = (NT_SetEntryBooleanArrayDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_SetEntryBooleanArray"), typeof(NT_SetEntryBooleanArrayDelegate));
+            NT_SetEntryDoubleArray = (NT_SetEntryDoubleArrayDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_SetEntryDoubleArray"), typeof(NT_SetEntryDoubleArrayDelegate));
+            NT_SetEntryStringArray = (NT_SetEntryStringArrayDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_SetEntryStringArray"), typeof(NT_SetEntryStringArrayDelegate));
+            NT_CreateRpc = (NT_CreateRpcDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_CreateRpc"), typeof(NT_CreateRpcDelegate));
+            NT_CreatePolledRpc = (NT_CreatePolledRpcDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_CreatePolledRpc"), typeof(NT_CreatePolledRpcDelegate));
+            NT_PollRpc = (NT_PollRpcDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_PollRpc"), typeof(NT_PollRpcDelegate));
+            NT_PostRpcResponse = (NT_PostRpcResponseDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_PostRpcResponse"), typeof(NT_PostRpcResponseDelegate));
+            NT_CallRpc = (NT_CallRpcDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_CallRpc"), typeof(NT_CallRpcDelegate));
+            NT_GetRpcResult = (NT_GetRpcResultDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_GetRpcResult"), typeof(NT_GetRpcResultDelegate));
+        }
+        
 
         //Callback Typedefs
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -50,180 +116,137 @@ namespace NetworkTables.Native
         public delegate void NT_ConnectionListenerCallback(
             uint uid, IntPtr data, int connected, ref NT_ConnectionInfo conn);
 
-        //Table Functions
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_SetEntryFlags(byte[] name, UIntPtr name_len, uint flags);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern uint NT_GetEntryFlags(byte[] name, UIntPtr name_len);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_DeleteEntry(byte[] name, UIntPtr name_len);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_DeleteAllEntries();
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr NT_GetEntryInfo(byte[] prefix, UIntPtr prefix_len, uint types, ref UIntPtr count);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_Flush();
-
-        //Callback Functions
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern uint NT_AddEntryListener(byte[] prefix, UIntPtr prefix_len, IntPtr data,
-            NT_EntryListenerCallback callback, uint flags);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_RemoveEntryListener(uint entry_listener_uid);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern uint NT_AddConnectionListener(IntPtr data, NT_ConnectionListenerCallback callback, int immediate_notify);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_RemoveConnectionListener(uint conn_listener_uid);
-
-        //Ignoring RPC for now
-
-
-        //Client/Server Functions
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_SetNetworkIdentity(byte[] name, UIntPtr name_len);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_StartServer(byte[] persist_filename, byte[] listen_address, uint port);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_StopServer();
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_StartClient(byte[] server_name, uint port);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_StopClient();
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_SetUpdateRate(double interval);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr NT_GetConnections(ref UIntPtr count);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void NT_LogFunc(uint level, IntPtr file, uint line, IntPtr msg);
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void WarmFunction(UIntPtr line, IntPtr msg);
-
-        //Persistent Functions
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr NT_SavePersistent(byte[] filename);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr NT_LoadPersistent(byte[] filename, WarmFunction warn);
-
-        //Utility Functions
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_DisposeValue(IntPtr value);
-
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_InitValue(IntPtr value);
-
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_DisposeString(ref NT_String_Read str);
-
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern NT_Type NT_GetType(byte[] name, UIntPtr name_len);
-
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_DisposeConnectionInfoArray(IntPtr arr, UIntPtr count);
-
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_DisposeEntryInfoArray(IntPtr arr, UIntPtr count);
-
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern ulong NT_Now();
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void NT_LogFunc(uint level, IntPtr file, uint line, IntPtr msg);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_SetLogger(NT_LogFunc funct, uint min_level);
-
-        //Interop Utility Functions
-        //[DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        //public static extern NT_String NT_AllocateNTString(UIntPtr size);
-
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr NT_AllocateCharArray(UIntPtr size);
-
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_FreeBooleanArray(IntPtr arr);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_FreeDoubleArray(IntPtr arr);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_FreeCharArray(IntPtr arr);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_FreeStringArray(IntPtr arr, UIntPtr arr_size);
-
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern NT_Type NT_GetValueType(IntPtr value);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int NT_GetValueBoolean(IntPtr value, ref ulong last_change, ref int v_boolean);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int NT_GetValueDouble(IntPtr value, ref ulong last_change, ref double v_double);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr NT_GetValueString(IntPtr value, ref ulong last_change, ref UIntPtr string_len);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr NT_GetValueRaw(IntPtr value, ref ulong last_change, ref UIntPtr raw_len);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr NT_GetValueBooleanArray(IntPtr value, ref ulong last_change, ref UIntPtr size);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr NT_GetValueDoubleArray(IntPtr value, ref ulong last_change, ref UIntPtr size);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr NT_GetValueStringArray(IntPtr value, ref ulong last_change, ref UIntPtr size);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-
-        public static extern int NT_GetEntryBoolean(byte[] name, UIntPtr name_len, ref ulong last_change, ref int v_boolean);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int NT_GetEntryDouble(byte[] name, UIntPtr name_len, ref ulong last_change, ref double v_double);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr NT_GetEntryString(byte[] name, UIntPtr name_len, ref ulong last_change, ref UIntPtr string_len);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr NT_GetEntryRaw(byte[] name, UIntPtr name_len, ref ulong last_change, ref UIntPtr raw_len);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr NT_GetEntryBooleanArray(byte[] name, UIntPtr name_len, ref ulong last_change, ref UIntPtr size);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr NT_GetEntryDoubleArray(byte[] name, UIntPtr name_len, ref ulong last_change, ref UIntPtr size);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr NT_GetEntryStringArray(byte[] name, UIntPtr name_len, ref ulong last_change, ref UIntPtr size);
-
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int NT_SetEntryBoolean(byte[] name, UIntPtr name_len, int v_boolean, int force);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int NT_SetEntryDouble(byte[] name, UIntPtr name_len, double v_double, int force);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int NT_SetEntryString(byte[] name, UIntPtr name_len, byte[] v_string, UIntPtr string_len, int force);
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int NT_SetEntryRaw(byte[] name, UIntPtr name_len, byte[] raw, UIntPtr raw_len, int force);
-
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int NT_SetEntryBooleanArray(byte[] name, UIntPtr name_len, int[] arr, UIntPtr size,
-            int force);
-
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int NT_SetEntryDoubleArray(byte[] name, UIntPtr name_len, double[] arr, UIntPtr size,
-            int force);
-
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int NT_SetEntryStringArray(byte[] name, UIntPtr name_len, NT_String_Write[] arr, UIntPtr size,
-            int force);
-
-
-
-        //RPC
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate IntPtr NT_RPCCallback(
             IntPtr data, IntPtr name, UIntPtr name_len, IntPtr param, UIntPtr params_len, ref UIntPtr results_len);
 
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_CreateRpc(byte[] name, UIntPtr name_len, byte[] def, UIntPtr def_len, IntPtr data,
-            NT_RPCCallback callback);
+        internal delegate void NT_SetEntryFlagsDelegate(byte[] name, UIntPtr name_len, uint flags);
+        internal delegate uint NT_GetEntryFlagsDelegate(byte[] name, UIntPtr name_len);
+        internal delegate void NT_DeleteEntryDelegate(byte[] name, UIntPtr name_len);
+        internal delegate void NT_DeleteAllEntriesDelegate();
+        internal delegate IntPtr NT_GetEntryInfoDelegate(byte[] prefix, UIntPtr prefix_len, uint types, ref UIntPtr count);
+        internal delegate void NT_FlushDelegate();
+        internal delegate uint NT_AddEntryListenerDelegate(byte[] prefix, UIntPtr prefix_len, IntPtr data, NT_EntryListenerCallback callback, uint flags);
+        internal delegate void NT_RemoveEntryListenerDelegate(uint entry_listener_uid);
+        internal delegate uint NT_AddConnectionListenerDelegate(IntPtr data, NT_ConnectionListenerCallback callback, int immediate_notify);
+        internal delegate void NT_RemoveConnectionListenerDelegate(uint conn_listener_uid);
+        internal delegate void NT_SetNetworkIdentityDelegate(byte[] name, UIntPtr name_len);
+        internal delegate void NT_StartServerDelegate(byte[] persist_filename, byte[] listen_address, uint port);
+        internal delegate void NT_StopServerDelegate();
+        internal delegate void NT_StartClientDelegate(byte[] server_name, uint port);
+        internal delegate void NT_StopClientDelegate();
+        internal delegate void NT_SetUpdateRateDelegate(double interval);
+        internal delegate IntPtr NT_GetConnectionsDelegate(ref UIntPtr count);
+        internal delegate IntPtr NT_SavePersistentDelegate(byte[] filename);
+        internal delegate IntPtr NT_LoadPersistentDelegate(byte[] filename, WarmFunction warn);
+        internal delegate void NT_DisposeValueDelegate(IntPtr value);
+        internal delegate void NT_InitValueDelegate(IntPtr value);
+        internal delegate void NT_DisposeStringDelegate(ref NT_String_Read str);
+        internal delegate NT_Type NT_GetTypeDelegate(byte[] name, UIntPtr name_len);
+        internal delegate void NT_DisposeConnectionInfoArrayDelegate(IntPtr arr, UIntPtr count);
+        internal delegate void NT_DisposeEntryInfoArrayDelegate(IntPtr arr, UIntPtr count);
+        internal delegate ulong NT_NowDelegate();
+        internal delegate void NT_SetLoggerDelegate(NT_LogFunc funct, uint min_level);
+        internal delegate IntPtr NT_AllocateCharArrayDelegate(UIntPtr size);
+        internal delegate void NT_FreeBooleanArrayDelegate(IntPtr arr);
+        internal delegate void NT_FreeDoubleArrayDelegate(IntPtr arr);
+        internal delegate void NT_FreeCharArrayDelegate(IntPtr arr);
+        internal delegate void NT_FreeStringArrayDelegate(IntPtr arr, UIntPtr arr_size);
+        internal delegate NT_Type NT_GetValueTypeDelegate(IntPtr value);
+        internal delegate int NT_GetValueBooleanDelegate(IntPtr value, ref ulong last_change, ref int v_boolean);
+        internal delegate int NT_GetValueDoubleDelegate(IntPtr value, ref ulong last_change, ref double v_double);
+        internal delegate IntPtr NT_GetValueStringDelegate(IntPtr value, ref ulong last_change, ref UIntPtr string_len);
+        internal delegate IntPtr NT_GetValueRawDelegate(IntPtr value, ref ulong last_change, ref UIntPtr raw_len);
+        internal delegate IntPtr NT_GetValueBooleanArrayDelegate(IntPtr value, ref ulong last_change, ref UIntPtr size);
+        internal delegate IntPtr NT_GetValueDoubleArrayDelegate(IntPtr value, ref ulong last_change, ref UIntPtr size);
+        internal delegate IntPtr NT_GetValueStringArrayDelegate(IntPtr value, ref ulong last_change, ref UIntPtr size);
+        internal delegate int NT_GetEntryBooleanDelegate(byte[] name, UIntPtr name_len, ref ulong last_change, ref int v_boolean);
+        internal delegate int NT_GetEntryDoubleDelegate(byte[] name, UIntPtr name_len, ref ulong last_change, ref double v_double);
+        internal delegate IntPtr NT_GetEntryStringDelegate(byte[] name, UIntPtr name_len, ref ulong last_change, ref UIntPtr string_len);
+        internal delegate IntPtr NT_GetEntryRawDelegate(byte[] name, UIntPtr name_len, ref ulong last_change, ref UIntPtr raw_len);
+        internal delegate IntPtr NT_GetEntryBooleanArrayDelegate(byte[] name, UIntPtr name_len, ref ulong last_change, ref UIntPtr size);
+        internal delegate IntPtr NT_GetEntryDoubleArrayDelegate(byte[] name, UIntPtr name_len, ref ulong last_change, ref UIntPtr size);
+        internal delegate IntPtr NT_GetEntryStringArrayDelegate(byte[] name, UIntPtr name_len, ref ulong last_change, ref UIntPtr size);
+        internal delegate int NT_SetEntryBooleanDelegate(byte[] name, UIntPtr name_len, int v_boolean, int force);
+        internal delegate int NT_SetEntryDoubleDelegate(byte[] name, UIntPtr name_len, double v_double, int force);
+        internal delegate int NT_SetEntryStringDelegate(byte[] name, UIntPtr name_len, byte[] v_string, UIntPtr string_len, int force);
+        internal delegate int NT_SetEntryRawDelegate(byte[] name, UIntPtr name_len, byte[] raw, UIntPtr raw_len, int force);
+        internal delegate int NT_SetEntryBooleanArrayDelegate(byte[] name, UIntPtr name_len, int[] arr, UIntPtr size, int force);
+        internal delegate int NT_SetEntryDoubleArrayDelegate(byte[] name, UIntPtr name_len, double[] arr, UIntPtr size, int force);
+        internal delegate int NT_SetEntryStringArrayDelegate(byte[] name, UIntPtr name_len, NT_String_Write[] arr, UIntPtr size, int force);
+        internal delegate void NT_CreateRpcDelegate(byte[] name, UIntPtr name_len, byte[] def, UIntPtr def_len, IntPtr data, NT_RPCCallback callback);
+        internal delegate void NT_CreatePolledRpcDelegate(byte[] name, UIntPtr name_len, byte[] def, UIntPtr def_len);
+        internal delegate int NT_PollRpcDelegate(int blocking, ref NT_RpcCallInfo call_info);
+        internal delegate void NT_PostRpcResponseDelegate(uint rpc_id, uint call_uid, byte[] result, UIntPtr result_len);
+        internal delegate uint NT_CallRpcDelegate(byte[] name, UIntPtr name_len, byte[] param, UIntPtr params_len);
+        internal delegate IntPtr NT_GetRpcResultDelegate(int blocking, uint call_uid, ref UIntPtr result_len);
 
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_CreatePolledRpc(byte[] name, UIntPtr name_len, byte[] def, UIntPtr def_len);
 
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int NT_PollRpc(int blocking, ref NT_RpcCallInfo call_info);
-
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NT_PostRpcResponse(uint rpc_id, uint call_uid, byte[] result, UIntPtr result_len);
-
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern uint NT_CallRpc(byte[] name, UIntPtr name_len, byte[] param, UIntPtr params_len);
-
-        [DllImport(NTSharedFile, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr NT_GetRpcResult(int blocking, uint call_uid, ref UIntPtr result_len);
-
+        internal static NT_SetEntryFlagsDelegate NT_SetEntryFlags;
+        internal static NT_GetEntryFlagsDelegate NT_GetEntryFlags;
+        internal static NT_DeleteEntryDelegate NT_DeleteEntry;
+        internal static NT_DeleteAllEntriesDelegate NT_DeleteAllEntries;
+        internal static NT_GetEntryInfoDelegate NT_GetEntryInfo;
+        internal static NT_FlushDelegate NT_Flush;
+        internal static NT_AddEntryListenerDelegate NT_AddEntryListener;
+        internal static NT_RemoveEntryListenerDelegate NT_RemoveEntryListener;
+        internal static NT_AddConnectionListenerDelegate NT_AddConnectionListener;
+        internal static NT_RemoveConnectionListenerDelegate NT_RemoveConnectionListener;
+        internal static NT_SetNetworkIdentityDelegate NT_SetNetworkIdentity;
+        internal static NT_StartServerDelegate NT_StartServer;
+        internal static NT_StopServerDelegate NT_StopServer;
+        internal static NT_StartClientDelegate NT_StartClient;
+        internal static NT_StopClientDelegate NT_StopClient;
+        internal static NT_SetUpdateRateDelegate NT_SetUpdateRate;
+        internal static NT_GetConnectionsDelegate NT_GetConnections;
+        internal static NT_SavePersistentDelegate NT_SavePersistent;
+        internal static NT_LoadPersistentDelegate NT_LoadPersistent;
+        internal static NT_DisposeValueDelegate NT_DisposeValue;
+        internal static NT_InitValueDelegate NT_InitValue;
+        internal static NT_DisposeStringDelegate NT_DisposeString;
+        internal static NT_GetTypeDelegate NT_GetType;
+        internal static NT_DisposeConnectionInfoArrayDelegate NT_DisposeConnectionInfoArray;
+        internal static NT_DisposeEntryInfoArrayDelegate NT_DisposeEntryInfoArray;
+        internal static NT_NowDelegate NT_Now;
+        internal static NT_SetLoggerDelegate NT_SetLogger;
+        internal static NT_AllocateCharArrayDelegate NT_AllocateCharArray;
+        internal static NT_FreeBooleanArrayDelegate NT_FreeBooleanArray;
+        internal static NT_FreeDoubleArrayDelegate NT_FreeDoubleArray;
+        internal static NT_FreeCharArrayDelegate NT_FreeCharArray;
+        internal static NT_FreeStringArrayDelegate NT_FreeStringArray;
+        internal static NT_GetValueTypeDelegate NT_GetValueType;
+        internal static NT_GetValueBooleanDelegate NT_GetValueBoolean;
+        internal static NT_GetValueDoubleDelegate NT_GetValueDouble;
+        internal static NT_GetValueStringDelegate NT_GetValueString;
+        internal static NT_GetValueRawDelegate NT_GetValueRaw;
+        internal static NT_GetValueBooleanArrayDelegate NT_GetValueBooleanArray;
+        internal static NT_GetValueDoubleArrayDelegate NT_GetValueDoubleArray;
+        internal static NT_GetValueStringArrayDelegate NT_GetValueStringArray;
+        internal static NT_GetEntryBooleanDelegate NT_GetEntryBoolean;
+        internal static NT_GetEntryDoubleDelegate NT_GetEntryDouble;
+        internal static NT_GetEntryStringDelegate NT_GetEntryString;
+        internal static NT_GetEntryRawDelegate NT_GetEntryRaw;
+        internal static NT_GetEntryBooleanArrayDelegate NT_GetEntryBooleanArray;
+        internal static NT_GetEntryDoubleArrayDelegate NT_GetEntryDoubleArray;
+        internal static NT_GetEntryStringArrayDelegate NT_GetEntryStringArray;
+        internal static NT_SetEntryBooleanDelegate NT_SetEntryBoolean;
+        internal static NT_SetEntryDoubleDelegate NT_SetEntryDouble;
+        internal static NT_SetEntryStringDelegate NT_SetEntryString;
+        internal static NT_SetEntryRawDelegate NT_SetEntryRaw;
+        internal static NT_SetEntryBooleanArrayDelegate NT_SetEntryBooleanArray;
+        internal static NT_SetEntryDoubleArrayDelegate NT_SetEntryDoubleArray;
+        internal static NT_SetEntryStringArrayDelegate NT_SetEntryStringArray;
+        internal static NT_CreateRpcDelegate NT_CreateRpc;
+        internal static NT_CreatePolledRpcDelegate NT_CreatePolledRpc;
+        internal static NT_PollRpcDelegate NT_PollRpc;
+        internal static NT_PostRpcResponseDelegate NT_PostRpcResponse;
+        internal static NT_CallRpcDelegate NT_CallRpc;
+        internal static NT_GetRpcResultDelegate NT_GetRpcResult;
     }
 }
