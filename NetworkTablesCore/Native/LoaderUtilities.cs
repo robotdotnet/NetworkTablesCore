@@ -84,7 +84,6 @@ namespace NetworkTables.Native
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
-            Console.WriteLine(outputName);
             byte[] bytes = null;
             using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(inputName))
             {

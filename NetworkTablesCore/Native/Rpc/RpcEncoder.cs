@@ -71,7 +71,7 @@ namespace NetworkTables.Native.Rpc
                     return;
             }
         }
-        public int GetValueSize(RPCValue value)
+        public int GetValueSize(RpcValue value)
         {
             if (value == null) return -1;
             int size;
@@ -108,7 +108,7 @@ namespace NetworkTables.Native.Rpc
             }
         }
 
-        public void WriteValue(RPCValue value)
+        public void WriteValue(RpcValue value)
         {
             if (value == null) return;
             switch (value.Type)
