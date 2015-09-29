@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NetworkTables;
 using NetworkTables.Native;
 using NUnit.Framework;
 
@@ -12,6 +13,14 @@ namespace NetworkTablesCore.Test
     [TestFixture]
     public class TestRPC
     {
+        [TestFixtureSetUp]
+        public void InitClass()
+        {
+            NetworkTable.Shutdown();
+            NetworkTable.SetServerMode();
+            NetworkTable.Initialize();
+        }
+
         public byte[] callback1(string names, byte[] params_str)
         {
             var param = RemoteProcedureCall.UnpackRpcValues(params_str, NT_Type.NT_DOUBLE);
@@ -26,6 +35,8 @@ namespace NetworkTablesCore.Test
 
             return RemoteProcedureCall.PackRpcValues(RpcValue.MakeDouble(val + 1.2));
         }
+
+        [Test]
         public void TestRpcLocal()
         {
             CoreMethods.SetLogger(((level, file, line, message) =>
@@ -49,7 +60,7 @@ namespace NetworkTablesCore.Test
             Console.WriteLine(call1Result[0].ToString());
         }
 
-
+        [Test]
         public void TestRpcSpeed()
         {
             CoreMethods.SetLogger(((level, file, line, message) =>
