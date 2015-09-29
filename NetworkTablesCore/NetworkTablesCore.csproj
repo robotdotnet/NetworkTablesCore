@@ -59,7 +59,7 @@
     <Compile Include="Native\Exceptions\TableKeyNotDefinedException.cs" />
     <Compile Include="Native\Interop.cs" />
     <Compile Include="Native\LoaderUtilities.cs" />
-    <Compile Include="Native\RpcMethods.cs" />
+    <Compile Include="Native\RemoteProcedureCall.cs" />
     <Compile Include="Native\RpcStructs.cs" />
     <Compile Include="Native\Rpc\Leb128.cs" />
     <Compile Include="Native\Rpc\RpcDecoder.cs" />

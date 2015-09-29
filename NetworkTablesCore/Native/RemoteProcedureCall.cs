@@ -5,7 +5,7 @@ using NetworkTables.Native.Rpc;
 
 namespace NetworkTables.Native
 {
-    public static class RpcMethods
+    public static class RemoteProcedureCall
     {
         public delegate byte[] RpcCallback(string name, byte[] params_str);
 
@@ -53,8 +53,8 @@ namespace NetworkTables.Native
                     return retPtr;
                 };
 
-            UIntPtr packed_len = UIntPtr.Zero;
-            byte[] packed = PackRpcDefinition(def, ref packed_len);
+            UIntPtr packed_len;
+            byte[] packed = PackRpcDefinition(def, out packed_len);
             UIntPtr name_len;
             byte[] name_b = CoreMethods.CreateUTF8String(name, out name_len);
             Interop.NT_CreateRpc(name_b, name_len, packed, packed_len, IntPtr.Zero, modCallback);
@@ -63,8 +63,8 @@ namespace NetworkTables.Native
 
         public static void CreatePolledPrc(string name, NT_RpcDefinition def)
         {
-            UIntPtr packed_len = UIntPtr.Zero;
-            byte[] packed = PackRpcDefinition(def, ref packed_len);
+            UIntPtr packed_len;
+            byte[] packed = PackRpcDefinition(def, out packed_len);
             UIntPtr name_len;
             byte[] name_b = CoreMethods.CreateUTF8String(name, out name_len);
             Interop.NT_CreatePolledRpc(name_b, name_len, packed, packed_len);
@@ -76,7 +76,7 @@ namespace NetworkTables.Native
             return retVal != 0;
         }
 
-        public static byte[] PackRpcDefinition(NT_RpcDefinition def, ref UIntPtr packed_len)
+        public static byte[] PackRpcDefinition(NT_RpcDefinition def, out UIntPtr packed_len)
         {
             RpcEncoder enc = new RpcEncoder();
             enc.Write8((byte)def.version);
@@ -104,18 +104,16 @@ namespace NetworkTables.Native
             return enc.Buffer;
         }
 
-        public static bool GetRpcResult(bool blocking, uint call_uid, out byte[] result)
+        public static byte[] GetRpcResult(bool blocking, uint call_uid)
         {
             UIntPtr size = UIntPtr.Zero;
             IntPtr retVal = Interop.NT_GetRpcResult(blocking ? 1 : 0, call_uid, ref size);
             if (retVal == IntPtr.Zero)
             {
-                result = new byte[0];
-                return false;
+                return new byte[0];
 
             }
-            result = CoreMethods.ReadUTF8StringToByteArray(retVal, size);
-            return true;
+            return CoreMethods.ReadUTF8StringToByteArray(retVal, size);
         }
 
         public static uint CallRpc(string name, params RpcValue[] rpcValues)

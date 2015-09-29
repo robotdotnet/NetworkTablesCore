@@ -11,37 +11,78 @@
             return Value.ToString();
         }
 
-        public RpcValue(string val)
+        public static RpcValue MakeDouble(double val)
+        {
+            return new RpcValue(val);
+        }
+
+        public static RpcValue MakeBoolean(bool val)
+        {
+            return new RpcValue(val);
+        }
+
+        public static RpcValue MakeString(string val)
+        {
+            return new RpcValue(val);
+        }
+
+        public static RpcValue MakeRaw(string val)
+        {
+            return new RpcValue(val, true);
+        }
+
+        public static RpcValue MakeBooleanArray(bool[] val)
+        {
+            return new RpcValue(val);
+        }
+
+        public static RpcValue MakeDoubleArray(double[] val)
+        {
+            return new RpcValue(val);
+        }
+
+        public static RpcValue MakeStringArray(string[] val)
+        {
+            return new RpcValue(val);
+        }
+
+        private RpcValue(string val)
         {
             Type = NT_Type.NT_STRING;
             Value = val;
         }
 
-        public RpcValue(bool val)
+        private RpcValue(string val, bool raw)
+        {
+            Type = NT_Type.NT_RAW;
+            Value = val;
+        }
+
+        private RpcValue(bool val)
         {
             Type = NT_Type.NT_BOOLEAN;
             Value = val;
         }
 
-        public RpcValue(double val)
+        private RpcValue(double val)
         {
             Type = NT_Type.NT_DOUBLE;
             Value = val;
         }
 
-        public RpcValue(string[] val)
+        private RpcValue(string[] val)
         {
             Type = NT_Type.NT_STRING_ARRAY;
             Value = val;
         }
 
-        public RpcValue(double[] val)
+        private RpcValue(double[] val)
         {
             Type = NT_Type.NT_DOUBLE_ARRAY;
             Value = val;
         }
 
-        public RpcValue(bool[] val)
+        private RpcValue(bool[] val)
         {
             Type = NT_Type.NT_BOOLEAN_ARRAY;
             Value = val;

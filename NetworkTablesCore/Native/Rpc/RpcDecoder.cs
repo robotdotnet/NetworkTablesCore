@@ -28,15 +28,17 @@ namespace NetworkTables.Native.Rpc
             {
                 case NT_Type.NT_BOOLEAN:
                     byte vB = 0;
-                    return !Read8(ref vB) ? null : new RpcValue(vB != 0);
+                    return !Read8(ref vB) ? null : RpcValue.MakeBoolean(vB != 0);
                 case NT_Type.NT_DOUBLE:
                     double vD = 0;
-                    return !ReadDouble(ref vD) ? null : new RpcValue(vD);
-                case NT_Type.NT_RPC:
+                    return !ReadDouble(ref vD) ? null : RpcValue.MakeDouble(vD);
                 case NT_Type.NT_RAW:
+                    string vRa = "";
+                    return !ReadString(ref vRa) ? null : RpcValue.MakeRaw(vRa);
+                case NT_Type.NT_RPC:
                 case NT_Type.NT_STRING:
                     string vS = "";
-                    return !ReadString(ref vS) ? null : new RpcValue(vS);
+                    return !ReadString(ref vS) ? null : RpcValue.MakeString(vS);
                 case NT_Type.NT_BOOLEAN_ARRAY:
                     if (!Read8(ref size)) return null;
                     buf = ReadArray(size);
@@ -46,7 +48,7 @@ namespace NetworkTables.Native.Rpc
                     {
                         bBuf[i] = buf[i] != 0;
                     }
-                    return new RpcValue(bBuf);
+                    return RpcValue.MakeBooleanArray(bBuf);
                 case NT_Type.NT_DOUBLE_ARRAY:
                     if (!Read8(ref size)) return null;
                     buf = ReadArray(size * 8);
@@ -56,7 +58,7 @@ namespace NetworkTables.Native.Rpc
                     {
                         dBuf[i] = ReadDouble(buf, count);
                     }
-                    return new RpcValue(dBuf);
+                    return RpcValue.MakeDoubleArray(dBuf);
                     break;
                 case NT_Type.NT_STRING_ARRAY:
                     if (!Read8(ref size)) return null;
@@ -67,7 +69,7 @@ namespace NetworkTables.Native.Rpc
                     {
                         if (!ReadString(ref sBuf[i])) return null;
                     }
-                    return new RpcValue(sBuf);
+                    return RpcValue.MakeStringArray(sBuf);
                 default:
                     Console.WriteLine("invalid type when trying to read value");
                     return null;
