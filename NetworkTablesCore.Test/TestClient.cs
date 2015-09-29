@@ -48,8 +48,6 @@ namespace NetworkTablesCore.Test
             nt.PutStringArray("strarray", strs);
 
             Thread.Sleep(1000);
-
-            NetworkTable.Shutdown();
         }
     }
 }

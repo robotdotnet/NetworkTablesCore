@@ -39,8 +39,6 @@ namespace NetworkTablesCore.Test
             nt.PutNumber("foo2", 0.5);
 
             Thread.Sleep(1000);
-
-            NetworkTable.Shutdown();
         }
     }
 }
