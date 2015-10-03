@@ -4,10 +4,8 @@ using NUnit.Framework;
 
 namespace NetworkTablesCore.Test
 {
-    [TestFixture]
     public class TestEntries
     {
-        [TestFixtureSetUp]
         public void InitClass()
         {
             NetworkTable.Shutdown();
