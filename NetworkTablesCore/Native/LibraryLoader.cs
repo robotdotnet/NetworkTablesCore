@@ -63,7 +63,7 @@ namespace NetworkTables.Native
         private static extern IntPtr dlerror();
     }
 
-    public class RoboRIOLibraryLoader : ILibraryLoader
+    internal class RoboRioLibraryLoader : ILibraryLoader
     {
         IntPtr ILibraryLoader.LoadLibrary(string filename)
         {

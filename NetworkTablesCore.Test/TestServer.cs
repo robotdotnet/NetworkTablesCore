@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using NetworkTables;
 using NetworkTables.Native;
 using NUnit.Framework;
@@ -13,7 +9,6 @@ namespace NetworkTablesCore.Test
     [TestFixture]
     public class TestServer
     {
-        [Test]
         public void Test()
         {
             NetworkTable.Shutdown();
@@ -31,7 +26,7 @@ namespace NetworkTablesCore.Test
             Thread.Sleep(1000);
 
             nt.PutNumber("foo", 0.5);
-            nt.SetFlags("foo", EntryFlags.PERSISTENT);
+            nt.SetFlags("foo", EntryFlags.Persistent);
 
             nt.PutNumber("foo2", 0.5);
             nt.PutNumber("foo2", 0.7);

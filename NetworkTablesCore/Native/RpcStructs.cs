@@ -1,8 +1,8 @@
 ﻿namespace NetworkTables.Native
 {
-    public class RpcValue
+    internal class RpcValue
     {
-        public NT_Type Type { get; }
+        public NtType Type { get; }
 
         public object Value { get; }
 
@@ -48,48 +48,48 @@
 
         private RpcValue(string val)
         {
-            Type = NT_Type.NT_STRING;
+            Type = NtType.String;
             Value = val;
         }
 
         private RpcValue(string val, bool raw)
         {
-            Type = NT_Type.NT_RAW;
+            Type = NtType.Raw;
             Value = val;
         }
 
         private RpcValue(bool val)
         {
-            Type = NT_Type.NT_BOOLEAN;
+            Type = NtType.Boolean;
             Value = val;
         }
 
         private RpcValue(double val)
         {
-            Type = NT_Type.NT_DOUBLE;
+            Type = NtType.Double;
             Value = val;
         }
 
         private RpcValue(string[] val)
         {
-            Type = NT_Type.NT_STRING_ARRAY;
+            Type = NtType.StringArray;
             Value = val;
         }
 
         private RpcValue(double[] val)
         {
-            Type = NT_Type.NT_DOUBLE_ARRAY;
+            Type = NtType.DoubleArray;
             Value = val;
         }
 
         private RpcValue(bool[] val)
         {
-            Type = NT_Type.NT_BOOLEAN_ARRAY;
+            Type = NtType.BooleanArray;
             Value = val;
         }
     }
 
-    public class NT_RpcDefinition
+    internal class NT_RpcDefinition
     {
         public readonly uint version;
         public readonly string name;
@@ -100,25 +100,25 @@
         {
             this.version = version;
             this.name = name;
-            this.paramsArray = p;
-            this.resultsArray = r;
+            paramsArray = p;
+            resultsArray = r;
         }
     }
 
 
-    public class NT_RpcResultDef
+    internal class NT_RpcResultDef
     {
         public readonly string name;
-        public readonly NT_Type type;
+        public readonly NtType type;
 
-        public NT_RpcResultDef(string name, NT_Type type)
+        public NT_RpcResultDef(string name, NtType type)
         {
             this.name = name;
             this.type = type;
         }
     }
 
-    public class NT_RpcParamDef
+    internal class NT_RpcParamDef
     {
         public readonly string name;
         public readonly RpcValue value;
@@ -130,11 +130,11 @@
         }
     }
 
-    public struct NT_RpcCallInfo
+    internal struct NT_RpcCallInfo
     {
         private uint rpc_id;
         private uint call_uid;
-        private NT_String_Read name;
-        private NT_String_Read param;
+        private NtStringRead name;
+        private NtStringRead param;
     }
 }

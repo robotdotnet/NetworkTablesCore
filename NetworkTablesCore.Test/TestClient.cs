@@ -10,7 +10,6 @@ namespace NetworkTablesCore.Test
     [TestFixture]
     public class TestClient
     {
-        [Test]
         public void Client()
         {
             NetworkTable.Shutdown();
@@ -36,7 +35,7 @@ namespace NetworkTablesCore.Test
             }
 
             nt.PutBoolean("bar", false);
-            nt.SetFlags("bar", EntryFlags.PERSISTENT);
+            nt.SetFlags("bar", EntryFlags.Persistent);
             nt.PutBoolean("bar2", true);
             nt.PutBoolean("bar2", false);
             nt.PutBoolean("bar2", true);

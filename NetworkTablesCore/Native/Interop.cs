@@ -2,6 +2,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
+// ReSharper disable InconsistentNaming
 
 namespace NetworkTables.Native
 {
@@ -9,13 +10,15 @@ namespace NetworkTables.Native
     [SuppressUnmanagedCodeSecurity]
     internal class Interop
     {
-        private static readonly bool libraryLoaded = false;
-        private static readonly IntPtr library;
-        private static ILibraryLoader loader;
+        private static readonly bool s_libraryLoaded;
+        // ReSharper disable PrivateFieldCanBeConvertedToLocalVariable
+        private static readonly IntPtr s_library;
+        private static readonly ILibraryLoader s_loader;
+        // ReSharper restore PrivateFieldCanBeConvertedToLocalVariable
 
         static Interop()
         {
-            if (!libraryLoaded)
+            if (!s_libraryLoaded)
             {
                 try
                 {
@@ -26,11 +29,11 @@ namespace NetworkTables.Native
                     string loadedPath = LoaderUtilities.ExtractLibrary(type);
                     if (string.IsNullOrEmpty(loadedPath)) throw new FileNotFoundException("Library file could not be found in the resorces. Please contact RobotDotNet for support for this issue");
 
-                    library = LoaderUtilities.LoadLibrary(loadedPath, type, out loader);
+                    s_library = LoaderUtilities.LoadLibrary(loadedPath, type, out s_loader);
 
-                    if (library == IntPtr.Zero) throw new BadImageFormatException($"Library file {loadedPath} could not be loaded successfully.");
+                    if (s_library == IntPtr.Zero) throw new BadImageFormatException($"Library file {loadedPath} could not be loaded successfully.");
 
-                    InitializeDelegates(library, loader);
+                    InitializeDelegates(s_library, s_loader);
                 }
                 catch (Exception e)
                 {
@@ -38,7 +41,7 @@ namespace NetworkTables.Native
                     Console.WriteLine(e.StackTrace);
                     Environment.Exit(1);
                 }
-                libraryLoaded = true;
+                s_libraryLoaded = true;
             }
         }
 
@@ -129,7 +132,7 @@ namespace NetworkTables.Native
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void NT_ConnectionListenerCallback(
-            uint uid, IntPtr data, int connected, ref NT_ConnectionInfo conn);
+            uint uid, IntPtr data, int connected, ref NtConnectionInfo conn);
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void NT_LogFunc(uint level, IntPtr file, uint line, IntPtr msg);
@@ -184,9 +187,9 @@ namespace NetworkTables.Native
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void NT_InitValueDelegate(IntPtr value);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate void NT_DisposeStringDelegate(ref NT_String_Read str);
+        internal delegate void NT_DisposeStringDelegate(ref NtStringRead str);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate NT_Type NT_GetTypeDelegate(byte[] name, UIntPtr name_len);
+        internal delegate NtType NT_GetTypeDelegate(byte[] name, UIntPtr name_len);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void NT_DisposeConnectionInfoArrayDelegate(IntPtr arr, UIntPtr count);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -206,7 +209,7 @@ namespace NetworkTables.Native
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void NT_FreeStringArrayDelegate(IntPtr arr, UIntPtr arr_size);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate NT_Type NT_GetValueTypeDelegate(IntPtr value);
+        internal delegate NtType NT_GetValueTypeDelegate(IntPtr value);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate int NT_GetValueBooleanDelegate(IntPtr value, ref ulong last_change, ref int v_boolean);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -248,7 +251,7 @@ namespace NetworkTables.Native
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate int NT_SetEntryDoubleArrayDelegate(byte[] name, UIntPtr name_len, double[] arr, UIntPtr size, int force);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate int NT_SetEntryStringArrayDelegate(byte[] name, UIntPtr name_len, NT_String_Write[] arr, UIntPtr size, int force);
+        internal delegate int NT_SetEntryStringArrayDelegate(byte[] name, UIntPtr name_len, NtStringWrite[] arr, UIntPtr size, int force);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void NT_CreateRpcDelegate(byte[] name, UIntPtr name_len, byte[] def, UIntPtr def_len, IntPtr data, NT_RPCCallback callback);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]

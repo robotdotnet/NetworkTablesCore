@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NetworkTables;
 using NetworkTables.Native;
 using NUnit.Framework;
@@ -23,7 +19,7 @@ namespace NetworkTablesCore.Test
 
         public byte[] callback1(string names, byte[] params_str)
         {
-            var param = RemoteProcedureCall.UnpackRpcValues(params_str, NT_Type.NT_DOUBLE);
+            var param = RemoteProcedureCall.UnpackRpcValues(params_str, NtType.Double);
 
             if (param.Count == 0)
             {
@@ -44,7 +40,7 @@ namespace NetworkTablesCore.Test
                 Console.Error.WriteLine(message);
             }), 0);
 
-            var def = new NT_RpcDefinition(1, "myfunc1", new NT_RpcParamDef[] {new NT_RpcParamDef("param1", RpcValue.MakeDouble(0.0))}, new NT_RpcResultDef[] {new NT_RpcResultDef("result1", NT_Type.NT_DOUBLE)});
+            var def = new NT_RpcDefinition(1, "myfunc1", new[] {new NT_RpcParamDef("param1", RpcValue.MakeDouble(0.0))}, new[] {new NT_RpcResultDef("result1", NtType.Double)});
 
             RemoteProcedureCall.CreateRpc("func1", def, callback1);
 
@@ -54,7 +50,7 @@ namespace NetworkTablesCore.Test
 
             Console.WriteLine("Waiting for RPC Result");
             byte[] result = RemoteProcedureCall.GetRpcResult(true, call1UID);
-            var call1Result = RemoteProcedureCall.UnpackRpcValues(result, NT_Type.NT_DOUBLE);
+            var call1Result = RemoteProcedureCall.UnpackRpcValues(result, NtType.Double);
             Assert.AreNotEqual(0, call1Result.Count, "RPC Result empty");
 
             Console.WriteLine(call1Result[0].ToString());
@@ -68,7 +64,7 @@ namespace NetworkTablesCore.Test
                 Console.Error.WriteLine(message);
             }), 0);
 
-            var def = new NT_RpcDefinition(1, "myfunc1", new NT_RpcParamDef[] { new NT_RpcParamDef("param1", RpcValue.MakeDouble(0.0)) }, new NT_RpcResultDef[] { new NT_RpcResultDef("result1", NT_Type.NT_DOUBLE) });
+            var def = new NT_RpcDefinition(1, "myfunc1", new[] { new NT_RpcParamDef("param1", RpcValue.MakeDouble(0.0)) }, new[] { new NT_RpcResultDef("result1", NtType.Double) });
 
             RemoteProcedureCall.CreateRpc("func1", def, callback1);
 
@@ -81,7 +77,7 @@ namespace NetworkTablesCore.Test
             {
                 uint call1UID = RemoteProcedureCall.CallRpc("func1", RpcValue.MakeDouble(i));
                 byte[] call1Result = RemoteProcedureCall.GetRpcResult(true, call1UID);
-                var res = RemoteProcedureCall.UnpackRpcValues(call1Result, NT_Type.NT_DOUBLE);
+                var res = RemoteProcedureCall.UnpackRpcValues(call1Result, NtType.Double);
                 Assert.AreNotEqual(0, res.Count, "RPC Result empty");
             }
             sw.Stop();

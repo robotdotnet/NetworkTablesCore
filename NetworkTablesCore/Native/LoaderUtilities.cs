@@ -10,7 +10,7 @@ namespace NetworkTables.Native
         Windows64,
         Linux32,
         Linux64,
-        RoboRIO
+        RoboRio
     }
     internal static class LoaderUtilities
     {
@@ -28,7 +28,7 @@ namespace NetworkTables.Native
                 else
                 {
                     //We need to check for the RIO
-                    return File.Exists("/usr/local/frc/bin/frcRunRobot.sh") ? OsType.RoboRIO : OsType.Linux32;
+                    return File.Exists("/usr/local/frc/bin/frcRunRobot.sh") ? OsType.RoboRio : OsType.Linux32;
                 }
             }
             else
@@ -50,7 +50,7 @@ namespace NetworkTables.Native
                     return false;
                 case OsType.Linux64:
                     return false;
-                case OsType.RoboRIO:
+                case OsType.RoboRio:
                     return true;
                 default:
                     return false;
@@ -59,8 +59,8 @@ namespace NetworkTables.Native
 
         internal static string ExtractLibrary(OsType type)
         {
-            string inputName = "";
-            string outputName = "";
+            string inputName;
+            string outputName;
             switch (type)
             {
                 case OsType.Windows32:
@@ -73,23 +73,20 @@ namespace NetworkTables.Native
                     break;
                 case OsType.Linux32:
                     return null;
-                    break;
                 case OsType.Linux64:
                     return null;
-                    break;
-                case OsType.RoboRIO:
+                case OsType.RoboRio:
                     inputName = "NetworkTables.NativeLibraries.libntcorerio.so";
                     outputName = "/home/lvuser/libntcore.so";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
-            byte[] bytes = null;
             using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(inputName))
             {
                 if (s == null || s.Length == 0)
                     return null;
-                bytes = new byte[(int)s.Length];
+                var bytes = new byte[(int)s.Length];
                 s.Read(bytes, 0, (int)s.Length);
 
                 if (File.Exists(outputName))
@@ -110,8 +107,8 @@ namespace NetworkTables.Native
                     return loader.LoadLibrary(dllLoc);
                 case OsType.Linux32:
                 case OsType.Linux64:
-                case OsType.RoboRIO:
-                    loader = new RoboRIOLibraryLoader();
+                case OsType.RoboRio:
+                    loader = new RoboRioLibraryLoader();
                     return loader.LoadLibrary(dllLoc);
                 default:
                     loader = null;

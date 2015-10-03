@@ -5,7 +5,7 @@ using System.Text;
 
 namespace NetworkTables.Native.Rpc
 {
-    class RpcDecoder
+    internal class RpcDecoder
     {
         public static double ReadDouble(byte[] buf, int start)
         {
@@ -13,33 +13,33 @@ namespace NetworkTables.Native.Rpc
         }
 
         private readonly byte[] m_buffer;
-        private int count = 0;
+        private int m_count;
 
         public RpcDecoder(byte[] buffer)
         {
             m_buffer = buffer;
         }
 
-        public RpcValue ReadValue(NT_Type type)
+        public RpcValue ReadValue(NtType type)
         {
             byte size = 0;
             byte[] buf;
             switch (type)
             {
-                case NT_Type.NT_BOOLEAN:
+                case NtType.Boolean:
                     byte vB = 0;
                     return !Read8(ref vB) ? null : RpcValue.MakeBoolean(vB != 0);
-                case NT_Type.NT_DOUBLE:
+                case NtType.Double:
                     double vD = 0;
                     return !ReadDouble(ref vD) ? null : RpcValue.MakeDouble(vD);
-                case NT_Type.NT_RAW:
+                case NtType.Raw:
                     string vRa = "";
                     return !ReadString(ref vRa) ? null : RpcValue.MakeRaw(vRa);
-                case NT_Type.NT_RPC:
-                case NT_Type.NT_STRING:
+                case NtType.Rpc:
+                case NtType.String:
                     string vS = "";
                     return !ReadString(ref vS) ? null : RpcValue.MakeString(vS);
-                case NT_Type.NT_BOOLEAN_ARRAY:
+                case NtType.BooleanArray:
                     if (!Read8(ref size)) return null;
                     buf = ReadArray(size);
                     if (buf == null) return null;
@@ -49,18 +49,17 @@ namespace NetworkTables.Native.Rpc
                         bBuf[i] = buf[i] != 0;
                     }
                     return RpcValue.MakeBooleanArray(bBuf);
-                case NT_Type.NT_DOUBLE_ARRAY:
+                case NtType.DoubleArray:
                     if (!Read8(ref size)) return null;
                     buf = ReadArray(size * 8);
                     if (buf == null) return null;
                     double[] dBuf = new double[size];
                     for (int i = 0; i < size; i++)
                     {
-                        dBuf[i] = ReadDouble(buf, count);
+                        dBuf[i] = ReadDouble(buf, m_count);
                     }
                     return RpcValue.MakeDoubleArray(dBuf);
-                    break;
-                case NT_Type.NT_STRING_ARRAY:
+                case NtType.StringArray:
                     if (!Read8(ref size)) return null;
                     buf = ReadArray(size * 8);
                     if (buf == null) return null;
@@ -79,8 +78,8 @@ namespace NetworkTables.Native.Rpc
         public byte[] ReadArray(int len)
         {
             List<byte> buf = new List<byte>(len);
-            if (m_buffer.Length < count + len) return null;
-            for (int i = count; i < count + len; i++)
+            if (m_buffer.Length < m_count + len) return null;
+            for (int i = m_count; i < m_count + len; i++)
             {
                 buf.Add(m_buffer[i]);
             }
@@ -89,41 +88,41 @@ namespace NetworkTables.Native.Rpc
 
         public bool Read8(ref byte val)
         {
-            if (m_buffer.Length < count + 1) return false;
-            val = (byte)(m_buffer[count] & 0xff);
-            count++;
+            if (m_buffer.Length < m_count + 1) return false;
+            val = (byte)(m_buffer[m_count] & 0xff);
+            m_count++;
             return true;
         }
 
         public bool Read16(ref short val)
         {
-            if (m_buffer.Length < count + 2) return false;
-            val = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(m_buffer, count));
+            if (m_buffer.Length < m_count + 2) return false;
+            val = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(m_buffer, m_count));
             return true;
         }
 
         public bool Read32(ref int val)
         {
-            if (m_buffer.Length < count + 4) return false;
-            val = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(m_buffer, count));
+            if (m_buffer.Length < m_count + 4) return false;
+            val = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(m_buffer, m_count));
             return true;
         }
 
         public bool ReadDouble(ref double val)
         {
-            if (m_buffer.Length < count + 8) return false;
-            val = ReadDouble(m_buffer, count);
+            if (m_buffer.Length < m_count + 8) return false;
+            val = ReadDouble(m_buffer, m_count);
             return true;
         }
 
         public bool ReadString(ref string val)
         {
             ulong v;
-            if (Leb128.ReadUleb128(m_buffer, ref count, out v) == 0) return false;
+            if (Leb128.ReadUleb128(m_buffer, ref m_count, out v) == 0) return false;
             var len = (int)v;
 
-            if (m_buffer.Length < count + len) return false;
-            val = Encoding.UTF8.GetString(m_buffer, count, len);
+            if (m_buffer.Length < m_count + len) return false;
+            val = Encoding.UTF8.GetString(m_buffer, m_count, len);
             return true;
         }
     }

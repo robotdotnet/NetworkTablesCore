@@ -2,35 +2,62 @@
 
 namespace NetworkTables
 {
+    /// <summary>
+    /// The flags avalible for TableListeners
+    /// </summary>
     [Flags]
     public enum NotifyFlags
     {
-        NOTIFY_NONE = 0x00,
-        NOTIFY_IMMEDIATE = 0x01, /* initial listener addition */
-        NOTIFY_LOCAL = 0x02,     /* changed locally */
-        NOTIFY_NEW = 0x04,       /* newly created entry */
-        NOTIFY_DELETE = 0x08,    /* deleted */
-        NOTIFY_UPDATE = 0x10,    /* value changed */
-        NOTIFY_FLAGS = 0x20      /* flags changed */
+        /// Notify nobody
+        NotifyNone = 0x00,
+        /// Initial listener addition
+        NotifyImmediate = 0x01,
+        /// Changed locally
+        NotifyLocal = 0x02,    
+        /// Newly created entry
+        NotifyNew = 0x04,    
+        /// Deleted entry
+        NotifyDelete = 0x08,    
+        /// Value changed for entry
+        NotifyUpdate = 0x10,    
+        /// Flags changed for entry
+        NotifyFlagsChanged = 0x20      
     };
 
+    /// <summary>
+    /// The flags avalible for Entries
+    /// </summary>
     [Flags]
     public enum EntryFlags
     {
-        NONE = 0x00,
-        PERSISTENT = 0x01
+        /// No flags
+        None = 0x00,
+        /// Set entry to be persistent
+        Persistent = 0x01
     }
 
+    /// <summary>
+    /// The log level to use for the NT logger
+    /// </summary>
     public enum LogLevel
     {
-        LOG_CRITICAL = 50,
-        LOG_ERROR = 40,
-        LOG_WARNING = 30,
-        LOG_INFO = 20,
-        LOG_DEBUG = 10,
-        LOG_DEBUG1 = 9,
-        LOG_DEBUG2 = 8,
-        LOG_DEBUG3 = 7,
-        LOG_DEBUG4 = 6
+        ///
+        LogCritical = 50,
+        ///
+        LogError = 40,
+        ///
+        LogWarning = 30,
+        ///
+        LogInfo = 20,
+        ///
+        LogDebug = 10,
+        ///
+        LogDebug1 = 9,
+        ///
+        LogDebug2 = 8,
+        ///
+        LogDebug3 = 7,
+        ///
+        LogDebug4 = 6
     }
 }
