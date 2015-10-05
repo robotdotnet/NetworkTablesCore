@@ -10,6 +10,7 @@ namespace NetworkTables.Native
         Windows64,
         Linux32,
         Linux64,
+        ArmLinux,
         RoboRio
     }
     internal static class LoaderUtilities
@@ -76,7 +77,7 @@ namespace NetworkTables.Native
                 case OsType.Linux64:
                     return null;
                 case OsType.RoboRio:
-                    inputName = "NetworkTables.NativeLibraries.libntcorerio.so";
+                    inputName = "NetworkTables.NativeLibraries.libntcorearm.so";
                     outputName = "/home/lvuser/libntcore.so";
                     break;
                 default:

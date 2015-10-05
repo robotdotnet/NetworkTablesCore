@@ -51,22 +51,7 @@ namespace NetworkTables.Native
             NT_GetEntryFlags = (NT_GetEntryFlagsDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_GetEntryFlags"), typeof(NT_GetEntryFlagsDelegate));
             NT_DeleteEntry = (NT_DeleteEntryDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_DeleteEntry"), typeof(NT_DeleteEntryDelegate));
             NT_DeleteAllEntries = (NT_DeleteAllEntriesDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_DeleteAllEntries"), typeof(NT_DeleteAllEntriesDelegate));
-            if (loader is WindowsLibraryLoader)
-            {
-                NT_GetEntryInfo =
-                    (NT_GetEntryInfoDelegate)
-                        Marshal.GetDelegateForFunctionPointer(
-                            loader.GetProcAddress(library, "NT_GetEntryInfo"),
-                            typeof(NT_GetEntryInfoDelegate));
-            }
-            else
-            {
-                NT_GetEntryInfo =
-                    (NT_GetEntryInfoDelegate)
-                        Marshal.GetDelegateForFunctionPointer(
-                            loader.GetProcAddress(library, "_Z15NT_GetEntryInfoPKcjiPj"),
-                            typeof(NT_GetEntryInfoDelegate));
-            }
+            NT_GetEntryInfo = (NT_GetEntryInfoDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_GetEntryInfo"), typeof(NT_GetEntryInfoDelegate));
             NT_Flush = (NT_FlushDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_Flush"), typeof(NT_FlushDelegate));
             NT_AddEntryListener = (NT_AddEntryListenerDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_AddEntryListener"), typeof(NT_AddEntryListenerDelegate));
             NT_RemoveEntryListener = (NT_RemoveEntryListenerDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_RemoveEntryListener"), typeof(NT_RemoveEntryListenerDelegate));

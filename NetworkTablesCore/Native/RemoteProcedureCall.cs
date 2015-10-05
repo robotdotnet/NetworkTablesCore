@@ -45,7 +45,7 @@ namespace NetworkTables.Native
                 (IntPtr data, IntPtr ptr, UIntPtr len, IntPtr intPtr, UIntPtr paramsLen, ref UIntPtr resultsLen) =>
                 {
                     string retName = CoreMethods.ReadUTF8String(ptr, len);
-                    byte[] param = CoreMethods.ReadUTF8StringToByteArray(intPtr, paramsLen);
+                    byte[] param = CoreMethods.GetRawDataFromPtr(intPtr, paramsLen);
                     byte[] cb = callback(retName, param);
                     resultsLen = (UIntPtr)cb.Length;
                     IntPtr retPtr = Interop.NT_AllocateCharArray(resultsLen);

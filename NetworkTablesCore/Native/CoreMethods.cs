@@ -45,13 +45,11 @@ namespace NetworkTables.Native
             return retVal != 0;
         }
 
-        internal static bool SetEntryRaw(string name, string value, bool force = false)
+        internal static bool SetEntryRaw(string name, byte[] value, bool force = false)
         {
             UIntPtr size;
             byte[] namePtr = CreateUTF8String(name, out size);
-            UIntPtr stringSize;
-            byte[] stringPtr = CreateUTF8String(name, out stringSize);
-            int retVal = Interop.NT_SetEntryRaw(namePtr, size, stringPtr, stringSize, force ? 1 : 0);
+            int retVal = Interop.NT_SetEntryRaw(namePtr, size, value, (UIntPtr)value.Length, force ? 1 : 0);
             return retVal != 0;
         }
 
@@ -152,7 +150,7 @@ namespace NetworkTables.Native
             }
         }
 
-        internal static string GetEntryRaw(string name, string defaultValue)
+        internal static byte[] GetEntryRaw(string name, byte[] defaultValue)
         {
             UIntPtr size;
             byte[] namePtr = CreateUTF8String(name, out size);
@@ -165,9 +163,9 @@ namespace NetworkTables.Native
             }
             else
             {
-                string str = ReadUTF8String(ret, stringSize);
+                byte[] data = GetRawDataFromPtr(ret, stringSize);
                 Interop.NT_FreeCharArray(ret);
-                return str;
+                return data;
             }
         }
 
@@ -269,7 +267,7 @@ namespace NetworkTables.Native
             }
         }
 
-        internal static string GetEntryRaw(string name)
+        internal static byte[] GetEntryRaw(string name)
         {
             UIntPtr size;
             byte[] namePtr = CreateUTF8String(name, out size);
@@ -282,9 +280,9 @@ namespace NetworkTables.Native
             }
             else
             {
-                string str = ReadUTF8String(ret, stringSize);
+                byte[] data = GetRawDataFromPtr(ret, stringSize);
                 Interop.NT_FreeCharArray(ret);
-                return str;
+                return data;
             }
         }
 
@@ -417,7 +415,7 @@ namespace NetworkTables.Native
                         break;
                     case NtType.Raw:
                         ptr = Interop.NT_GetValueRaw(value, ref lastChange, ref size);
-                        obj = ReadUTF8String(ptr, size);
+                        obj = GetRawDataFromPtr(ptr, size);
                         Interop.NT_FreeCharArray(ptr);
                         break;
                     case NtType.BooleanArray:
@@ -436,7 +434,9 @@ namespace NetworkTables.Native
                         Interop.NT_FreeStringArray(ptr, size);
                         break;
                     case NtType.Rpc:
-                        obj = null;
+                        ptr = Interop.NT_GetValueRaw(value, ref lastChange, ref size);
+                        obj = GetRawDataFromPtr(ptr, size);
+                        Interop.NT_FreeCharArray(ptr);
                         break;
                     default:
                         obj = null;
@@ -644,6 +644,14 @@ namespace NetworkTables.Native
             double[] arr = new double[size.ToUInt64()];
             Marshal.Copy(ptr, arr, 0, arr.Length);
             return arr;
+        }
+
+        internal static byte[] GetRawDataFromPtr(IntPtr ptr, UIntPtr size)
+        {
+            int len = (int)size.ToUInt64();
+            byte[] data = new byte[len];
+            Marshal.Copy(ptr, data, 0, len);
+            return data;
         }
 
         private static bool[] GetBooleanArrayFromPtr(IntPtr ptr, UIntPtr size)

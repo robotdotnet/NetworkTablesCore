@@ -534,6 +534,10 @@ namespace NetworkTables
             if (value is double) return PutNumber(key, (double)value);
             else if (value is string) return PutString(key, (string)value);
             else if (value is bool) return PutBoolean(key, (bool)value);
+            else if (value is byte[])
+            {
+                return CoreMethods.SetEntryRaw(key, (byte[]) value);
+            }
             else if (value is double[])
             {
                 return CoreMethods.SetEntryDoubleArray(key, (double[])value);

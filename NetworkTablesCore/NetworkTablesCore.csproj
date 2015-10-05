@@ -73,11 +73,11 @@
     <Compile Include="Tables\ITableListener.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NativeLibraries\libntcorerio.so" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="NativeLibraries\ntcore32.dll" />
     <EmbeddedResource Include="NativeLibraries\ntcore64.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="NativeLibraries\libntcorearm.so" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
