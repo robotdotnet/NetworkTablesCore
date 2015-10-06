@@ -50,9 +50,9 @@ namespace NetworkTables.Native
                 case OsType.Windows64:
                     return true;
                 case OsType.Linux32:
-                    return false;
+                    return true;
                 case OsType.Linux64:
-                    return false;
+                    return true;
                 case OsType.RoboRio:
                     return true;
                 default:
@@ -75,9 +75,13 @@ namespace NetworkTables.Native
                     outputName = "ntcore.dlln";
                     break;
                 case OsType.Linux32:
-                    return null;
+                    inputName = "NetworkTables.NativeLibraries.libntcore32.so";
+                    outputName = "libntcore.so";
+                    break;
                 case OsType.Linux64:
-                    return null;
+                    inputName = "NetworkTables.NativeLibraries.libntcore32.so";
+                    outputName = "libntcore.so";
+                    break;
                 case OsType.RoboRio:
                     inputName = "NetworkTables.NativeLibraries.libntcorearm.so";
                     outputName = "/home/lvuser/libntcore.so";
@@ -150,6 +154,8 @@ namespace NetworkTables.Native
                     return loader.LoadLibrary(dllLoc);
                 case OsType.Linux32:
                 case OsType.Linux64:
+                    loader = new LinuxLibraryLoader();
+                    return loader.LoadLibrary(dllLoc);
                 case OsType.RoboRio:
                     loader = new RoboRioLibraryLoader();
                     return loader.LoadLibrary(dllLoc);
