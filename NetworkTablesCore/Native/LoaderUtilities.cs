@@ -84,11 +84,12 @@ namespace NetworkTables.Native
                     break;
                 case OsType.RoboRio:
                     inputName = "NetworkTables.NativeLibraries.libntcorearm.so";
-                    outputName = "/home/lvuser/libntcore.so";
+                    outputName = "libntcore.so";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
+            outputName = Path.GetTempPath() + outputName;
             byte[] bytes = null;
             //Load our resource file into memory
             using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(inputName))
