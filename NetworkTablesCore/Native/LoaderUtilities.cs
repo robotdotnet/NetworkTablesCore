@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Security.Cryptography;
 
 namespace NetworkTables.Native
 {
@@ -83,17 +85,57 @@ namespace NetworkTables.Native
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
+            byte[] bytes = null;
+            //Load our resource file into memory
             using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(inputName))
             {
                 if (s == null || s.Length == 0)
                     return null;
-                var bytes = new byte[(int)s.Length];
+                bytes = new byte[(int)s.Length];
                 s.Read(bytes, 0, (int)s.Length);
+            }
+            bool isFileSame = true;
 
+            //If file exists
+            if (File.Exists(outputName))
+            {
+                //Load existing file into memory
+                byte[] existingFile = File.ReadAllBytes(outputName);
+                //If files are different length they are different,
+                //and we can automatically assume they are different.
+                if (existingFile.Length != bytes.Length)
+                {
+                    isFileSame = false;
+                }
+                else
+                {
+                    //Otherwise directly compare the files
+                    //I first tried hashing, but that took 1.5-2.0 seconds,
+                    //wheras this took 0.3 seconds.
+                    for (int i = 0; i < existingFile.Length; i++)
+                    {
+                        if (bytes[i] != existingFile[i])
+                        {
+                            isFileSame = false;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                isFileSame = false;
+            }
+
+            //If file is different write the new file
+            if (!isFileSame)
+            {
                 if (File.Exists(outputName))
                     File.Delete(outputName);
                 File.WriteAllBytes(outputName, bytes);
             }
+            //Force a garbage collection, since we just wasted about 12 MB of RAM.
+            GC.Collect();
+
             return outputName;
 
         }
