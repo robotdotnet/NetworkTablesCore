@@ -5,7 +5,7 @@ This is a DotNet implementation of NetworkTables, using the new ntcore native li
 
 The program uses C# 6.0 features, and comes precompiled for .NET 4.5. However, as long as you have VS 2015, it will compile down to .NET 3.5 with only minor changes. 
 
-Currently support Windows 32 and 64 bit, and the RoboRIO. The native library is not currently compiled for linux, but it probably could be without too much hastle.
+Currently support Windows 32 and 64 bit, Linux 32 and 64 bit, and the RoboRIO. The native library should be able to be compiled on Mac, however I do not own a Mac, and have no way to test it. If the native library is built for Mac OS, and the loading code is changed to load the right library. Arm support other then the RoboRIO should be easy to enable, and should happen soon.
 
 
 Please note that NetworkTables is a protocol used for robot communication in the
