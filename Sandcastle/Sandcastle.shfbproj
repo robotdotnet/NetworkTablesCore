@@ -75,6 +75,11 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Win32' ">
   </PropertyGroup>
+  <PropertyGroup>
+      <!-- NOTE: Update the version number in the path (YYYY.M.D.R) to match the package version -->
+      <SHFBROOT Condition=" '$(SHFBROOT)' == '' ">$(MSBuildThisFileDirectory)..\packages\EWSoftware.SHFB.2015.10.10.0\Tools\</SHFBROOT>
+
+    </PropertyGroup>
   <ItemGroup>
     <Folder Include="Content" />
     <Folder Include="Content\VersionHistory" />
@@ -96,6 +101,7 @@
   <Import Project="$(SHFBROOT)\SandcastleHelpFileBuilder.targets" />
   <!-- The pre-build and post-build event properties must appear *after* the targets file import in order to be
 			 evaluated correctly. -->
+	
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
