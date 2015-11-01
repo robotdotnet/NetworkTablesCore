@@ -9,23 +9,41 @@ namespace NetworkTables.Native
     /// </summary>
     public enum NtType
     {
-        ///No type assigned
+        /// <summary>
+        /// No type assigned
+        /// </summary>
         Unassigned = 0,
-        ///Boolean type
+        /// <summary>
+        /// Boolean type
+        /// </summary>
         Boolean = 0x01,
-        ///Double type
+        /// <summary>
+        /// Double type
+        /// </summary>
         Double = 0x02,
-        ///String type
+        /// <summary>
+        /// String type
+        /// </summary>
         String = 0x04,
-        ///Raw type
+        /// <summary>
+        /// Raw type
+        /// </summary>
         Raw = 0x08,
-        ///Boolean Array type
+        /// <summary>
+        /// Boolean Array type
+        /// </summary>
         BooleanArray = 0x10,
-        ///Double Array type
+        /// <summary>
+        /// Double Array type
+        /// </summary>
         DoubleArray = 0x20,
-        ///String Array type
+        /// <summary>
+        /// String Array type
+        /// </summary>
         StringArray = 0x40,
-        ///Rpc type
+        /// <summary>
+        /// Rpc type
+        /// </summary>
         Rpc = 0x80
     }  
 

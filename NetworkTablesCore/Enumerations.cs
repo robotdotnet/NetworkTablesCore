@@ -8,20 +8,34 @@ namespace NetworkTables
     [Flags]
     public enum NotifyFlags
     {
-        /// Notify nobody
+        /// <summary>
+        ///  Notify nobody
+        /// </summary>
         NotifyNone = 0x00,
+        /// <summary>
         /// Initial listener addition
+        /// </summary>
         NotifyImmediate = 0x01,
+        /// <summary>
         /// Changed locally
-        NotifyLocal = 0x02,    
+        /// </summary>
+        NotifyLocal = 0x02,
+        /// <summary>
         /// Newly created entry
-        NotifyNew = 0x04,    
+        /// </summary>
+        NotifyNew = 0x04,
+        /// <summary>
         /// Deleted entry
-        NotifyDelete = 0x08,    
+        /// </summary>
+        NotifyDelete = 0x08,
+        /// <summary>
         /// Value changed for entry
-        NotifyUpdate = 0x10,    
+        /// </summary>
+        NotifyUpdate = 0x10,
+        /// <summary>
         /// Flags changed for entry
-        NotifyFlagsChanged = 0x20      
+        /// </summary>
+        NotifyFlagsChanged = 0x20
     };
 
     /// <summary>
@@ -30,9 +44,13 @@ namespace NetworkTables
     [Flags]
     public enum EntryFlags
     {
+        /// <summary>
         /// No flags
+        /// </summary>
         None = 0x00,
+        /// <summary>
         /// Set entry to be persistent
+        /// </summary>
         Persistent = 0x01
     }
 
