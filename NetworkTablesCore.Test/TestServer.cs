@@ -15,7 +15,7 @@ namespace NetworkTablesCore.Test
             CoreMethods.SetLogger(((level, file, line, message) =>
             {
                 Console.Error.WriteLine(message);
-            }), LogLevel.Debug4);
+            }), LogLevel.LogDebug4);
             
             Console.WriteLine("BeforeShuttingDown");
             NetworkTable.Shutdown();
