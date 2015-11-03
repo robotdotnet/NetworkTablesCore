@@ -7,6 +7,7 @@ using NUnit.Framework;
 
 namespace NetworkTablesCore.Test
 {
+    [TestFixture]
     public class TestClient
     {
         [Test]
