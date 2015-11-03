@@ -9,6 +9,7 @@ namespace NetworkTablesCore.Test
 {
     public class TestClient
     {
+        [Test]
         public void Client()
         {
             NetworkTable.Shutdown();
