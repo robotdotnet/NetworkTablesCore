@@ -6,10 +6,8 @@ using NUnit.Framework;
 
 namespace NetworkTablesCore.Test
 {
-    [TestFixture]
     public class TestServer
     {
-        [Test]
         public void Test()
         {
             CoreMethods.SetLogger(((level, file, line, message) =>
