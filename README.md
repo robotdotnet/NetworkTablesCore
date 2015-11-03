@@ -1,5 +1,5 @@
 # NetworkTablesDotNet
-[![Build status](https://ci.appveyor.com/api/projects/status/q6e3jxtlavkpuf3p/branch/master?svg=true)](https://ci.appveyor.com/project/robotdotnet-admin/networktablescore/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/q6e3jxtlavkpuf3p/branch/master?svg=true)](https://ci.appveyor.com/project/robotdotnet/networktablescore/branch/master)
 
 This is a DotNet implementation of NetworkTables, using the new ntcore native library for the 2016 season. The managed side of the code is based on the Java implentation, however all communication code is provided by the library. NetworkTables are used to pass non-Driver Station data to and from the robot across the network.
 
