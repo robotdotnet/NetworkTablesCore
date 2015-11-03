@@ -12,13 +12,15 @@ namespace NetworkTablesCore.Test
         [Test]
         public void Test()
         {
+            CoreMethods.SetLogger(((level, file, line, message) =>
+            {
+                Console.Error.WriteLine(message);
+            }), LogLevel.LogCritical);
+            
             Console.WriteLine("BeforeShuttingDown");
             NetworkTable.Shutdown();
             Console.WriteLine("Shutting Down");
-            CoreMethods.SetLogger(((level, file, line, message) =>
-            {
-                //Console.Error.WriteLine(message);
-            }), 0);
+            
 
             NetworkTable.SetIPAddress("127.0.0.1");
             Console.WriteLine("IP");
