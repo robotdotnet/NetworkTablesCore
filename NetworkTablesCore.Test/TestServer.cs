@@ -12,6 +12,7 @@ namespace NetworkTablesCore.Test
         [Test]
         public void Test()
         {
+            Console.WriteLine("BeforeShuttingDown");
             NetworkTable.Shutdown();
             Console.WriteLine("Shutting Down");
             CoreMethods.SetLogger(((level, file, line, message) =>
