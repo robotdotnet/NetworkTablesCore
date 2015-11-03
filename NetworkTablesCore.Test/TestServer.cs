@@ -6,8 +6,10 @@ using NUnit.Framework;
 
 namespace NetworkTablesCore.Test
 {
+    [TestFixture]
     public class TestServer
     {
+        [Test]
         public void Test()
         {
             NetworkTable.Shutdown();
