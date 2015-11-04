@@ -8,6 +8,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkTablesCore.Test", "NetworkTablesCore.Test\NetworkTablesCore.Test.csproj", "{1E2FCA78-FDA6-43AB-BB56-BE77C0BC701A}"
 EndProject
 Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "Sandcastle", "Sandcastle\Sandcastle.shfbproj", "{5647E833-22C8-4B86-B211-6A68B39155DE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1E2FCA78-FDA6-43AB-BB56-BE77C0BC701A} = {1E2FCA78-FDA6-43AB-BB56-BE77C0BC701A}
+		{7BD949DB-C15F-436B-BDD4-2A47AE80A832} = {7BD949DB-C15F-436B-BDD4-2A47AE80A832}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

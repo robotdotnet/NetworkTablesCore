@@ -541,7 +541,7 @@ namespace NetworkTables.Native
             UIntPtr size;
             byte[] name = CreateUTF8String(filename, out size);
             IntPtr err = Interop.NT_SavePersistent(name);
-            if (err != IntPtr.Zero) throw new Exception();//TODO: Figure out this exception
+            if (err != IntPtr.Zero) throw new PersistentException("Save persistent failed");//TODO: Figure out this exception
         }
 
         internal static string[] LoadPersistent(string filename)
@@ -553,7 +553,7 @@ namespace NetworkTables.Native
             {
                 warns.Add($"{line.ToString()}: {ReadUTF8String(msg)}");
             });
-            if (err != IntPtr.Zero) throw new Exception();//TODO: Figure out this exception
+            if (err != IntPtr.Zero) throw new PersistentException("Load Persistent Failed");//TODO: Figure out this exception
             return warns.ToArray();
         }
         #endregion
