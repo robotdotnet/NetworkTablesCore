@@ -60,8 +60,26 @@ namespace NetworkTables.Native
             }
         }
 
+        private const string Debugx64Windows = @"C:\Users\thad\Documents\GitHub\PeterJohnson\ntcore\build\binaries\ntcoreSharedLibrary\x64\ntcore.dll";
+        private const string Debugx32Windows = @"C:\Users\thad\Documents\GitHub\PeterJohnson\ntcore\build\binaries\ntcoreSharedLibrary\x86\ntcore.dll";
+        private const bool debug = false;
+
         internal static string ExtractLibrary(OsType type)
         {
+            if (debug)
+            {
+                switch (type)
+                {
+                    case OsType.Windows32:
+                        return Debugx32Windows;
+                        break;
+                    case OsType.Windows64:
+                        return Debugx64Windows;
+                        break;
+                }
+            }
+
+
             string inputName;
             string outputName;
             switch (type)
