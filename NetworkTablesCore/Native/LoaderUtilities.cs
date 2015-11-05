@@ -1,4 +1,5 @@
-﻿using System;
+﻿//#define NativeDebug
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -60,12 +61,17 @@ namespace NetworkTables.Native
             }
         }
 
+#if NativeDebug
+
         private const string Debugx64Windows = @"C:\Users\thad\Documents\GitHub\PeterJohnson\ntcore\build\binaries\ntcoreSharedLibrary\x64\ntcore.dll";
         private const string Debugx32Windows = @"C:\Users\thad\Documents\GitHub\PeterJohnson\ntcore\build\binaries\ntcoreSharedLibrary\x86\ntcore.dll";
         private const bool debug = false;
+#endif
 
         internal static string ExtractLibrary(OsType type)
         {
+
+#if NativeDebug
             if (debug)
             {
                 switch (type)
@@ -78,6 +84,7 @@ namespace NetworkTables.Native
                         break;
                 }
             }
+#endif
 
 
             string inputName;
