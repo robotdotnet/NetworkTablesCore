@@ -17,7 +17,7 @@ namespace NetworkTablesCore.Test
 
             CoreMethods.SetLogger(((level, file, line, message) =>
             {
-                Console.Error.WriteLine(message);
+                //Console.Error.WriteLine(message);
             }), 0);
 
             NetworkTable.SetIPAddress("127.0.0.1");

@@ -10,12 +10,12 @@ namespace NetworkTablesCore.Test
     public class TestServer
     {
         [Test]
-        [Ignore("Test is failing because Shutdown() has a deadlock in ntcore. Fixed in library, but need to update library.")]
+        //[Ignore("Test is failing because Shutdown() has a deadlock in ntcore. Fixed in library, but need to update library.")]
         public void Test()
         {
             CoreMethods.SetLogger(((level, file, line, message) =>
             {
-                Console.Error.WriteLine(message);
+                //Console.Error.WriteLine(message);
             }), 0);
             
             NetworkTable.Shutdown();
