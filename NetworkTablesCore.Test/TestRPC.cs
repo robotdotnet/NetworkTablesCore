@@ -7,16 +7,9 @@ using NUnit.Framework;
 namespace NetworkTablesCore.Test
 {
     [TestFixture]
+    [Category("Server")]
     public class TestRPC
     {
-        [TestFixtureSetUp]
-        public void InitClass()
-        {
-            NetworkTable.Shutdown();
-            NetworkTable.SetServerMode();
-            NetworkTable.Initialize();
-        }
-
         public byte[] callback1(string names, byte[] params_str)
         {
             var param = RemoteProcedureCall.UnpackRpcValues(params_str, NtType.Double);

@@ -8,21 +8,16 @@ using NUnit.Framework;
 namespace NetworkTablesCore.Test
 {
     [TestFixture]
-    public class TestClient
+    [Category("Client")]
+    public class TestClient : ClientTestBase
     {
         [Test]
         public void Client()
         {
-            NetworkTable.Shutdown();
-
             CoreMethods.SetLogger(((level, file, line, message) =>
             {
                 //Console.Error.WriteLine(message);
             }), 0);
-
-            NetworkTable.SetIPAddress("127.0.0.1");
-            NetworkTable.SetPort(10000);
-            NetworkTable.SetClientMode();
             NetworkTable nt = NetworkTable.GetTable("");
 
             Thread.Sleep(2000);
