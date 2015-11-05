@@ -11,7 +11,7 @@ namespace NetworkTablesCore.Test
     public class TestServer
     {
         [Test]
-        //[Ignore("Test is failing for some very odd reason. It passes if I log into the build server using RDP before it runs the test. Otherwise it fails....")]
+        //[Ignore("Test is failing for some very odd reason. It passes if I log into the build Server using RDP before it runs the test. Otherwise it fails....")]
         [Timeout(10000)]
         public void Test()
         {

@@ -13,20 +13,20 @@ namespace NetworkTablesCore.Test
         [SetUp]
         public void Init()
         {
-            if (!GlobalTestConstants.started)
+            if (!GlobalTestConstants.Started)
             {
                 NetworkTable.SetIPAddress("127.0.0.1");
                 NetworkTable.SetPort(10000);
                 NetworkTable.SetClientMode();
                 NetworkTable.Initialize();
-                GlobalTestConstants.started = true;
-                GlobalTestConstants.server = false;
+                GlobalTestConstants.Started = true;
+                GlobalTestConstants.Server = false;
             }
             else
             {
-                if (GlobalTestConstants.server == true)
+                if (GlobalTestConstants.Server == true)
                 {
-                    throw new InvalidOperationException("Test can only run either client or server. Not both.");
+                    throw new InvalidOperationException("Test can only run either client or Server. Not both.");
                 }
             }
         }

@@ -8,7 +8,7 @@ namespace NetworkTablesCore.Test
 {
     public class GlobalTestConstants
     {
-        internal static bool started = false;
-        internal static bool server = false;
+        internal static bool Started = false;
+        internal static bool Server = false;
     }
 }
