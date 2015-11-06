@@ -1,0 +1,12 @@
+language: csharp
+solution: NetworkTablesCore.sln
+
+install:
+  - nuget restore NetworkTablesCore.sln
+  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
+script:
+  - xbuild /p:Configuration=AppVeyor NetworkTablesCore.sln
+  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./NetworkTablesCore.Test/Output/NetworkTablesCore.Test.dll /framework:net-4.0 /include:Server
+  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./NetworkTablesCore.Test/Output/NetworkTablesCore.Test.dll /framework:net-4.0 /include:Client
+  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console-x86.exe ./NetworkTablesCore.Test/Output/NetworkTablesCore.Test.dll /framework:net-4.0 /include:Server
+  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console-x86.exe ./NetworkTablesCore.Test/Output/NetworkTablesCore.Test.dll /framework:net-4.0 /include:Client
