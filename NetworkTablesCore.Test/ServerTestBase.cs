@@ -11,7 +11,20 @@ namespace NetworkTablesCore.Test
     public class ServerTestBase
     {
         [SetUp]
-        public void Init()
+        public void TestInit()
+        {
+            if (Environment.Is64BitProcess)
+            {
+                Console.WriteLine("64 Bit Test");
+            }
+            else
+            {
+                Console.WriteLine("32 Bit Test");
+            }
+        }
+
+        [TestFixtureSetUp]
+        public void ClassSetUp()
         {
             if (!GlobalTestConstants.Started)
             {

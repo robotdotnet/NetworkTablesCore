@@ -11,24 +11,16 @@ namespace NetworkTablesCore.Test
     public class TestServer
     {
         [Test]
-        //[Ignore("Test is failing for some very odd reason. It passes if I log into the build Server using RDP before it runs the test. Otherwise it fails....")]
-        [Timeout(10000)]
         public void Test()
         {
             CoreMethods.SetLogger(((level, file, line, message) =>
             {
-                Console.Error.WriteLine(message);
+                //Console.Error.WriteLine(message);
             }), 0);
-            /*
-            NetworkTable.Shutdown();
-            
-            NetworkTable.SetIPAddress("127.0.0.1");
-            NetworkTable.SetPort(10000);
-            NetworkTable.SetServerMode();
-            */
+
             NetworkTable nt = NetworkTable.GetTable("");
 
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
 
             nt.PutNumber("foo", 0.5);
             nt.SetFlags("foo", EntryFlags.Persistent);
@@ -37,7 +29,7 @@ namespace NetworkTablesCore.Test
             nt.PutNumber("foo2", 0.6);
             nt.PutNumber("foo2", 0.5);
 
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
         }
     }
 }
