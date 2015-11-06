@@ -38,13 +38,12 @@ namespace NetworkTables.Native
     {
         IntPtr ILibraryLoader.LoadLibrary(string filename)
         {
-            Console.WriteLine("Loading Library");
             IntPtr dl = dlopen(filename, 2);
             if (dl != IntPtr.Zero) return dl;
             IntPtr err = dlerror();
             if (err != IntPtr.Zero)
             {
-                throw new DllNotFoundException($"DLL Could not be opened: {Marshal.PtrToStringAnsi(err)}");
+                throw new DllNotFoundException($"Library Could not be opened: {Marshal.PtrToStringAnsi(err)}");
             }
             return dl;
         }
@@ -75,7 +74,14 @@ namespace NetworkTables.Native
     {
         IntPtr ILibraryLoader.LoadLibrary(string filename)
         {
-            return dlopen(filename, 2);
+            IntPtr dl = dlopen(filename, 2);
+            if (dl != IntPtr.Zero) return dl;
+            IntPtr err = dlerror();
+            if (err != IntPtr.Zero)
+            {
+                throw new DllNotFoundException($"Library Could not be opened: {Marshal.PtrToStringAnsi(err)}");
+            }
+            return dl;
         }
 
         IntPtr ILibraryLoader.GetProcAddress(IntPtr dllHandle, string name)

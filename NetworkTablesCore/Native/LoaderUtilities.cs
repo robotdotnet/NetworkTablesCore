@@ -101,11 +101,11 @@ namespace NetworkTables.Native
                     break;
                 case OsType.Linux32:
                     inputName = "NetworkTables.NativeLibraries.libntcore32.so";
-                    outputName = "libntcore32.so";
+                    outputName = "libntcore.so";
                     break;
                 case OsType.Linux64:
                     inputName = "NetworkTables.NativeLibraries.libntcore64.so";
-                    outputName = "libntcore64.so";
+                    outputName = "libntcore.so";
                     break;
                 case OsType.RoboRio:
                     inputName = "NetworkTables.NativeLibraries.libntcorearm.so";
