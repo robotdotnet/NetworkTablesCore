@@ -8,7 +8,7 @@ namespace NetworkTablesCore.Test
 {
     [TestFixture]
     [Category("Server")]
-    public class TestServer
+    public class TestServer : ServerTestBase
     {
         [Test]
         public void Test()

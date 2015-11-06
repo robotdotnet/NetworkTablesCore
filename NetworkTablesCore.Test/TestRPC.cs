@@ -8,7 +8,7 @@ namespace NetworkTablesCore.Test
 {
     [TestFixture]
     [Category("Server")]
-    public class TestRPC
+    public class TestRPC : ServerTestBase
     {
         public byte[] callback1(string names, byte[] params_str)
         {
