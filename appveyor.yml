@@ -1,4 +1,4 @@
-version: 2015.2.0.{build}
+version: 2016.0.0.{build}
 skip_tags: true
 os: Visual Studio 2015
 configuration: AppVeyor
@@ -20,11 +20,8 @@ test_script:
 - cmd: >-
     nunit-console.exe %APPVEYOR_BUILD_FOLDER%\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll /framework:net-4.0 /include:Server
 
-
     nunit-console.exe %APPVEYOR_BUILD_FOLDER%\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll /framework:net-4.0 /include:Client
 
-
     nunit-console-x86.exe %APPVEYOR_BUILD_FOLDER%\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll /framework:net-4.0 /include:Server
-
 
     nunit-console-x86.exe %APPVEYOR_BUILD_FOLDER%\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll /framework:net-4.0 /include:Client
