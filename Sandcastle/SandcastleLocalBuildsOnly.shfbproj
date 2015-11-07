@@ -50,6 +50,7 @@
         <configuration />
       </PlugInConfig>
     </PlugInConfigurations>
+    <ComponentPath>..\sbpackages\EWSoftware.SHFB.NETFramework.4.6\tools\Data\.NETFramework\</ComponentPath>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in order for Visual Studio to perform
 			 the build.  The others are optional common platform types that may appear. -->
@@ -68,6 +69,10 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Win32' ">
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Win32' ">
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- NOTE: Update the version number in the path (YYYY.M.D.R) to match the package version -->
+    <SHFBROOT Condition=" '$(SHFBROOT)' == '' ">$(MSBuildThisFileDirectory)..\sbpackages\EWSoftware.SHFB.2015.10.10.0\Tools\</SHFBROOT>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Content" />
@@ -93,6 +98,7 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
+    <PostBuildEvent>xcopy Help\NetworkTables.xml ..\NetworkTablesCore\Output /y</PostBuildEvent>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
 </Project>
