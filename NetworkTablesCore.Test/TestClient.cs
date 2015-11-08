@@ -14,10 +14,10 @@ namespace NetworkTablesCore.Test
         [Test]
         public void Client()
         {
-            CoreMethods.SetLogger(((level, file, line, message) =>
+            CoreMethods.SetLogger((level, file, line, message) =>
             {
                 //Console.Error.WriteLine(message);
-            }), 0);
+            }, 0);
             NetworkTable nt = NetworkTable.GetTable("");
 
             Thread.Sleep(2000);

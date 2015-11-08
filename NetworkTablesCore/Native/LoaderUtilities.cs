@@ -1,9 +1,7 @@
-﻿//#define NativeDebug
+﻿//#define NativeDebug //Uncomment this to enable easy native debugging. Then change the DebugxWindows to be the native lib location
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Security.Cryptography;
 
 namespace NetworkTables.Native
 {
@@ -115,7 +113,7 @@ namespace NetworkTables.Native
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
             outputName = Path.GetTempPath() + outputName;
-            byte[] bytes = null;
+            byte[] bytes;
             //Load our resource file into memory
             using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(inputName))
             {

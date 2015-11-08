@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using NetworkTables;
 using NetworkTables.Native;
 using NUnit.Framework;
 
@@ -10,9 +9,9 @@ namespace NetworkTablesCore.Test
     [Category("Server")]
     public class TestRPC : ServerTestBase
     {
-        public byte[] callback1(string names, byte[] params_str)
+        private byte[] Callback1(string names, byte[] paramsStr)
         {
-            var param = RemoteProcedureCall.UnpackRpcValues(params_str, NtType.Double);
+            var param = RemoteProcedureCall.UnpackRpcValues(paramsStr, NtType.Double);
 
             if (param.Count == 0)
             {
@@ -28,21 +27,21 @@ namespace NetworkTablesCore.Test
         [Test]
         public void TestRpcLocal()
         {
-            CoreMethods.SetLogger(((level, file, line, message) =>
+            CoreMethods.SetLogger((level, file, line, message) =>
             {
                 //Console.Error.WriteLine(message);
-            }), 0);
+            }, 0);
 
             var def = new NtRpcDefinition(1, "myfunc1", new[] {new NtRpcParamDef("param1", RpcValue.MakeDouble(0.0))}, new[] {new NtRpcResultDef("result1", NtType.Double)});
 
-            RemoteProcedureCall.CreateRpc("func1", def, callback1);
+            RemoteProcedureCall.CreateRpc("func1", def, Callback1);
 
             Console.WriteLine("Calling RPC");
 
-            uint call1UID = RemoteProcedureCall.CallRpc("func1", RpcValue.MakeDouble(2.0));
+            uint call1Uid = RemoteProcedureCall.CallRpc("func1", RpcValue.MakeDouble(2.0));
 
             Console.WriteLine("Waiting for RPC Result");
-            byte[] result = RemoteProcedureCall.GetRpcResult(true, call1UID);
+            byte[] result = RemoteProcedureCall.GetRpcResult(true, call1Uid);
             var call1Result = RemoteProcedureCall.UnpackRpcValues(result, NtType.Double);
             Assert.AreNotEqual(0, call1Result.Count, "RPC Result empty");
 
@@ -52,14 +51,14 @@ namespace NetworkTablesCore.Test
         [Test]
         public void TestRpcSpeed()
         {
-            CoreMethods.SetLogger(((level, file, line, message) =>
+            CoreMethods.SetLogger((level, file, line, message) =>
             {
                 //Console.Error.WriteLine(message);
-            }), 0);
+            }, 0);
 
             var def = new NtRpcDefinition(1, "myfunc1", new[] { new NtRpcParamDef("param1", RpcValue.MakeDouble(0.0)) }, new[] { new NtRpcResultDef("result1", NtType.Double) });
 
-            RemoteProcedureCall.CreateRpc("func1", def, callback1);
+            RemoteProcedureCall.CreateRpc("func1", def, Callback1);
 
             
 
@@ -68,8 +67,8 @@ namespace NetworkTablesCore.Test
 
             for (int i = 0; i < 10000; ++i)
             {
-                uint call1UID = RemoteProcedureCall.CallRpc("func1", RpcValue.MakeDouble(i));
-                byte[] call1Result = RemoteProcedureCall.GetRpcResult(true, call1UID);
+                uint call1Uid = RemoteProcedureCall.CallRpc("func1", RpcValue.MakeDouble(i));
+                byte[] call1Result = RemoteProcedureCall.GetRpcResult(true, call1Uid);
                 var res = RemoteProcedureCall.UnpackRpcValues(call1Result, NtType.Double);
                 Assert.AreNotEqual(0, res.Count, "RPC Result empty");
             }

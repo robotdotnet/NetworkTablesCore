@@ -176,7 +176,7 @@ namespace NetworkTables
         /// <see cref="GetTable(string)"/> if the system is a client.</remarks>
         public static void SetTeam(int team)
         {
-            SetIPAddress($"10.{(team / 100)}.{(team % 100)}.2");
+            SetIPAddress($"10.{team / 100}.{team % 100}.2");
         }
 
         /// <summary>
@@ -800,6 +800,7 @@ namespace NetworkTables
                 m_listenerMap.Add(listener, adapters);
             }
 
+            // ReSharper disable once InconsistentNaming
             EntryListenerFunction func = (uid, key, value, flags_) =>
             {
                 string relativeKey = key.Substring(m_path.Length + 1);
@@ -830,6 +831,7 @@ namespace NetworkTables
                 m_listenerMap.Add(listener, adapters);
             }
             string fullKey = m_path + PathSeperatorChar + key;
+            // ReSharper disable once InconsistentNaming
             EntryListenerFunction func = (uid, funcKey, value, flags_) =>
             {
                 if (!funcKey.Equals(fullKey))
@@ -857,6 +859,7 @@ namespace NetworkTables
                 m_listenerMap.Add(listener, adapters);
             }
             HashSet<string> notifiedTables = new HashSet<string>();
+            // ReSharper disable once InconsistentNaming
             EntryListenerFunction func = (uid, key, value, flags_) =>
             {
                 string relativeKey = key.Substring(m_path.Length + 1);

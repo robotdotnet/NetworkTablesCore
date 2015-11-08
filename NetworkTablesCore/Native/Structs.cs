@@ -103,12 +103,13 @@ namespace NetworkTables.Native
     //Looks like this will always be created for us by the library, so we do not have to write it.
     internal struct NtConnectionInfo
     {
-        public NtStringRead remote_id;
-        public IntPtr remote_name;
-        public uint remote_port;
-        public ulong last_update;
-        public uint protocol_version;
-
+#pragma warning disable 649
+        public readonly NtStringRead RemoteId;
+        public readonly IntPtr RemoteName;
+        public readonly uint RemotePort;
+        public readonly ulong LastUpdate;
+        public readonly uint ProtocolVersion;
+#pragma warning restore 649
     }
 
 

@@ -42,7 +42,7 @@ namespace NetworkTables.Native
         public static void CreateRpc(string name, NtRpcDefinition def, RpcCallback callback)
         {
             Interop.NT_RPCCallback modCallback =
-                (IntPtr data, IntPtr ptr, UIntPtr len, IntPtr intPtr, UIntPtr paramsLen, ref UIntPtr resultsLen) =>
+                (IntPtr data, IntPtr ptr, UIntPtr len, IntPtr intPtr, UIntPtr paramsLen, out UIntPtr resultsLen) =>
                 {
                     string retName = CoreMethods.ReadUTF8String(ptr, len);
                     byte[] param = CoreMethods.GetRawDataFromPtr(intPtr, paramsLen);

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NetworkTables;
 using NUnit.Framework;
 
@@ -13,14 +9,7 @@ namespace NetworkTablesCore.Test
         [SetUp]
         public void TestInit()
         {
-            if (Environment.Is64BitProcess)
-            {
-                Console.WriteLine("64 Bit Test");
-            }
-            else
-            {
-                Console.WriteLine("32 Bit Test");
-            }
+            Console.WriteLine(Environment.Is64BitProcess ? "64 Bit Test" : "32 Bit Test");
         }
 
         [TestFixtureSetUp]
@@ -37,7 +26,7 @@ namespace NetworkTablesCore.Test
             }
             else
             {
-                if (GlobalTestConstants.Server == true)
+                if (GlobalTestConstants.Server)
                 {
                     throw new InvalidOperationException("Test can only run either client or Server. Not both.");
                 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using NetworkTables;
 using NetworkTables.Native;
 using NUnit.Framework;
@@ -13,10 +12,10 @@ namespace NetworkTablesCore.Test
         [Test]
         public void Test()
         {
-            CoreMethods.SetLogger(((level, file, line, message) =>
+            CoreMethods.SetLogger((level, file, line, message) =>
             {
                 //Console.Error.WriteLine(message);
-            }), 0);
+            }, 0);
 
             NetworkTable nt = NetworkTable.GetTable("");
 

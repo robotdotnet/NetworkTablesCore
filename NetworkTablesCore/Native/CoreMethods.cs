@@ -373,7 +373,7 @@ namespace NetworkTables.Native
             {
                 IntPtr data = new IntPtr(connections.ToInt64() + connectionInfoSize * i);
                 var con = (NtConnectionInfo)Marshal.PtrToStructure(data, typeof(NtConnectionInfo));
-                connectionsArray[i] = new ConnectionInfo(con.remote_id.ToString(), ReadUTF8String(con.remote_name), (int)con.remote_port, (long)con.last_update, (int)con.protocol_version);
+                connectionsArray[i] = new ConnectionInfo(con.RemoteId.ToString(), ReadUTF8String(con.RemoteName), (int)con.RemotePort, (long)con.LastUpdate, (int)con.ProtocolVersion);
             }
             Interop.NT_DisposeConnectionInfoArray(connections, count);
             return connectionsArray;
@@ -386,6 +386,7 @@ namespace NetworkTables.Native
 
         internal static int AddEntryListener(string prefix, EntryListenerFunction listener, NotifyFlags flags)
         {
+            // ReSharper disable once InconsistentNaming
             Interop.NT_EntryListenerCallback modCallback = (uid, data, name, len, value, flags_) =>
             {
                 NtType type = Interop.NT_GetValueType(value);
@@ -471,8 +472,8 @@ namespace NetworkTables.Native
             Interop.NT_ConnectionListenerCallback modCallback =
                 (uint uid, IntPtr data, int connected, ref NtConnectionInfo conn) =>
                 {
-                    string remoteName = ReadUTF8String(conn.remote_name);
-                    ConnectionInfo info = new ConnectionInfo(conn.remote_id.ToString(), remoteName, (int)conn.remote_port, (long)conn.last_update, (int)conn.protocol_version);
+                    string remoteName = ReadUTF8String(conn.RemoteName);
+                    ConnectionInfo info = new ConnectionInfo(conn.RemoteId.ToString(), remoteName, (int)conn.RemotePort, (long)conn.LastUpdate, (int)conn.ProtocolVersion);
                     callback((int)uid, connected != 0, info);
                 };
 
@@ -662,7 +663,7 @@ namespace NetworkTables.Native
             for (int i = 0; i < iSize; i++)
             {
                 IntPtr data = new IntPtr(ptr.ToInt64() + sizeof(int) * i);
-                bArr[i] = ((int)Marshal.PtrToStructure(data, typeof(int))) != 0;
+                bArr[i] = (int)Marshal.PtrToStructure(data, typeof(int)) != 0;
             }
             return bArr;
         }

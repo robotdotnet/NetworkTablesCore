@@ -127,8 +127,10 @@ namespace NetworkTables.Native
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate IntPtr NT_RPCCallback(
-            IntPtr data, IntPtr name, UIntPtr name_len, IntPtr param, UIntPtr params_len, ref UIntPtr results_len);
+            IntPtr data, IntPtr name, UIntPtr name_len, IntPtr param, UIntPtr params_len, out UIntPtr results_len);
 
+
+        //Interup Functions
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void NT_SetEntryFlagsDelegate(byte[] name, UIntPtr name_len, uint flags);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
