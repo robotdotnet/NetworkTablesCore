@@ -1,4 +1,6 @@
-﻿namespace NetworkTables.Native
+﻿using System.Runtime.InteropServices;
+
+namespace NetworkTables.Native
 {
     internal class RpcValue
     {
@@ -130,6 +132,7 @@
         }
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     internal struct NtRpcCallInfo
     {
 #pragma warning disable 649
