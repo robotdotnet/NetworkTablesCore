@@ -81,8 +81,9 @@ namespace NetworkTables.Native.Rpc
                     return 1;
                 case NtType.Double:
                     return 8;
-                case NtType.Rpc:
                 case NtType.Raw:
+                    return GetRawSize((byte[])value.Value);
+                case NtType.Rpc:
                 case NtType.String:
                     return GetStringSize((string)value.Value);
                 case NtType.BooleanArray:
@@ -120,6 +121,8 @@ namespace NetworkTables.Native.Rpc
                     WriteDouble((double)value.Value);
                     break;
                 case NtType.Raw:
+                    WriteRaw((byte[])value.Value);
+                    break;
                 case NtType.String:
                 case NtType.Rpc:
                     WriteString((string)value.Value);
@@ -156,6 +159,17 @@ namespace NetworkTables.Native.Rpc
                     Console.WriteLine("unrecognized type when writing value");
                     return;
             }
+        }
+
+        public int GetRawSize(byte[] raw)
+        {
+            return Leb128.SizeUleb128((ulong)raw.Length) + raw.Length;
+        }
+
+        public void WriteRaw(byte[] raw)
+        {
+            WriteUleb128((ulong)raw.Length);
+            m_buffer.AddRange(raw);
         }
 
         public int GetStringSize(string str)

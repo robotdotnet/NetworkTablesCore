@@ -26,9 +26,9 @@
             return new RpcValue(val);
         }
 
-        public static RpcValue MakeRaw(string val)
+        public static RpcValue MakeRaw(byte[] val)
         {
-            return new RpcValue(val, true);
+            return new RpcValue(val);
         }
 
         public static RpcValue MakeBooleanArray(bool[] val)
@@ -52,7 +52,7 @@
             Value = val;
         }
 
-        private RpcValue(string val, bool raw)
+        private RpcValue(byte[] val)
         {
             Type = NtType.Raw;
             Value = val;
@@ -132,9 +132,11 @@
 
     internal struct NtRpcCallInfo
     {
+#pragma warning disable 649
         public readonly uint RpcId;
         public readonly uint CallUid;
         public readonly NtStringRead Name;
         public readonly NtStringRead Param;
+#pragma warning restore 649
     }
 }

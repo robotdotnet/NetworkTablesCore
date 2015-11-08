@@ -33,8 +33,8 @@ namespace NetworkTables.Native.Rpc
                     double vD = 0;
                     return !ReadDouble(ref vD) ? null : RpcValue.MakeDouble(vD);
                 case NtType.Raw:
-                    string vRa = "";
-                    return !ReadString(ref vRa) ? null : RpcValue.MakeRaw(vRa);
+                    byte[] vRa = null;
+                    return !ReadRaw(ref vRa) ? null : RpcValue.MakeRaw(vRa);
                 case NtType.Rpc:
                 case NtType.String:
                     string vS = "";
@@ -123,6 +123,18 @@ namespace NetworkTables.Native.Rpc
 
             if (m_buffer.Length < m_count + len) return false;
             val = Encoding.UTF8.GetString(m_buffer, m_count, len);
+            return true;
+        }
+
+        public bool ReadRaw(ref byte[] val)
+        {
+            ulong v;
+            if (Leb128.ReadUleb128(m_buffer, ref m_count, out v) == 0) return false;
+            var len = (int)v;
+
+            if (m_buffer.Length < m_count + len) return false;
+            val = new byte[len];
+            Array.Copy(m_buffer, m_count, val, 0, len);
             return true;
         }
     }
