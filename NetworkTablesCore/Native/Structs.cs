@@ -101,6 +101,7 @@ namespace NetworkTables.Native
 
 
     //Looks like this will always be created for us by the library, so we do not have to write it.
+    [StructLayout(LayoutKind.Sequential)]
     internal struct NtConnectionInfo
     {
 #pragma warning disable 649
