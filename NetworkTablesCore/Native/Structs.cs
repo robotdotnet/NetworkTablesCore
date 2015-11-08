@@ -53,6 +53,12 @@ namespace NetworkTables.Native
         private readonly IntPtr str;
         private readonly UIntPtr len;
 
+        internal NtStringRead(IntPtr str, UIntPtr len)
+        {
+            this.str = str;
+            this.len = len;
+        }
+
         public override string ToString()
         {
             byte[] arr = new byte[len.ToUInt64()];
@@ -64,8 +70,8 @@ namespace NetworkTables.Native
     [StructLayout(LayoutKind.Sequential)]
     internal struct NtStringWrite : IDisposable
     {
-        private readonly IntPtr str;
-        private readonly UIntPtr len;
+        internal readonly IntPtr str;
+        internal readonly UIntPtr len;
 
         public NtStringWrite(string vStr)
         {

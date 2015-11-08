@@ -1,17 +1,29 @@
 ﻿using System;
 using NetworkTables;
+using NetworkTables.Native.Exceptions;
 using NUnit.Framework;
 
 namespace NetworkTablesCore.Test
 {
     [TestFixture]
-    public class TestEntries
+    [Category("Client")]
+    public class TestNetworkTableErrors : ClientTestBase
     {
-        private readonly NetworkTable m_nt;
+        private NetworkTable m_nt;
 
-        public TestEntries()
+        [SetUp]
+        public void SetUp()
         {
             m_nt = NetworkTable.GetTable("");
+        }
+
+        [Test]
+        public void TestBadPersistentFileRead()
+        {
+            Assert.Throws<PersistentException>(() =>
+            {
+                NetworkTable.LoadPersistent("invalid.txt");
+            });
         }
 
         [Test]
