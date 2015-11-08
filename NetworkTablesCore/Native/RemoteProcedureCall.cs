@@ -39,7 +39,7 @@ namespace NetworkTables.Native
 
         private static readonly List<Interop.NT_RPCCallback> s_rpcCallbacks = new List<Interop.NT_RPCCallback>();
 
-        public static void CreateRpc(string name, NT_RpcDefinition def, RpcCallback callback)
+        public static void CreateRpc(string name, NtRpcDefinition def, RpcCallback callback)
         {
             Interop.NT_RPCCallback modCallback =
                 (IntPtr data, IntPtr ptr, UIntPtr len, IntPtr intPtr, UIntPtr paramsLen, ref UIntPtr resultsLen) =>
@@ -61,7 +61,7 @@ namespace NetworkTables.Native
             s_rpcCallbacks.Add(modCallback);
         }
 
-        public static void CreatePolledPrc(string name, NT_RpcDefinition def)
+        public static void CreatePolledPrc(string name, NtRpcDefinition def)
         {
             UIntPtr packedLen;
             byte[] packed = PackRpcDefinition(def, out packedLen);
@@ -70,35 +70,35 @@ namespace NetworkTables.Native
             Interop.NT_CreatePolledRpc(nameB, nameLen, packed, packedLen);
         }
 
-        public static bool PollRpc(bool blocking, ref NT_RpcCallInfo info)
+        public static bool PollRpc(bool blocking, ref NtRpcCallInfo info)
         {
             int retVal = Interop.NT_PollRpc(blocking ? 1 : 0, ref info);
             return retVal != 0;
         }
 
-        public static byte[] PackRpcDefinition(NT_RpcDefinition def, out UIntPtr packedLen)
+        public static byte[] PackRpcDefinition(NtRpcDefinition def, out UIntPtr packedLen)
         {
             RpcEncoder enc = new RpcEncoder();
-            enc.Write8((byte)def.version);
-            enc.WriteString(def.name);
+            enc.Write8((byte)def.Version);
+            enc.WriteString(def.Name);
 
-            int paramsSize = def.paramsArray.Length;
+            int paramsSize = def.ParamsArray.Length;
             if (paramsSize > 0xff) paramsSize = 0xff;
             enc.Write8((byte)paramsSize);
             for (int i = 0; i < paramsSize; ++i)
             {
-                enc.WriteType(def.paramsArray[i].value.Type);
-                enc.WriteString(def.paramsArray[i].name);
-                enc.WriteValue(def.paramsArray[i].value);
+                enc.WriteType(def.ParamsArray[i].Value.Type);
+                enc.WriteString(def.ParamsArray[i].Name);
+                enc.WriteValue(def.ParamsArray[i].Value);
             }
 
-            int resultsSize = def.resultsArray.Length;
+            int resultsSize = def.ResultsArray.Length;
             if (resultsSize > 0xff) resultsSize = 0xff;
             enc.Write8((byte)resultsSize);
             for (int i = 0; i < resultsSize; ++i)
             {
-                enc.WriteType(def.resultsArray[i].type);
-                enc.WriteString(def.resultsArray[i].name);
+                enc.WriteType(def.ResultsArray[i].Type);
+                enc.WriteString(def.ResultsArray[i].Name);
             }
             packedLen = (UIntPtr)enc.Buffer.Length;
             return enc.Buffer;

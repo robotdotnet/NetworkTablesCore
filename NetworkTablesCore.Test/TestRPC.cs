@@ -33,7 +33,7 @@ namespace NetworkTablesCore.Test
                 //Console.Error.WriteLine(message);
             }), 0);
 
-            var def = new NT_RpcDefinition(1, "myfunc1", new[] {new NT_RpcParamDef("param1", RpcValue.MakeDouble(0.0))}, new[] {new NT_RpcResultDef("result1", NtType.Double)});
+            var def = new NtRpcDefinition(1, "myfunc1", new[] {new NtRpcParamDef("param1", RpcValue.MakeDouble(0.0))}, new[] {new NtRpcResultDef("result1", NtType.Double)});
 
             RemoteProcedureCall.CreateRpc("func1", def, callback1);
 
@@ -57,7 +57,7 @@ namespace NetworkTablesCore.Test
                 //Console.Error.WriteLine(message);
             }), 0);
 
-            var def = new NT_RpcDefinition(1, "myfunc1", new[] { new NT_RpcParamDef("param1", RpcValue.MakeDouble(0.0)) }, new[] { new NT_RpcResultDef("result1", NtType.Double) });
+            var def = new NtRpcDefinition(1, "myfunc1", new[] { new NtRpcParamDef("param1", RpcValue.MakeDouble(0.0)) }, new[] { new NtRpcResultDef("result1", NtType.Double) });
 
             RemoteProcedureCall.CreateRpc("func1", def, callback1);
 

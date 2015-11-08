@@ -242,7 +242,7 @@ namespace NetworkTables.Native
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void NT_CreatePolledRpcDelegate(byte[] name, UIntPtr name_len, byte[] def, UIntPtr def_len);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate int NT_PollRpcDelegate(int blocking, ref NT_RpcCallInfo call_info);
+        internal delegate int NT_PollRpcDelegate(int blocking, ref NtRpcCallInfo call_info);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void NT_PostRpcResponseDelegate(uint rpc_id, uint call_uid, byte[] result, UIntPtr result_len);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]

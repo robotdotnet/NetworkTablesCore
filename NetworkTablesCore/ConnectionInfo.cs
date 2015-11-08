@@ -5,15 +5,15 @@
     /// </summary>
     public class ConnectionInfo
     {
-        /// Gets the Remote Id of the Connection.
+        /// <summary>Gets the Remote Id of the Connection.</summary>
         public string RemoteId { get; }
-        /// Gets the Remote Name of the Connection.
+        /// <summary>Gets the Remote Name of the Connection.</summary>
         public string RemoteName { get; }
-        /// Gets the Remote Port of the Connection.
+        /// <summary>Gets the Remote Port of the Connection.</summary>
         public int RemotePort { get; }
-        /// Gets the last update time of the Connection.
+        /// <summary>Gets the last update time of the Connection.</summary>
         public long LastUpdate { get; }
-        /// Gets the Protocol Version of the Connection.
+        /// <summary>Gets the Protocol Version of the Connection.</summary>
         public int ProtocolVersion { get; }
 
         internal ConnectionInfo(string rId, string rName, int rPort, long lastUpdate, int protocolVersion)

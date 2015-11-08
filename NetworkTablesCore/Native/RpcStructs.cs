@@ -89,52 +89,52 @@
         }
     }
 
-    internal class NT_RpcDefinition
+    internal class NtRpcDefinition
     {
-        public readonly uint version;
-        public readonly string name;
-        public readonly NT_RpcParamDef[] paramsArray;
-        public readonly NT_RpcResultDef[] resultsArray;
+        public readonly uint Version;
+        public readonly string Name;
+        public readonly NtRpcParamDef[] ParamsArray;
+        public readonly NtRpcResultDef[] ResultsArray;
 
-        public NT_RpcDefinition(uint version, string name, NT_RpcParamDef[] p, NT_RpcResultDef[] r)
+        public NtRpcDefinition(uint version, string name, NtRpcParamDef[] p, NtRpcResultDef[] r)
         {
-            this.version = version;
-            this.name = name;
-            paramsArray = p;
-            resultsArray = r;
+            Version = version;
+            Name = name;
+            ParamsArray = p;
+            ResultsArray = r;
         }
     }
 
 
-    internal class NT_RpcResultDef
+    internal class NtRpcResultDef
     {
-        public readonly string name;
-        public readonly NtType type;
+        public readonly string Name;
+        public readonly NtType Type;
 
-        public NT_RpcResultDef(string name, NtType type)
+        public NtRpcResultDef(string name, NtType type)
         {
-            this.name = name;
-            this.type = type;
+            Name = name;
+            Type = type;
         }
     }
 
-    internal class NT_RpcParamDef
+    internal class NtRpcParamDef
     {
-        public readonly string name;
-        public readonly RpcValue value;
+        public readonly string Name;
+        public readonly RpcValue Value;
 
-        public NT_RpcParamDef(string name, RpcValue value)
+        public NtRpcParamDef(string name, RpcValue value)
         {
-            this.value = value;
-            this.name = name;
+            Value = value;
+            Name = name;
         }
     }
 
-    internal struct NT_RpcCallInfo
+    internal struct NtRpcCallInfo
     {
-        private uint rpc_id;
-        private uint call_uid;
-        private NtStringRead name;
-        private NtStringRead param;
+        public readonly uint RpcId;
+        public readonly uint CallUid;
+        public readonly NtStringRead Name;
+        public readonly NtStringRead Param;
     }
 }

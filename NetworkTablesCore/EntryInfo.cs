@@ -7,13 +7,13 @@ namespace NetworkTables
     /// </summary>
     public class EntryInfo
     {
-        /// Gets the Name of the entry.
+        /// <summary>Gets the Name of the entry.</summary>
         public string Name { get; }
-        /// Gets the Type of the entry.
+        /// <summary>Gets the Type of the entry.</summary>
         public NtType Type { get; }
-        /// Gets the Flags attached to the entry.
+        /// <summary>Gets the Flags attached to the entry.</summary>
         public EntryFlags Flags { get; }
-        /// Gets the last change time of the entry.
+        /// <summary>Gets the last change time of the entry.</summary>
         public long LastChange { get; }
 
         internal EntryInfo(string name, NtType type, EntryFlags flags, long lastChange)

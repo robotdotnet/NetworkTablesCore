@@ -76,9 +76,9 @@ namespace NetworkTables
     /// </example>
     public class NetworkTable : ITable, IRemote
     {
-        ///The character used to seperate tables and keys.
+        /// <summary>The character used to seperate tables and keys.</summary>
         public const char PathSeperatorChar = '/';
-        ///The default port NetworkTables listens on
+        /// <summary>The default port NetworkTables listens on.</summary>
         public const uint DefaultPort = 1735;
         private static uint s_mPort = DefaultPort;
         private static string s_ipAddress = "";

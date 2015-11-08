@@ -42,7 +42,7 @@ namespace NetworkTables.Native.Rpc
                 byte b = addr[start];
                 start++;
                 count++;
-                result |= (ulong)((byte)(b & 0x7f) << shift);
+                result |= (uint)((byte)(b & 0x7f) << shift);
                 shift += 7;
                 if ((b & 0x80) == 0) break;
             }
