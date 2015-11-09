@@ -8,14 +8,8 @@ assembly_info:
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
-nuget:
-  disable_publish_on_pr: true
 before_build:
 - cmd: nuget restore
-build:
-  publish_nuget: true
-  publish_nuget_symbols: true
-  verbosity: minimal
 test_script:
 - cmd: >-
     nunit-console.exe %APPVEYOR_BUILD_FOLDER%\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll /framework:net-4.0 /include:Server
@@ -25,3 +19,13 @@ test_script:
     nunit-console-x86.exe %APPVEYOR_BUILD_FOLDER%\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll /framework:net-4.0 /include:Server
 
     nunit-console-x86.exe %APPVEYOR_BUILD_FOLDER%\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll /framework:net-4.0 /include:Client
+
+branches:
+  only:
+    - master
+nuget:
+  disable_publish_on_pr: true
+build:
+  publish_nuget: true
+  publish_nuget_symbols: true
+  verbosity: minimal
