@@ -13,6 +13,7 @@ nuget:
 before_build:
 - cmd: nuget restore
 build:
+  project: NetworkTablesCore.sln
   verbosity: minimal
 
 after_build:
@@ -31,13 +32,16 @@ after_build:
     Get-ChildItem .\*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
     }
 test_script:
+- .\packages\OpenCover.4.6.166\tools\OpenCover.Console.exe -register:user -target:nunit-console.exe -targetargs:".\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll /noshadow /framework:net-4.0 /include:Client" -filter:"+[Network*]* -[NetworkTablesCore.T*]*" -output:coverage.xml -mergeoutput -returntargetcode
+
+- .\packages\OpenCover.4.6.166\tools\OpenCover.Console.exe -register:user -target:nunit-console.exe -targetargs:".\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll /noshadow /framework:net-4.0 /include:Server" -filter:"+[Network*]* -[NetworkTablesCore.T*]*" -output:coverage.xml -mergeoutput -returntargetcode
+
 - cmd: >-
-
-    nunit-console.exe %APPVEYOR_BUILD_FOLDER%\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll /framework:net-4.0 /include:Server
-
-    nunit-console.exe %APPVEYOR_BUILD_FOLDER%\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll /framework:net-4.0 /include:Client
 
     nunit-console-x86.exe %APPVEYOR_BUILD_FOLDER%\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll /framework:net-4.0 /include:Server
 
     nunit-console-x86.exe %APPVEYOR_BUILD_FOLDER%\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll /framework:net-4.0 /include:Client
 
+- "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
+- pip install codecov
+- codecov -f "coverage.xml"
