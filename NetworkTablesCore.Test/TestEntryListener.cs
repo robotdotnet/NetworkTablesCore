@@ -12,13 +12,94 @@ using NUnit.Framework;
 namespace NetworkTablesCore.Test
 {
     [TestFixture]
-    [Category("Client")]
-    public class TestEntryListener : ClientTestBase
+    [Category("Server")]
+    public class TestEntryListener : ServerTestBase
     {
         [SetUp]
         public void SetUp()
         {
             CoreMethods.DeleteAllEntries();
+        }
+
+        [Test]
+        public void TestAddEntryListener()
+        {
+            string key1 = "testKey";
+            string toWrite1 = "written";
+            CoreMethods.SetEntryString(key1, toWrite1);
+
+            int count = 0;
+            string recievedKey = "";
+            object recievedValue = null;
+            NotifyFlags receivedFlags = 0;
+
+            NotifyFlags f = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
+            if (true)
+                f |= NotifyFlags.NotifyLocal;
+
+            int listener = CoreMethods.AddEntryListener(key1, (uid, key, value, flags) =>
+            {
+                count++;
+                recievedKey = key;
+                recievedValue = value;
+                receivedFlags = flags;
+            }, f);
+
+            string toWrite2 = "NewNumber";
+            CoreMethods.SetEntryString(key1, toWrite2);
+
+            Thread.Sleep(20);
+
+            Assert.That(count, Is.EqualTo(1));
+            Assert.That(recievedKey, Is.EqualTo(key1));
+            Assert.That(recievedValue, Is.Not.Null);
+
+            string retValue = recievedValue as string;
+            Assert.That(retValue, Is.Not.Null);
+            Assert.That(retValue, Is.EqualTo(toWrite2));
+
+            Assert.That(receivedFlags.HasFlag(NotifyFlags.NotifyLocal));
+
+            CoreMethods.RemoveEntryListener(listener);
+        }
+
+        [Test]
+        public void TestAddEntryListenerImmediateNotify()
+        {
+            string key1 = "testKey";
+            string toWrite1 = "written";
+            CoreMethods.SetEntryString(key1, toWrite1);
+
+            int count = 0;
+            string recievedKey = "";
+            object recievedValue = null;
+            NotifyFlags receivedFlags = 0;
+
+            NotifyFlags f = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
+            if (true)
+                f |= NotifyFlags.NotifyImmediate;
+
+            int listener = CoreMethods.AddEntryListener(key1, (uid, key, value, flags) =>
+            {
+                count++;
+                recievedKey = key;
+                recievedValue = value;
+                receivedFlags = flags;
+            }, f);
+
+            Thread.Sleep(20);
+
+            Assert.That(count, Is.EqualTo(1));
+            Assert.That(recievedKey, Is.EqualTo(key1));
+            Assert.That(recievedValue, Is.Not.Null);
+
+            string retValue = recievedValue as string;
+            Assert.That(retValue, Is.Not.Null);
+            Assert.That(retValue, Is.EqualTo(toWrite1));
+
+            Assert.That(receivedFlags.HasFlag(NotifyFlags.NotifyImmediate));
+
+            CoreMethods.RemoveEntryListener(listener);
         }
 
         [TestCase(true)]
