@@ -8,10 +8,31 @@ assembly_info:
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
+nuget:
+  disable_publish_on_pr: true
 before_build:
 - cmd: nuget restore
+build:
+  verbosity: minimal
+
+after_build:
+- ps: >-
+    
+    If (($env:APPVEYOR_REPO_BRANCH -eq "master") -and (!$env:APPVEYOR_PULL_REQUEST_NUMBER)) {
+
+    ./nuget install EWSoftware.SHFB -Version 2015.10.10.0 -o sbpackages
+
+    ./nuget install EWSoftware.SHFB.NETFramework -Version 4.6 -o sbpackages
+
+     & 'C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe' Sandcastle\SandcastleLocalBuildsOnly.shfbproj /property:Configuration=Release
+
+    ./nuget pack "$env:APPVEYOR_BUILD_FOLDER\NetworkTablesCore\NetworkTablesCore.csproj" -Properties "Configuration=Release;Platform=AnyCPU" -Symbols
+
+    Get-ChildItem .\*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+    }
 test_script:
 - cmd: >-
+
     nunit-console.exe %APPVEYOR_BUILD_FOLDER%\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll /framework:net-4.0 /include:Server
 
     nunit-console.exe %APPVEYOR_BUILD_FOLDER%\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll /framework:net-4.0 /include:Client
@@ -20,12 +41,3 @@ test_script:
 
     nunit-console-x86.exe %APPVEYOR_BUILD_FOLDER%\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll /framework:net-4.0 /include:Client
 
-branches:
-  only:
-    - master
-nuget:
-  disable_publish_on_pr: true
-build:
-  publish_nuget: true
-  publish_nuget_symbols: true
-  verbosity: minimal
