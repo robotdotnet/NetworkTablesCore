@@ -53,6 +53,7 @@ namespace NetworkTables.Native
             //Sets logger to null so no logger gets called back.
             NT_SetLogger(null, 0);
 
+            NT_StopClient();
             //Remove RPC callbacks
         }
 
