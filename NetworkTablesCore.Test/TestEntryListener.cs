@@ -12,8 +12,8 @@ using NUnit.Framework;
 namespace NetworkTablesCore.Test
 {
     [TestFixture]
-    [Category("Server")]
-    public class TestEntryListener : ServerTestBase
+    [Category("Client")]
+    public class TestEntryListener : ClientTestBase
     {
         [SetUp]
         public void SetUp()
@@ -111,9 +111,6 @@ namespace NetworkTablesCore.Test
                 receivedFlags = flags;
             }, f);
 
-            string[] toWrite2 = { "wdsrite1", "wrisdte2", "wrdsite3" };
-            CoreMethods.SetEntryStringArray(key1, toWrite2);
-
             Thread.Sleep(300);
 
             Assert.That(count, Is.EqualTo(1));
@@ -122,6 +119,11 @@ namespace NetworkTablesCore.Test
 
             string[] retValue = recievedValue as string[];
             Assert.That(retValue, Is.Not.Null);
+
+            for (int i = 0; i < retValue.Length; i++)
+            {
+                Assert.That(retValue[i], Is.EqualTo(toWrite1[i]));
+            }
             //Assert.That(retValue, Is.EqualTo(toWrite1));
 
             Assert.That(receivedFlags.HasFlag(NotifyFlags.NotifyImmediate));
@@ -153,9 +155,6 @@ namespace NetworkTablesCore.Test
                 receivedFlags = flags;
             }, f);
 
-            double[] toWrite2 = { 48254.6454, 156484.545654, 1564897.798789 };
-            CoreMethods.SetEntryDoubleArray(key1, toWrite2);
-
             Thread.Sleep(300);
 
             Assert.That(count, Is.EqualTo(1));
@@ -164,6 +163,11 @@ namespace NetworkTablesCore.Test
 
             double[] retValue = recievedValue as double[];
             Assert.That(retValue, Is.Not.Null);
+
+            for (int i = 0; i < retValue.Length; i++)
+            {
+                Assert.That(retValue[i], Is.EqualTo(toWrite1[i]));
+            }
             //Assert.That(retValue, Is.EqualTo(toWrite1));
 
             Assert.That(receivedFlags.HasFlag(NotifyFlags.NotifyImmediate));
@@ -195,9 +199,6 @@ namespace NetworkTablesCore.Test
                 receivedFlags = flags;
             }, f);
 
-            bool[] toWrite2 = { false, false, false };
-            CoreMethods.SetEntryBooleanArray(key1, toWrite2);
-
             Thread.Sleep(300);
 
             Assert.That(count, Is.EqualTo(1));
@@ -206,6 +207,11 @@ namespace NetworkTablesCore.Test
 
             bool[] retValue = recievedValue as bool[];
             Assert.That(retValue, Is.Not.Null);
+
+            for (int i = 0; i < retValue.Length; i++)
+            {
+                Assert.That(retValue[i], Is.EqualTo(toWrite1[i]));
+            }
             //Assert.That(retValue, Is.EqualTo(toWrite1));
 
             Assert.That(receivedFlags.HasFlag(NotifyFlags.NotifyImmediate));

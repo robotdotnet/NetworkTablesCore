@@ -42,7 +42,18 @@ namespace NetworkTables.Native
                     Environment.Exit(1);
                 }
                 s_libraryLoaded = true;
+
+                //Adds our unload code.
+                AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
             }
+        }
+
+        private static void OnProcessExit(object sender, EventArgs e)
+        {
+            //Sets logger to null so no logger gets called back.
+            NT_SetLogger(null, 0);
+
+            //Remove RPC callbacks
         }
 
         private static void InitializeDelegates(IntPtr library, ILibraryLoader loader)

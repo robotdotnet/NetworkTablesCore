@@ -12,8 +12,8 @@ using NUnit.Framework;
 namespace NetworkTablesCore.Test
 {
     [TestFixture]
-    [Category("Server")]
-    public class TestNativeInterface : ServerTestBase
+    [Category("Client")]
+    public class TestNativeInterface : ClientTestBase
     {
         [SetUp]
         public void SetUp()
