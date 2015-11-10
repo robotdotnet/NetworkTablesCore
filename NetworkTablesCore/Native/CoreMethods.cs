@@ -412,32 +412,26 @@ namespace NetworkTables.Native
                     case NtType.String:
                         ptr = Interop.NT_GetValueString(value, ref lastChange, ref size);
                         obj = ReadUTF8String(ptr, size);
-                        Interop.NT_FreeCharArray(ptr);
                         break;
                     case NtType.Raw:
                         ptr = Interop.NT_GetValueRaw(value, ref lastChange, ref size);
                         obj = GetRawDataFromPtr(ptr, size);
-                        Interop.NT_FreeCharArray(ptr);
                         break;
                     case NtType.BooleanArray:
                         ptr = Interop.NT_GetValueBooleanArray(value, ref lastChange, ref size);
                         obj = GetBooleanArrayFromPtr(ptr, size);
-                        Interop.NT_FreeBooleanArray(ptr);
                         break;
                     case NtType.DoubleArray:
                         ptr = Interop.NT_GetValueDoubleArray(value, ref lastChange, ref size);
                         obj = GetDoubleArrayFromPtr(ptr, size);
-                        Interop.NT_FreeDoubleArray(ptr);
                         break;
                     case NtType.StringArray:
                         ptr = Interop.NT_GetValueStringArray(value, ref lastChange, ref size);
                         obj = GetStringArrayFromPtr(ptr, size);
-                        Interop.NT_FreeStringArray(ptr, size);
                         break;
                     case NtType.Rpc:
                         ptr = Interop.NT_GetValueRaw(value, ref lastChange, ref size);
                         obj = GetRawDataFromPtr(ptr, size);
-                        Interop.NT_FreeCharArray(ptr);
                         break;
                     default:
                         obj = null;

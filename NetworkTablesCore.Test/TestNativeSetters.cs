@@ -1,12 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NetworkTables.Native;
+using NUnit.Framework;
 
 namespace NetworkTablesCore.Test
 {
-    class TestNativeSetters
+    [TestFixture]
+    [Category("Client")]
+    public class TestNativeSetters : ClientTestBase
     {
+        [Test]
+        public void TestMultipleStringArraySet()
+        {
+            string key = "MyKey";
+
+            string[] firstWrite = new[]
+            {
+                "FirstString",
+                "SecondString",
+                "ThirdString"
+            };
+            CoreMethods.SetEntryStringArray(key, firstWrite);
+
+
+            string[] secondWrite = new[]
+            {
+                "FirstNewString",
+                "SecondNewString",
+                "ThirdNewString"
+            };
+            CoreMethods.SetEntryStringArray(key, secondWrite);
+        }
     }
 }

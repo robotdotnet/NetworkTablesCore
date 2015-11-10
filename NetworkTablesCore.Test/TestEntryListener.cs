@@ -87,6 +87,7 @@ namespace NetworkTablesCore.Test
             CoreMethods.RemoveEntryListener(listener);
         }
 
+        [Test]
         public void TestEntryListenerStringArray()
         {
             string key1 = "testKey";
@@ -113,13 +114,97 @@ namespace NetworkTablesCore.Test
             string[] toWrite2 = { "wdsrite1", "wrisdte2", "wrdsite3" };
             CoreMethods.SetEntryStringArray(key1, toWrite2);
 
-            Thread.Sleep(60);
+            Thread.Sleep(300);
 
             Assert.That(count, Is.EqualTo(1));
             Assert.That(recievedKey, Is.EqualTo(key1));
             Assert.That(recievedValue, Is.Not.Null);
 
             string[] retValue = recievedValue as string[];
+            Assert.That(retValue, Is.Not.Null);
+            //Assert.That(retValue, Is.EqualTo(toWrite1));
+
+            Assert.That(receivedFlags.HasFlag(NotifyFlags.NotifyImmediate));
+
+            CoreMethods.RemoveEntryListener(listener);
+        }
+
+        [Test]
+        public void TestEntryListenerDoubleArray()
+        {
+            string key1 = "testKey";
+            double[] toWrite1 = { 3.58, 6.825, 454.54};
+            CoreMethods.SetEntryDoubleArray(key1, toWrite1);
+
+            int count = 0;
+            string recievedKey = "";
+            object recievedValue = null;
+            NotifyFlags receivedFlags = 0;
+
+            NotifyFlags f = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
+            if (true)
+                f |= NotifyFlags.NotifyImmediate;
+
+            int listener = CoreMethods.AddEntryListener(key1, (uid, key, value, flags) =>
+            {
+                count++;
+                recievedKey = key;
+                recievedValue = value;
+                receivedFlags = flags;
+            }, f);
+
+            double[] toWrite2 = { 48254.6454, 156484.545654, 1564897.798789 };
+            CoreMethods.SetEntryDoubleArray(key1, toWrite2);
+
+            Thread.Sleep(300);
+
+            Assert.That(count, Is.EqualTo(1));
+            Assert.That(recievedKey, Is.EqualTo(key1));
+            Assert.That(recievedValue, Is.Not.Null);
+
+            double[] retValue = recievedValue as double[];
+            Assert.That(retValue, Is.Not.Null);
+            //Assert.That(retValue, Is.EqualTo(toWrite1));
+
+            Assert.That(receivedFlags.HasFlag(NotifyFlags.NotifyImmediate));
+
+            CoreMethods.RemoveEntryListener(listener);
+        }
+
+        [Test]
+        public void TestEntryListenerBooleanArray()
+        {
+            string key1 = "testKey";
+            bool[] toWrite1 = { true, true, true };
+            CoreMethods.SetEntryBooleanArray(key1, toWrite1);
+
+            int count = 0;
+            string recievedKey = "";
+            object recievedValue = null;
+            NotifyFlags receivedFlags = 0;
+
+            NotifyFlags f = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
+            if (true)
+                f |= NotifyFlags.NotifyImmediate;
+
+            int listener = CoreMethods.AddEntryListener(key1, (uid, key, value, flags) =>
+            {
+                count++;
+                recievedKey = key;
+                recievedValue = value;
+                receivedFlags = flags;
+            }, f);
+
+            bool[] toWrite2 = { false, false, false };
+            CoreMethods.SetEntryBooleanArray(key1, toWrite2);
+
+            Thread.Sleep(300);
+
+            Assert.That(count, Is.EqualTo(1));
+            Assert.That(recievedKey, Is.EqualTo(key1));
+            Assert.That(recievedValue, Is.Not.Null);
+
+            bool[] retValue = recievedValue as bool[];
             Assert.That(retValue, Is.Not.Null);
             //Assert.That(retValue, Is.EqualTo(toWrite1));
 
