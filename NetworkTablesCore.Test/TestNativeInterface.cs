@@ -222,6 +222,23 @@ namespace NetworkTablesCore.Test
             Assert.That(!CoreMethods.ContainsKey("testKey"));
         }
 
+        [Test]
+        public void TestGetEntryFlags()
+        {
+            string key = "testKey";
+            CoreMethods.SetEntryString(key, "value");
+
+            EntryFlags flags = CoreMethods.GetEntryFlags(key);
+
+            Assert.That(flags, Is.EqualTo(EntryFlags.None));
+
+            CoreMethods.SetEntryFlags(key, EntryFlags.Persistent);
+
+            flags = CoreMethods.GetEntryFlags(key);
+
+            Assert.That(flags, Is.EqualTo(EntryFlags.Persistent));
+        }
+
 
     }
 }
