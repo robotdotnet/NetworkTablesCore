@@ -1,5 +1,15 @@
-# NetworkTablesCore
-[![Build status](https://ci.appveyor.com/api/projects/status/q6e3jxtlavkpuf3p/branch/master?svg=true)](https://ci.appveyor.com/project/robotdotnet/networktablescore/branch/master) [![codecov.io](https://codecov.io/github/robotdotnet/NetworkTablesCore/coverage.svg?branch=master)](https://codecov.io/github/robotdotnet/NetworkTablesCore?branch=master)
+**Build Status**
+
+| Windows                 | Linux                   | Code Coverage         |
+| ------------------------|-------------------------|-----------------------|
+| [![Build status][1]][2] | [![Build Status][3]][4] | [![codecov.io][5]][6] |
+
+[1]: https://ci.appveyor.com/api/projects/status/q6e3jxtlavkpuf3p/branch/master?svg=true
+[2]: https://ci.appveyor.com/project/robotdotnet/networktablescore/branch/master
+[3]: https://travis-ci.org/robotdotnet/NetworkTablesCore.svg?branch=master
+[4]: https://travis-ci.org/robotdotnet/NetworkTablesCore
+[5]: https://codecov.io/github/robotdotnet/NetworkTablesCore/coverage.svg?branch=master
+[6]: https://codecov.io/github/robotdotnet/NetworkTablesCore?branch=master
 
 This is a DotNet implementation of NetworkTables, using the new ntcore native library for the 2016 season. The managed side of the code is based on the Java implentation, however all communication code is provided by the library. NetworkTables are used to pass non-Driver Station data to and from the robot across the network.
 
