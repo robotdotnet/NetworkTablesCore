@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -6,8 +7,8 @@ using System.Security;
 
 namespace NetworkTables.Native
 {
-
     [SuppressUnmanagedCodeSecurity]
+    [ExcludeFromCodeCoverage]
     internal class Interop
     {
         private static readonly bool s_libraryLoaded;
@@ -53,8 +54,10 @@ namespace NetworkTables.Native
             //Sets logger to null so no logger gets called back.
             NT_SetLogger(null, 0);
 
-            //NT_StopClient();
-            //Remove RPC callbacks
+            NT_StopClient();
+            NT_StopServer();
+            NT_StopRpcServer();
+            NT_StopNotifier();
         }
 
         private static void InitializeDelegates(IntPtr library, ILibraryLoader loader)

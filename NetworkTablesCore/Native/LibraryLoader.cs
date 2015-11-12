@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace NetworkTables.Native
@@ -9,6 +10,7 @@ namespace NetworkTables.Native
         IntPtr GetProcAddress(IntPtr dllHandle, string name);
     }
 
+    [ExcludeFromCodeCoverage]
     internal class WindowsLibraryLoader : ILibraryLoader
     {
         IntPtr ILibraryLoader.LoadLibrary(string filename)
@@ -34,6 +36,7 @@ namespace NetworkTables.Native
         private static extern IntPtr GetProcAddress(IntPtr handle, string procedureName);
     }
 
+    [ExcludeFromCodeCoverage]
     internal class LinuxLibraryLoader : ILibraryLoader
     {
         IntPtr ILibraryLoader.LoadLibrary(string filename)
@@ -70,6 +73,7 @@ namespace NetworkTables.Native
         private static extern IntPtr dlerror();
     }
 
+    [ExcludeFromCodeCoverage]
     internal class RoboRioLibraryLoader : ILibraryLoader
     {
         IntPtr ILibraryLoader.LoadLibrary(string filename)
