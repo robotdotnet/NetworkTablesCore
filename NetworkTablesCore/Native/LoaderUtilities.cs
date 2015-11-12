@@ -1,5 +1,6 @@
 ﻿//#define NativeDebug //Uncomment this to enable easy native debugging. Then change the DebugxWindows to be the native lib location
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 
@@ -14,6 +15,7 @@ namespace NetworkTables.Native
         ArmLinux,
         RoboRio
     }
+    [ExcludeFromCodeCoverage]
     internal static class LoaderUtilities
     {
         internal static OsType GetOsType()
