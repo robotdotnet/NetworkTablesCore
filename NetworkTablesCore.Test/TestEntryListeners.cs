@@ -21,6 +21,12 @@ namespace NetworkTablesCore.Test
             CoreMethods.DeleteAllEntries();
         }
 
+        [TestFixtureTearDown]
+        public void FixtureTearDown()
+        {
+            CoreMethods.StopNotifier();
+        }
+
         [Test]
         public void TestAddEntryListener()
         {

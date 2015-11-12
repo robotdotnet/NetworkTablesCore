@@ -74,6 +74,8 @@ namespace NetworkTables.Native
             NT_StopServer = (NT_StopServerDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_StopServer"), typeof(NT_StopServerDelegate));
             NT_StartClient = (NT_StartClientDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_StartClient"), typeof(NT_StartClientDelegate));
             NT_StopClient = (NT_StopClientDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_StopClient"), typeof(NT_StopClientDelegate));
+            NT_StopRpcServer = (NT_StopRpcServerDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_StopRpcServer"), typeof(NT_StopRpcServerDelegate));
+            NT_StopNotifier = (NT_StopNotifierDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_StopNotifier"), typeof(NT_StopNotifierDelegate));
             NT_SetUpdateRate = (NT_SetUpdateRateDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_SetUpdateRate"), typeof(NT_SetUpdateRateDelegate));
             NT_GetConnections = (NT_GetConnectionsDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_GetConnections"), typeof(NT_GetConnectionsDelegate));
             NT_SavePersistent = (NT_SavePersistentDelegate)Marshal.GetDelegateForFunctionPointer(loader.GetProcAddress(library, "NT_SavePersistent"), typeof(NT_SavePersistentDelegate));
@@ -173,6 +175,10 @@ namespace NetworkTables.Native
         internal delegate void NT_StartClientDelegate(byte[] server_name, uint port);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void NT_StopClientDelegate();
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate uint NT_StopRpcServerDelegate();
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate IntPtr NT_StopNotifierDelegate();
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void NT_SetUpdateRateDelegate(double interval);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -280,6 +286,8 @@ namespace NetworkTables.Native
         internal static NT_StopServerDelegate NT_StopServer;
         internal static NT_StartClientDelegate NT_StartClient;
         internal static NT_StopClientDelegate NT_StopClient;
+        internal static NT_StopRpcServerDelegate NT_StopRpcServer;
+        internal static NT_StopNotifierDelegate NT_StopNotifier;
         internal static NT_SetUpdateRateDelegate NT_SetUpdateRate;
         internal static NT_GetConnectionsDelegate NT_GetConnections;
         internal static NT_SavePersistentDelegate NT_SavePersistent;

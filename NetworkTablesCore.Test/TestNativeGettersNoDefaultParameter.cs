@@ -24,7 +24,6 @@ namespace NetworkTablesCore.Test
         public void TestGetStringNonExistant()
         {
             string key = "mykey";
-            string testVal = "Hello Test";
             Assert.Throws<TableKeyNotDefinedException>(() => CoreMethods.GetEntryString(key));
         }
 
@@ -32,7 +31,6 @@ namespace NetworkTablesCore.Test
         public void TestGetBooleanNonExistant()
         {
             string key = "mykey";
-            bool testVal = true;
             Assert.Throws<TableKeyNotDefinedException>(() =>CoreMethods.GetEntryBoolean(key));
         }
 
@@ -40,7 +38,6 @@ namespace NetworkTablesCore.Test
         public void TestGetDoubleNonExistant()
         {
             string key = "mykey";
-            double testVal = 5.86;
             Assert.Throws<TableKeyNotDefinedException>(() =>CoreMethods.GetEntryDouble(key));
         }
 
@@ -48,7 +45,6 @@ namespace NetworkTablesCore.Test
         public void TestGetRawNonExistant()
         {
             string key = "mykey";
-            byte[] testVal = { 56, 88, 92, 0, 0, 1 };
             Assert.Throws<TableKeyNotDefinedException>(() =>CoreMethods.GetEntryRaw(key));
         }
 
@@ -56,7 +52,6 @@ namespace NetworkTablesCore.Test
         public void TestGetDoubleArrayNonExistant()
         {
             string key = "mykey";
-            double[] testVal = { 3.58, 6.825, 454.54 };
             Assert.Throws<TableKeyNotDefinedException>(() =>CoreMethods.GetEntryDoubleArray(key));
         }
 
@@ -64,7 +59,6 @@ namespace NetworkTablesCore.Test
         public void TestGetStringArrayNonExistant()
         {
             string key = "mykey";
-            string[] testVal = { "write1", "write2", "write3" };
             Assert.Throws<TableKeyNotDefinedException>(() =>CoreMethods.GetEntryStringArray(key));
         }
 
@@ -72,7 +66,6 @@ namespace NetworkTablesCore.Test
         public void TestGetBooleanArrayNonExistant()
         {
             string key = "mykey";
-            bool[] testVal = { true, false, true };
             Assert.Throws<TableKeyNotDefinedException>(() =>CoreMethods.GetEntryBooleanArray(key));
         }
 
@@ -82,70 +75,63 @@ namespace NetworkTablesCore.Test
         public void TestGetStringWrongType()
         {
             string key = "mykey";
-            string testVal = "Hello Test";
             CoreMethods.SetEntryBoolean(key, true);
 
-            Assert.Throws<TableKeyNotDefinedException>(() =>CoreMethods.GetEntryString(key));
+            Assert.Throws<TableKeyDifferentTypeException>(() =>CoreMethods.GetEntryString(key));
         }
 
         [Test]
         public void TestGetBooleanWrongType()
         {
             string key = "mykey";
-            bool testVal = true;
             CoreMethods.SetEntryDouble(key, 5.86);
 
-            Assert.Throws<TableKeyNotDefinedException>(() =>CoreMethods.GetEntryBoolean(key));
+            Assert.Throws<TableKeyDifferentTypeException>(() =>CoreMethods.GetEntryBoolean(key));
         }
 
         [Test]
         public void TestGetDoubleWrongType()
         {
             string key = "mykey";
-            double testVal = 5.86;
             CoreMethods.SetEntryBoolean(key, true);
 
-            Assert.Throws<TableKeyNotDefinedException>(() =>CoreMethods.GetEntryDouble(key));
+            Assert.Throws<TableKeyDifferentTypeException>(() =>CoreMethods.GetEntryDouble(key));
         }
 
         [Test]
         public void TestGetRawWrongType()
         {
             string key = "mykey";
-            byte[] testVal = { 56, 88, 92, 0, 0, 1 };
             CoreMethods.SetEntryBoolean(key, true);
 
-            Assert.Throws<TableKeyNotDefinedException>(() =>CoreMethods.GetEntryRaw(key));
+            Assert.Throws<TableKeyDifferentTypeException>(() =>CoreMethods.GetEntryRaw(key));
         }
 
         [Test]
         public void TestGetDoubleArrayWrongType()
         {
             string key = "mykey";
-            double[] testVal = { 3.58, 6.825, 454.54 };
             CoreMethods.SetEntryBoolean(key, true);
 
-            Assert.Throws<TableKeyNotDefinedException>(() =>CoreMethods.GetEntryDoubleArray(key));
+            Assert.Throws<TableKeyDifferentTypeException>(() =>CoreMethods.GetEntryDoubleArray(key));
         }
 
         [Test]
         public void TestGetStringArrayWrongType()
         {
             string key = "mykey";
-            string[] testVal = { "write1", "write2", "write3" };
             CoreMethods.SetEntryBoolean(key, true);
 
-            Assert.Throws<TableKeyNotDefinedException>(() =>CoreMethods.GetEntryStringArray(key));
+            Assert.Throws<TableKeyDifferentTypeException>(() =>CoreMethods.GetEntryStringArray(key));
         }
 
         [Test]
         public void TestGetBooleanArrayWrongType()
         {
             string key = "mykey";
-            bool[] testVal = { true, false, true };
             CoreMethods.SetEntryBoolean(key, true);
 
-            Assert.Throws<TableKeyNotDefinedException>(() => CoreMethods.GetEntryBooleanArray(key));
+            Assert.Throws<TableKeyDifferentTypeException>(() => CoreMethods.GetEntryBooleanArray(key));
         }
 
 
@@ -155,7 +141,6 @@ namespace NetworkTablesCore.Test
         public void TestGetStringValid()
         {
             string key = "mykey";
-            string testVal = "Hello Test";
             string actualVal = "Im Valid";
             CoreMethods.SetEntryString(key, actualVal);
 
@@ -166,7 +151,6 @@ namespace NetworkTablesCore.Test
         public void TestGetBooleanValid()
         {
             string key = "mykey";
-            bool testVal = true;
             bool actualVal = false;
             CoreMethods.SetEntryBoolean(key, actualVal);
 
@@ -177,7 +161,6 @@ namespace NetworkTablesCore.Test
         public void TestGetDoubleValid()
         {
             string key = "mykey";
-            double testVal = 5.86;
             double actualVal = 1213.323;
             CoreMethods.SetEntryDouble(key, actualVal);
 
@@ -188,7 +171,6 @@ namespace NetworkTablesCore.Test
         public void TestGetRawValid()
         {
             string key = "mykey";
-            byte[] testVal = { 56, 88, 92, 0, 0, 1 };
 
             byte[] actualVal = { 42, 28, 142, 0, 22, 0, 132 };
             CoreMethods.SetEntryRaw(key, actualVal);
@@ -207,7 +189,6 @@ namespace NetworkTablesCore.Test
         public void TestGetDoubleArrayValid()
         {
             string key = "mykey";
-            double[] testVal = { 3.58, 6.825, 454.54 };
 
             double[] actualVal = { 3.54538, 43536.825, 34534454.34554, 3423413.23432 };
             CoreMethods.SetEntryDoubleArray(key, actualVal);
@@ -226,7 +207,6 @@ namespace NetworkTablesCore.Test
         public void TestGetStringArrayValid()
         {
             string key = "mykey";
-            string[] testVal = { "write1", "write2", "write3" };
 
             string[] actualVal = { "writeas1", "wriasdte2", "writasde3", "adsadsd4" };
             CoreMethods.SetEntryStringArray(key, actualVal);
@@ -245,7 +225,6 @@ namespace NetworkTablesCore.Test
         public void TestGetBooleanArrayValid()
         {
             string key = "mykey";
-            bool[] testVal = { true, false, true };
 
             bool[] actualVal = { false, false, true, true, false };
             CoreMethods.SetEntryBooleanArray(key, actualVal);

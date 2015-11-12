@@ -220,6 +220,19 @@ namespace NetworkTables.Native
 
         #region Getters
 
+        private static void ThrowException(string name, byte[] namePtr, UIntPtr size, NtType requestedType)
+        {
+            NtType typeInTable = Interop.NT_GetType(namePtr, size);
+            if (typeInTable == NtType.Unassigned)
+            {
+                throw new TableKeyNotDefinedException(name);
+            }
+            else
+            {
+                throw new TableKeyDifferentTypeException(name, requestedType, typeInTable);
+            }
+        }
+
         internal static bool GetEntryBoolean(string name)
         {
             UIntPtr size;
@@ -229,7 +242,7 @@ namespace NetworkTables.Native
             int status = Interop.NT_GetEntryBoolean(namePtr, size, ref lc, ref boolean);
             if (status == 0)
             {
-                throw new TableKeyNotDefinedException(name);//Change this to GetTableKeyNotDefined
+                ThrowException(name, namePtr, size, NtType.Boolean);
             }
             return boolean != 0;
         }
@@ -243,7 +256,7 @@ namespace NetworkTables.Native
             int status = Interop.NT_GetEntryDouble(namePtr, size, ref lastChange, ref retVal);
             if (status == 0)
             {
-                throw new TableKeyNotDefinedException(name);
+                ThrowException(name, namePtr, size, NtType.Double);
             }
             return retVal;
         }
@@ -257,14 +270,12 @@ namespace NetworkTables.Native
             IntPtr ret = Interop.NT_GetEntryString(namePtr, size, ref lastChange, ref stringSize);
             if (ret == IntPtr.Zero)
             {
-                throw new TableKeyNotDefinedException(name);
+                ThrowException(name, namePtr, size, NtType.String);
+                return null;
             }
-            else
-            {
-                string str = ReadUTF8String(ret, stringSize);
-                Interop.NT_FreeCharArray(ret);
-                return str;
-            }
+            string str = ReadUTF8String(ret, stringSize);
+            Interop.NT_FreeCharArray(ret);
+            return str;
         }
 
         internal static byte[] GetEntryRaw(string name)
@@ -276,14 +287,12 @@ namespace NetworkTables.Native
             IntPtr ret = Interop.NT_GetEntryRaw(namePtr, size, ref lastChange, ref stringSize);
             if (ret == IntPtr.Zero)
             {
-                throw new TableKeyNotDefinedException(name);
+                ThrowException(name, namePtr, size, NtType.Raw);
+                return null;
             }
-            else
-            {
-                byte[] data = GetRawDataFromPtr(ret, stringSize);
-                Interop.NT_FreeCharArray(ret);
-                return data;
-            }
+            byte[] data = GetRawDataFromPtr(ret, stringSize);
+            Interop.NT_FreeCharArray(ret);
+            return data;
         }
 
         internal static double[] GetEntryDoubleArray(string name)
@@ -295,7 +304,8 @@ namespace NetworkTables.Native
             IntPtr arrPtr = Interop.NT_GetEntryDoubleArray(namePtr, size, ref lastChange, ref arrSize);
             if (arrPtr == IntPtr.Zero)
             {
-                throw new TableKeyNotDefinedException(name);//TODO: Change this to not defined exception
+                ThrowException(name, namePtr, size, NtType.DoubleArray);
+                return null;
             }
             double[] arr = GetDoubleArrayFromPtr(arrPtr, arrSize);
             Interop.NT_FreeDoubleArray(arrPtr);
@@ -311,7 +321,8 @@ namespace NetworkTables.Native
             IntPtr arrPtr = Interop.NT_GetEntryBooleanArray(namePtr, size, ref lastChange, ref arrSize);
             if (arrPtr == IntPtr.Zero)
             {
-                throw new TableKeyNotDefinedException(name);//TODO: Change this to not defined exception
+                ThrowException(name, namePtr, size, NtType.BooleanArray);
+                return null;
             }
             bool[] arr = GetBooleanArrayFromPtr(arrPtr, arrSize);
             Interop.NT_FreeBooleanArray(arrPtr);
@@ -327,7 +338,8 @@ namespace NetworkTables.Native
             IntPtr arrPtr = Interop.NT_GetEntryStringArray(namePtr, size, ref lastChange, ref arrSize);
             if (arrPtr == IntPtr.Zero)
             {
-                throw new TableKeyNotDefinedException(name);
+                ThrowException(name, namePtr, size, NtType.StringArray);
+                return null;
             }
             string[] arr = GetStringArrayFromPtr(arrPtr, arrSize);
             Interop.NT_FreeStringArray(arrPtr, arrSize);
@@ -521,6 +533,16 @@ namespace NetworkTables.Native
         internal static void StopServer()
         {
             Interop.NT_StopServer();
+        }
+
+        internal static void StopNotifier()
+        {
+            Interop.NT_StopNotifier();
+        }
+
+        internal static void StopRpcServer()
+        {
+            Interop.NT_StopRpcServer();
         }
 
         internal static void SetUpdateRate(double interval)

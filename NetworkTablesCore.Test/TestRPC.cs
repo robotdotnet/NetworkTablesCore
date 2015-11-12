@@ -9,6 +9,12 @@ namespace NetworkTablesCore.Test
     [Category("Server")]
     public class TestRPC : ServerTestBase
     {
+        [TestFixtureTearDown]
+        public void FixtureTearDown()
+        {
+            CoreMethods.StopRpcServer();
+        }
+
         private byte[] Callback1(string names, byte[] paramsStr)
         {
             var param = RemoteProcedureCall.UnpackRpcValues(paramsStr, NtType.Double);
