@@ -7,6 +7,7 @@ namespace NetworkTables.Native
     /// <summary>
     /// An enumeration of all types allowed in the NetworkTables.
     /// </summary>
+    [Flags]
     public enum NtType
     {
         /// <summary>

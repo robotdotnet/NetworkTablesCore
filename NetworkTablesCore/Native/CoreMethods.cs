@@ -349,7 +349,7 @@ namespace NetworkTables.Native
 
         #region EntryInfo
 
-        internal static EntryInfo[] GetEntries(string prefix, EntryFlags types)
+        internal static EntryInfo[] GetEntries(string prefix, NtType types)
         {
             UIntPtr size;
             byte[] str = CreateUTF8String(prefix, out size);

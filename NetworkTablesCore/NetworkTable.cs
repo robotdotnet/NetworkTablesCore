@@ -280,7 +280,7 @@ namespace NetworkTables
         /// </summary>
         /// <param name="types">Bitmask of types to check for; 0 is treated as a "don't care".</param>
         /// <returns>A set of all keys currently in the table.</returns>
-        public HashSet<string> GetKeys(EntryFlags types)
+        public HashSet<string> GetKeys(NtType types)
         {
             HashSet<string> keys = new HashSet<string>();
             int prefixLen = m_path.Length + 1;
@@ -531,9 +531,9 @@ namespace NetworkTables
         {
             key = m_path + PathSeperatorChar + key;
             //TODO: Make number accept all numbers.
-            if (value is double) return PutNumber(key, (double)value);
-            else if (value is string) return PutString(key, (string)value);
-            else if (value is bool) return PutBoolean(key, (bool)value);
+            if (value is double) return CoreMethods.SetEntryDouble(key, (double)value);
+            else if (value is string) return CoreMethods.SetEntryString(key, (string)value);
+            else if (value is bool) return CoreMethods.SetEntryBoolean(key, (bool)value);
             else if (value is byte[])
             {
                 return CoreMethods.SetEntryRaw(key, (byte[]) value);

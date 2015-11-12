@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NetworkTables.Native;
 using NetworkTables.Native.Exceptions;
 
 namespace NetworkTables.Tables
@@ -35,7 +36,7 @@ namespace NetworkTables.Tables
         /// </summary>
         /// <param name="types">The bitmask of flags to check for.</param>
         /// <returns>A set of the keys currently in the table with the specified flags.</returns>
-        HashSet<string> GetKeys(EntryFlags types);
+        HashSet<string> GetKeys(NtType types);
 
         /// <summary>
         /// Gets all keys currently in the table.
