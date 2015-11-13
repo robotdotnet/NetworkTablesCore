@@ -431,6 +431,399 @@ namespace NetworkTablesCore.Test
         }
 
 
+        [Test]
+        public void TestPutAndGetNumberValid()
+        {
+            string key = "key";
+            double setVal = 5.88;
+            Assert.That(m_table.PutNumber(key, setVal));
 
+            Assert.That(m_table.GetNumber(key), Is.EqualTo(setVal).Within(0.01));
+        }
+
+        [Test]
+        public void TestPutAndGetNumberValidDefault()
+        {
+            string key = "key";
+            double setVal = 5.88;
+            Assert.That(m_table.PutNumber(key, setVal));
+
+            Assert.That(m_table.GetNumber(key, 3343.232), Is.EqualTo(setVal).Within(0.01));
+        }
+
+        [Test]
+        public void TestPutNumberIntoWrongType()
+        {
+            string key = "key";
+            double setVal = 5.88;
+            m_table.PutBoolean(key, true);
+            Assert.That(!m_table.PutNumber(key, setVal));
+        }
+
+        [Test]
+        public void TestGetNumberErrorDefault()
+        {
+            string key = "key";
+
+            double defaultVal = 123322.32123;
+            Assert.That(m_table.GetNumber(key, defaultVal), Is.EqualTo(defaultVal).Within(0.01));
+        }
+
+        [Test]
+        public void TestGetNumberErrorThrowsWrongType()
+        {
+            string key = "key";
+            m_table.PutBoolean(key, true);
+
+            Assert.Throws<TableKeyDifferentTypeException>(() => m_table.GetNumber(key));
+        }
+
+        [Test]
+        public void TestGetNumberErrorThrowsNotDefined()
+        {
+            string key = "key";
+
+            Assert.Throws<TableKeyNotDefinedException>(() => m_table.GetNumber(key));
+        }
+
+
+
+
+
+
+        [Test]
+        public void TestPutAndGetBooleanValid()
+        {
+            string key = "key";
+            bool setVal = true;
+            Assert.That(m_table.PutBoolean(key, setVal));
+
+            Assert.That(m_table.GetBoolean(key), Is.EqualTo(setVal));
+        }
+
+        [Test]
+        public void TestPutAndGetBooleanValidDefault()
+        {
+            string key = "key";
+            bool setVal = true;
+            Assert.That(m_table.PutBoolean(key, setVal));
+
+            Assert.That(m_table.GetBoolean(key, false), Is.EqualTo(setVal));
+        }
+
+        [Test]
+        public void TestPutBooleanIntoWrongType()
+        {
+            string key = "key";
+            bool setVal = true;
+            m_table.PutString(key, "string");
+            Assert.That(!m_table.PutBoolean(key, setVal));
+        }
+
+        [Test]
+        public void TestGetBooleanErrorDefault()
+        {
+            string key = "key";
+
+            bool defaultVal = true;
+            Assert.That(m_table.GetBoolean(key, defaultVal), Is.EqualTo(defaultVal));
+        }
+
+        [Test]
+        public void TestGetBooleanErrorThrowsWrongType()
+        {
+            string key = "key";
+            m_table.PutString(key, "string");
+
+            Assert.Throws<TableKeyDifferentTypeException>(() => m_table.GetBoolean(key));
+        }
+
+        [Test]
+        public void TestGetBooleanErrorThrowsNotDefined()
+        {
+            string key = "key";
+
+            Assert.Throws<TableKeyNotDefinedException>(() => m_table.GetBoolean(key));
+        }
+
+
+
+
+
+        [Test]
+        public void TestPutAndGetStringValid()
+        {
+            string key = "key";
+            string setVal = "string";
+            Assert.That(m_table.PutString(key, setVal));
+
+            Assert.That(m_table.GetString(key), Is.EqualTo(setVal));
+        }
+
+        [Test]
+        public void TestPutAndGetStringValidDefault()
+        {
+            string key = "key";
+            string setVal = "string";
+            Assert.That(m_table.PutString(key, setVal));
+
+            Assert.That(m_table.GetString(key, "Default"), Is.EqualTo(setVal));
+        }
+
+        [Test]
+        public void TestPutStringIntoWrongType()
+        {
+            string key = "key";
+            string setVal = "string";
+            m_table.PutBoolean(key, true);
+            Assert.That(!m_table.PutString(key, setVal));
+        }
+
+        [Test]
+        public void TestGetStringErrorDefault()
+        {
+            string key = "key";
+
+            string defaultVal = "string";
+            Assert.That(m_table.GetString(key, defaultVal), Is.EqualTo(defaultVal));
+        }
+
+        [Test]
+        public void TestGetStringErrorThrowsWrongType()
+        {
+            string key = "key";
+            m_table.PutBoolean(key, true);
+
+            Assert.Throws<TableKeyDifferentTypeException>(() => m_table.GetString(key));
+        }
+
+        [Test]
+        public void TestGetStringErrorThrowsNotDefined()
+        {
+            string key = "key";
+
+            Assert.Throws<TableKeyNotDefinedException>(() => m_table.GetString(key));
+        }
+
+
+
+        [Test]
+        public void TestPutAndGetStringArrayValid()
+        {
+            string key = "key";
+            string[] setVal = {
+                "string",
+                "string2",
+                "string3",
+            };
+            Assert.That(m_table.PutStringArray(key, setVal));
+
+            Assert.That(m_table.GetStringArray(key), Is.EquivalentTo(setVal));
+        }
+
+        [Test]
+        public void TestPutAndGetStringArrayValidDefault()
+        {
+            string key = "key";
+            string[] setVal = {
+                "string",
+                "string2",
+                "string3",
+            };
+            Assert.That(m_table.PutStringArray(key, setVal));
+
+            Assert.That(m_table.GetStringArray(key, new[] { "Default" }), Is.EquivalentTo(setVal));
+        }
+
+        [Test]
+        public void TestPutStringArrayIntoWrongType()
+        {
+            string key = "key";
+            string[] setVal = {
+                "string",
+                "string2",
+                "string3",
+            };
+            m_table.PutBoolean(key, true);
+            Assert.That(!m_table.PutStringArray(key, setVal));
+        }
+
+        [Test]
+        public void TestGetStringArrayErrorDefault()
+        {
+            string key = "key";
+
+            string[] defaultVal = {
+                "string",
+                "string2",
+                "string3",
+            };
+            Assert.That(m_table.GetStringArray(key, defaultVal), Is.EquivalentTo(defaultVal));
+        }
+
+        [Test]
+        public void TestGetStringArrayErrorThrowsWrongType()
+        {
+            string key = "key";
+            m_table.PutBoolean(key, true);
+
+            Assert.Throws<TableKeyDifferentTypeException>(() => m_table.GetStringArray(key));
+        }
+
+        [Test]
+        public void TestGetStringArrayErrorThrowsNotDefined()
+        {
+            string key = "key";
+
+            Assert.Throws<TableKeyNotDefinedException>(() => m_table.GetStringArray(key));
+        }
+
+
+
+
+        [Test]
+        public void TestPutAndGetNumberArrayValid()
+        {
+            string key = "key";
+            double[] setVal = {
+                123.4,
+                5.8,
+                6.2,
+            };
+            Assert.That(m_table.PutNumberArray(key, setVal));
+
+            Assert.That(m_table.GetNumberArray(key), Is.EquivalentTo(setVal));
+        }
+
+        [Test]
+        public void TestPutAndGetNumberArrayValidDefault()
+        {
+            string key = "key";
+            double[] setVal = {
+                123.4,
+                5.8,
+                6.2,
+            };
+            Assert.That(m_table.PutNumberArray(key, setVal));
+
+            Assert.That(m_table.GetNumberArray(key, new[] { 0.0 }), Is.EquivalentTo(setVal));
+        }
+
+        [Test]
+        public void TestPutNumberArrayIntoWrongType()
+        {
+            string key = "key";
+            double[] setVal = {
+                123.4,
+                5.8,
+                6.2,
+            };
+            m_table.PutBoolean(key, true);
+            Assert.That(!m_table.PutNumberArray(key, setVal));
+        }
+
+        [Test]
+        public void TestGetNumberArrayErrorDefault()
+        {
+            string key = "key";
+
+            double[] defaultVal = {
+                123.4,
+                5.8,
+                6.2,
+            };
+            Assert.That(m_table.GetNumberArray(key, defaultVal), Is.EquivalentTo(defaultVal));
+        }
+
+        [Test]
+        public void TestGetNumberArrayErrorThrowsWrongType()
+        {
+            string key = "key";
+            m_table.PutBoolean(key, true);
+
+            Assert.Throws<TableKeyDifferentTypeException>(() => m_table.GetNumberArray(key));
+        }
+
+        [Test]
+        public void TestGetNumberArrayErrorThrowsNotDefined()
+        {
+            string key = "key";
+
+            Assert.Throws<TableKeyNotDefinedException>(() => m_table.GetNumberArray(key));
+        }
+
+
+
+
+        [Test]
+        public void TestPutAndGetBooleanArrayValid()
+        {
+            string key = "key";
+            bool[] setVal = {
+                true,
+                false,
+                true,
+            };
+            Assert.That(m_table.PutBooleanArray(key, setVal));
+
+            Assert.That(m_table.GetBooleanArray(key), Is.EquivalentTo(setVal));
+        }
+
+        [Test]
+        public void TestPutAndGetBooleanArrayValidDefault()
+        {
+            string key = "key";
+            bool[] setVal = {
+                true,
+                false,
+                true,
+            };
+            Assert.That(m_table.PutBooleanArray(key, setVal));
+
+            Assert.That(m_table.GetBooleanArray(key, new[] { false }), Is.EquivalentTo(setVal));
+        }
+
+        [Test]
+        public void TestPutBooleanArrayIntoWrongType()
+        {
+            string key = "key";
+            bool[] setVal = {
+                true,
+                false,
+                true,
+            };
+            m_table.PutBoolean(key, true);
+            Assert.That(!m_table.PutBooleanArray(key, setVal));
+        }
+
+        [Test]
+        public void TestGetBooleanArrayErrorDefault()
+        {
+            string key = "key";
+
+            bool[] defaultVal = {
+                true,
+                false,
+                true,
+            };
+            Assert.That(m_table.GetBooleanArray(key, defaultVal), Is.EquivalentTo(defaultVal));
+        }
+
+        [Test]
+        public void TestGetBooleanArrayErrorThrowsWrongType()
+        {
+            string key = "key";
+            m_table.PutBoolean(key, true);
+
+            Assert.Throws<TableKeyDifferentTypeException>(() => m_table.GetBooleanArray(key));
+        }
+
+        [Test]
+        public void TestGetBooleanArrayErrorThrowsNotDefined()
+        {
+            string key = "key";
+
+            Assert.Throws<TableKeyNotDefinedException>(() => m_table.GetBooleanArray(key));
+        }
     }
 }

@@ -61,6 +61,7 @@
     <Compile Include="TestNativeInterface.cs" />
     <Compile Include="TestNativeMultipleSets.cs" />
     <Compile Include="TestNativeSetters.cs" />
+    <Compile Include="TestNetworkTableAPIListeners.cs" />
     <Compile Include="TestNetworkTableErrors.cs" />
     <Compile Include="TestNativeStructs.cs" />
     <Compile Include="TestNetworkTablesAPI.cs" />
