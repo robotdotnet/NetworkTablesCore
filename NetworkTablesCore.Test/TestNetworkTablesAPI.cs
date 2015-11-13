@@ -13,7 +13,7 @@ namespace NetworkTablesCore.Test
     [Category("Client")]
     public class TestNetworkTablesApi : ClientTestBase
     {
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void FixtureSetup()
         {
 
@@ -274,12 +274,12 @@ namespace NetworkTablesCore.Test
         }
 
         [Test]
-        [TestCase(3.56, Result = 3.56)]
-        [TestCase(true, Result = true)]
-        [TestCase("Hello", Result = "Hello")]
-        [TestCase(new byte[] { 0, 5, 12, 0 }, Result = new byte[] { 0, 5, 12, 0 })]
-        [TestCase(new double[] { 3.56, 5547.545 }, Result = new double[] { 3.56, 5547.545 })]
-        [TestCase(new bool[] { false, true, true }, Result = new bool[] { false, true, true })]
+        [TestCase(3.56, ExpectedResult = 3.56)]
+        [TestCase(true, ExpectedResult = true)]
+        [TestCase("Hello", ExpectedResult = "Hello")]
+        [TestCase(new byte[] { 0, 5, 12, 0 }, ExpectedResult = new byte[] { 0, 5, 12, 0 })]
+        [TestCase(new double[] { 3.56, 5547.545 }, ExpectedResult = new double[] { 3.56, 5547.545 })]
+        [TestCase(new bool[] { false, true, true }, ExpectedResult = new bool[] { false, true, true })]
         public object TestGetValue(object value)
         {
             string key = "key";
@@ -338,12 +338,12 @@ namespace NetworkTablesCore.Test
 
 
         [Test]
-        [TestCase(3.56, Result = 3.56)]
-        [TestCase(true, Result = true)]
-        [TestCase("Hello", Result = "Hello")]
-        [TestCase(new byte[] { 0, 5, 12, 0 }, Result = new byte[] { 0, 5, 12, 0 })]
-        [TestCase(new double[] { 3.56, 5547.545 }, Result = new double[] { 3.56, 5547.545 })]
-        [TestCase(new bool[] { false, true, true }, Result = new bool[] { false, true, true })]
+        [TestCase(3.56, ExpectedResult = 3.56)]
+        [TestCase(true, ExpectedResult = true)]
+        [TestCase("Hello", ExpectedResult = "Hello")]
+        [TestCase(new byte[] { 0, 5, 12, 0 }, ExpectedResult = new byte[] { 0, 5, 12, 0 })]
+        [TestCase(new double[] { 3.56, 5547.545 }, ExpectedResult = new double[] { 3.56, 5547.545 })]
+        [TestCase(new bool[] { false, true, true }, ExpectedResult = new bool[] { false, true, true })]
         public object TestGetValueDefault(object value)
         {
             string key = "key";
@@ -400,12 +400,12 @@ namespace NetworkTablesCore.Test
         }
 
         [Test]
-        [TestCase(3.56, Result = 3.56)]
-        [TestCase(true, Result = true)]
-        [TestCase("Hello", Result = "Hello")]
-        [TestCase(new byte[] {0, 5, 12, 0}, Result = new byte[] {0, 5, 12, 0})]
-        [TestCase(new double[] {3.56, 5547.545}, Result = new double[] {3.56, 5547.545})]
-        [TestCase(new bool[] {false, true, true}, Result = new bool[] {false, true, true})]
+        [TestCase(3.56, ExpectedResult = 3.56)]
+        [TestCase(true, ExpectedResult = true)]
+        [TestCase("Hello", ExpectedResult = "Hello")]
+        [TestCase(new byte[] {0, 5, 12, 0}, ExpectedResult = new byte[] {0, 5, 12, 0})]
+        [TestCase(new double[] {3.56, 5547.545}, ExpectedResult = new double[] {3.56, 5547.545})]
+        [TestCase(new bool[] {false, true, true}, ExpectedResult = new bool[] {false, true, true})]
         public object TestPutValue(object value)
         {
             string key = "key";

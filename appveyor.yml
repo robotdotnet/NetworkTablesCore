@@ -17,15 +17,17 @@ build:
   verbosity: minimal
 
 test_script:
-- .\packages\OpenCover.4.6.166\tools\OpenCover.Console.exe -register:user -target:nunit-console.exe -targetargs:".\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll /noshadow /framework:net-4.0 /include:Client" -filter:"+[Network*]* -[NetworkTablesCore.T*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput -returntargetcode
+- nuget install NUnit.Console -Pre -OutputDirectory testrunner
 
-- .\packages\OpenCover.4.6.166\tools\OpenCover.Console.exe -register:user -target:nunit-console.exe -targetargs:".\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll /noshadow /framework:net-4.0 /include:Server" -filter:"+[Network*]* -[NetworkTablesCore.T*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput -returntargetcode
+- .\packages\OpenCover.4.6.166\tools\OpenCover.Console.exe -register:user -target:testrunner\NUnit.Console.3.0.0-rc-2\tools\nunit3-console.exe -targetargs:".\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll --where "cat==Server"" -filter:"+[Network*]* -[NetworkTablesCore.T*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput -returntargetcode
+
+- .\packages\OpenCover.4.6.166\tools\OpenCover.Console.exe -register:user -target:testrunner\NUnit.Console.3.0.0-rc-2\tools\nunit3-console.exe -targetargs:".\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll --where "cat==Client"" -filter:"+[Network*]* -[NetworkTablesCore.T*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput -returntargetcode
 
 - cmd: >-
 
-    nunit-console-x86.exe %APPVEYOR_BUILD_FOLDER%\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll /framework:net-4.0 /include:Server
+    testrunner\NUnit.Console.3.0.0-rc-2\tools\nunit3-console.exe %APPVEYOR_BUILD_FOLDER%\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll --framework=net-4.0 --where "cat==Server" -x86
 
-    nunit-console-x86.exe %APPVEYOR_BUILD_FOLDER%\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll /framework:net-4.0 /include:Client
+    testrunner\NUnit.Console.3.0.0-rc-2\tools\nunit3-console.exe %APPVEYOR_BUILD_FOLDER%\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll --framework=net-4.0 --where "cat==Client" -x86
 
 - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
 - pip install codecov
