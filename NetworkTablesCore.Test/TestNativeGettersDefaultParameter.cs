@@ -4,8 +4,7 @@ using NUnit.Framework;
 namespace NetworkTablesCore.Test
 {
     [TestFixture]
-    [Category("Client")]
-    public class TestNativeGettersDefaultParameter : ClientTestBase
+    public class TestNativeGettersDefaultParameter : TestBase
     {
         [SetUp]
         public void SetUp()

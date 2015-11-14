@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
 using NetworkTables;
 using NetworkTables.Native;
 using NUnit.Framework;
@@ -10,8 +6,7 @@ using NUnit.Framework;
 namespace NetworkTablesCore.Test
 {
     [TestFixture]
-    [Category("Server")]
-    public class TestNativeListeners : ServerTestBase
+    public class TestNativeListeners : TestBase
     {
         [SetUp]
         public void SetUp()
@@ -253,7 +248,6 @@ namespace NetworkTablesCore.Test
             {
                 Assert.That(retValue[i], Is.EqualTo(toWrite1[i]));
             }
-            //Assert.That(retValue, Is.EqualTo(toWrite1));
 
             Assert.That(receivedFlags.HasFlag(NotifyFlags.NotifyImmediate));
 

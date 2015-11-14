@@ -10,8 +10,7 @@ using NUnit.Framework;
 namespace NetworkTablesCore.Test
 {
     [TestFixture]
-    [Category("Client")]
-    public class TestNetworkTablesApi : ClientTestBase
+    public class TestNetworkTablesApi : TestBase
     {
         [TestFixtureSetUp]
         public void FixtureSetup()
@@ -292,6 +291,8 @@ namespace NetworkTablesCore.Test
             Assert.That(errors.Length, Is.EqualTo(1));
             Assert.That(errors[0], Contains.Substring("3: unrecognized boolean value, not 'true' or 'false'"));
         }
+
+#region Getters and Setters
 
         [Test]
         [TestCase(3.56, ExpectedResult = 3.56)]
@@ -844,6 +845,29 @@ namespace NetworkTablesCore.Test
             string key = "key";
 
             Assert.Throws<TableKeyNotDefinedException>(() => m_table.GetBooleanArray(key));
+        }
+#endregion
+
+        // The below tests have no way to be checked, so we are just making sure they don't throw exceptions.
+
+
+        [Test]
+        public void TestSetNetworkIdentity()
+        {
+            NetworkTable.SetNetworkIdentity("UnitTests");
+
+            Assert.Pass();
+        }
+
+        [Test]
+        public void TestGetConnections()
+        {
+            Assert.That(NetworkTable.Connections(), Has.Length.EqualTo(0));
+        }
+
+        public void TestIsConnected()
+        {
+            Assert.That(!m_table.IsConnected);
         }
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
 using NetworkTables;
 using NetworkTables.Native;
 using NetworkTables.Tables;
@@ -44,8 +40,7 @@ namespace NetworkTablesCore.Test
 
 
     [TestFixture]
-    [Category("Server")]
-    public class TestNetworkTableApiListeners : ServerTestBase
+    public class TestNetworkTableApiListeners : TestBase
     {
         private NetworkTable m_table;
 
@@ -70,7 +65,7 @@ namespace NetworkTablesCore.Test
 
             m_table.AddTableListenerEx(listener, f);
 
-            Thread.Sleep(10);
+            Thread.Sleep(20);
 
             Assert.That(listener.Source, Is.EqualTo(m_table));
             Assert.That(listener.Key, Is.EqualTo(key));
@@ -82,7 +77,7 @@ namespace NetworkTablesCore.Test
 
             m_table.PutString(key2, val2);
 
-            Thread.Sleep(10);
+            Thread.Sleep(20);
 
             Assert.That(listener.Source, Is.EqualTo(m_table));
             Assert.That(listener.Key, Is.EqualTo(key2));
@@ -108,7 +103,7 @@ namespace NetworkTablesCore.Test
 
             m_table.PutString("Key2", "Value2");
 
-            Thread.Sleep(10);
+            Thread.Sleep(20);
 
             Assert.That(listener.Source, Is.EqualTo(m_table));
             Assert.That(listener.Key, Is.EqualTo(key));
@@ -134,7 +129,7 @@ namespace NetworkTablesCore.Test
 
             subTable.PutString(key, value);
 
-            Thread.Sleep(10);
+            Thread.Sleep(20);
 
             Assert.That(listener.Source, Is.EqualTo(m_table));
             Assert.That(listener.Key, Is.EqualTo(subTableName));
@@ -145,13 +140,83 @@ namespace NetworkTablesCore.Test
         }
 
         [Test]
+        public void TestAddTableListenerEntireTableImmediateNotify()
+        {
+            MockTableListener listener = new MockTableListener();
+
+            m_table.AddTableListener(listener, true);
+
+            Thread.Sleep(20);
+
+            m_table.RemoveTableListener(listener);
+
+            Assert.Pass();
+        }
+
+        [Test]
+        public void TestAddTableListenerEntireTable()
+        {
+            MockTableListener listener = new MockTableListener();
+
+            m_table.AddTableListener(listener);
+
+            Thread.Sleep(20);
+
+            m_table.RemoveTableListener(listener);
+
+            Assert.Pass();
+        }
+
+        [Test]
+        public void TestAddTableListenerKeyListenerImmediateNotify()
+        {
+            MockTableListener listener = new MockTableListener();
+
+            m_table.AddTableListener("key", listener, true);
+
+            Thread.Sleep(20);
+
+            m_table.RemoveTableListener(listener);
+
+            Assert.Pass();
+        }
+
+        [Test]
+        public void TestAddTableListenerKeyListener()
+        {
+            MockTableListener listener = new MockTableListener();
+
+            m_table.AddTableListener("key", listener);
+
+            Thread.Sleep(20);
+
+            m_table.RemoveTableListener(listener);
+
+            Assert.Pass();
+        }
+
+        [Test]
+        public void TestAddSubTableListenerNotLocal()
+        {
+            MockTableListener listener = new MockTableListener();
+
+            m_table.AddSubTableListener(listener);
+
+            Thread.Sleep(20);
+
+            m_table.RemoveTableListener(listener);
+
+            Assert.Pass();
+        }
+
+        [Test]
         public void TestConnectionListener()
         {
             MockConnectionListener listener = new MockConnectionListener();
 
             m_table.AddConnectionListener(listener, true);
 
-            Thread.Sleep(10);
+            Thread.Sleep(20);
             m_table.RemoveConnectionListener(listener);
 
             Assert.Pass("If we have gotten here without an exception we pass. Cannot test more without a remote.");

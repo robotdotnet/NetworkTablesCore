@@ -4,11 +4,8 @@ using NUnit.Framework;
 namespace NetworkTablesCore.Test
 {
     [SetUpFixture]
-    public class GlobalTestConstants
+    public class TestTearDownFixture
     {
-        internal static bool Started = false;
-        internal static bool Server = false;
-
         [TearDown]
         public void TearDown()
         {

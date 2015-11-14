@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 using NetworkTables;
 using NetworkTables.Native;
 using NUnit.Framework;
@@ -12,8 +7,7 @@ using NUnit.Framework;
 namespace NetworkTablesCore.Test
 {
     [TestFixture]
-    [Category("Client")]
-    public class TestNativeInterface : ClientTestBase
+    public class TestNativeInterface : TestBase
     {
         [SetUp]
         public void SetUp()
@@ -269,7 +263,26 @@ namespace NetworkTablesCore.Test
         {
             CoreMethods.SetNetworkIdentity("UnitTests");
 
-            Assert.Pass("Passes if the core method does not throw an exception");
+            Assert.Pass();
+        }
+
+        public void TestFlush()
+        {
+            CoreMethods.Flush();
+
+            Assert.Pass();
+        }
+
+        public void TestNow()
+        {
+            Assert.That(CoreMethods.Now(), Is.GreaterThan(0));
+        }
+
+        public void TestSetUpdateRate()
+        {
+            CoreMethods.SetUpdateRate(100);
+
+            Assert.Pass();
         }
 
         

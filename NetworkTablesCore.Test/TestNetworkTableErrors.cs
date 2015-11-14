@@ -7,8 +7,7 @@ using NUnit.Framework;
 namespace NetworkTablesCore.Test
 {
     [TestFixture]
-    [Category("Client")]
-    public class TestNetworkTableErrors : ClientTestBase
+    public class TestNetworkTableErrors : TestBase
     {
         private NetworkTable m_nt;
 
