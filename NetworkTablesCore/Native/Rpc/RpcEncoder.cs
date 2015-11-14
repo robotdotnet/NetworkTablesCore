@@ -13,7 +13,13 @@ namespace NetworkTables.Native.Rpc
 
         public void WriteDouble(double val)
         {
-            m_buffer.AddRange(BitConverter.GetBytes(IPAddress.HostToNetworkOrder(BitConverter.DoubleToInt64Bits(val))));
+            long lVal = BitConverter.DoubleToInt64Bits(val);
+            long swappedVal = IPAddress.HostToNetworkOrder(lVal);
+            byte[] bytes = BitConverter.GetBytes(swappedVal);
+
+            m_buffer.AddRange(bytes);
+
+            //m_buffer.AddRange(BitConverter.GetBytes(IPAddress.HostToNetworkOrder(BitConverter.DoubleToInt64Bits(val))));
         }
 
         public void Write8(byte val)
@@ -141,6 +147,7 @@ namespace NetworkTables.Native.Rpc
                     var vD = (double[])value.Value;
                     int sizeD = vD.Length;
                     if (sizeD > 0xff) sizeD = 0xff;
+                    Write8((byte)sizeD);
                     for (int i = 0; i < sizeD; i++)
                     {
                         WriteDouble(vD[i]);
@@ -150,6 +157,7 @@ namespace NetworkTables.Native.Rpc
                     var vS = (string[])value.Value;
                     int sizeS = vS.Length;
                     if (sizeS > 0xff) sizeS = 0xff;
+                    Write8((byte)sizeS);
                     for (int i = 0; i < sizeS; i++)
                     {
                         WriteString(vS[i]);

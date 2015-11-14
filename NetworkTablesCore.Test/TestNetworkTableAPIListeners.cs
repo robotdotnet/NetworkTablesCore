@@ -1,17 +1,225 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
 using NetworkTables;
 using NetworkTables.Native;
+using NetworkTables.Tables;
 using NUnit.Framework;
 namespace NetworkTablesCore.Test
 {
-    [TestFixture]
-    [Category("Server")]
-    public class TestNetworkTableAPIListeners : ServerTestBase
+    internal class MockTableListener : ITableListener
     {
+        public ITable Source = null;
+        public string Key = null;
+        public object Value = null;
+        public NotifyFlags Flags = 0;
 
+        public void ValueChanged(ITable source, string key, object value, NotifyFlags flags)
+        {
+            Source = source;
+            Key = key;
+            Value = value;
+            Flags = flags;
+        }
+    }
+
+    internal class MockConnectionListener : IRemoteConnectionListener
+    {
+        public IRemote ConnectedRemote = null;
+        public IRemote DisconnectedRemote = null;
+
+        public void Connected(IRemote remote)
+        {
+            ConnectedRemote = remote;
+        }
+
+        public void Disconnected(IRemote remote)
+        {
+            DisconnectedRemote = remote;
+        }
+    }
+
+
+
+    [TestFixture]
+    public class TestNetworkTableApiListeners : TestBase
+    {
+        private NetworkTable m_table;
+
+        [SetUp]
+        public void SetUp()
+        {
+            CoreMethods.DeleteAllEntries();
+            m_table = NetworkTable.GetTable("Table");
+        }
+
+        [Test]
+        public void TestAddTableListenerExListenerFlags()
+        {
+            MockTableListener listener = new MockTableListener();
+
+            NotifyFlags f = NotifyFlags.NotifyNew | NotifyFlags.NotifyLocal | NotifyFlags.NotifyImmediate;
+
+            string key = "key";
+            string value = "Value";
+
+            m_table.PutString(key, value);
+
+            m_table.AddTableListenerEx(listener, f);
+
+            Thread.Sleep(20);
+
+            Assert.That(listener.Source, Is.EqualTo(m_table));
+            Assert.That(listener.Key, Is.EqualTo(key));
+            Assert.That(listener.Value, Is.EqualTo(value));
+            Assert.That(listener.Flags, Is.EqualTo(NotifyFlags.NotifyImmediate));
+
+            string key2 = "key2";
+            string val2 = "value2";
+
+            m_table.PutString(key2, val2);
+
+            Thread.Sleep(20);
+
+            Assert.That(listener.Source, Is.EqualTo(m_table));
+            Assert.That(listener.Key, Is.EqualTo(key2));
+            Assert.That(listener.Value, Is.EqualTo(val2));
+            Assert.That(listener.Flags, Is.EqualTo(NotifyFlags.NotifyNew | NotifyFlags.NotifyLocal));
+
+            m_table.RemoveTableListener(listener);
+        }
+
+        [Test]
+        public void TestAddTableListenerExKeyListenerFlags()
+        {
+            MockTableListener listener = new MockTableListener();
+
+            NotifyFlags f = NotifyFlags.NotifyNew | NotifyFlags.NotifyLocal | NotifyFlags.NotifyImmediate;
+
+            string key = "key";
+            string value = "Value";
+
+            m_table.PutString(key, value);
+
+            m_table.AddTableListenerEx(key, listener, f);
+
+            m_table.PutString("Key2", "Value2");
+
+            Thread.Sleep(20);
+
+            Assert.That(listener.Source, Is.EqualTo(m_table));
+            Assert.That(listener.Key, Is.EqualTo(key));
+            Assert.That(listener.Value, Is.EqualTo(value));
+            Assert.That(listener.Flags, Is.EqualTo(NotifyFlags.NotifyImmediate));
+
+            m_table.RemoveTableListener(listener);
+        }
+
+        [Test]
+        public void TestAddSubTableListenerListenerLocalNotify()
+        {
+            MockTableListener listener = new MockTableListener();
+
+            string subTableName = "SubTable";
+
+            ITable subTable = m_table.GetSubTable("SubTable");
+
+            m_table.AddSubTableListener(listener, true);
+
+            string key = "key";
+            string value = "Value";
+
+            subTable.PutString(key, value);
+
+            Thread.Sleep(20);
+
+            Assert.That(listener.Source, Is.EqualTo(m_table));
+            Assert.That(listener.Key, Is.EqualTo(subTableName));
+            Assert.That(listener.Value.ToString(), Is.EqualTo(subTable.ToString()));
+            Assert.That(listener.Flags, Is.EqualTo(NotifyFlags.NotifyLocal | NotifyFlags.NotifyNew));
+
+            m_table.RemoveTableListener(listener);
+        }
+
+        [Test]
+        public void TestAddTableListenerEntireTableImmediateNotify()
+        {
+            MockTableListener listener = new MockTableListener();
+
+            m_table.AddTableListener(listener, true);
+
+            Thread.Sleep(20);
+
+            m_table.RemoveTableListener(listener);
+
+            Assert.Pass();
+        }
+
+        [Test]
+        public void TestAddTableListenerEntireTable()
+        {
+            MockTableListener listener = new MockTableListener();
+
+            m_table.AddTableListener(listener);
+
+            Thread.Sleep(20);
+
+            m_table.RemoveTableListener(listener);
+
+            Assert.Pass();
+        }
+
+        [Test]
+        public void TestAddTableListenerKeyListenerImmediateNotify()
+        {
+            MockTableListener listener = new MockTableListener();
+
+            m_table.AddTableListener("key", listener, true);
+
+            Thread.Sleep(20);
+
+            m_table.RemoveTableListener(listener);
+
+            Assert.Pass();
+        }
+
+        [Test]
+        public void TestAddTableListenerKeyListener()
+        {
+            MockTableListener listener = new MockTableListener();
+
+            m_table.AddTableListener("key", listener);
+
+            Thread.Sleep(20);
+
+            m_table.RemoveTableListener(listener);
+
+            Assert.Pass();
+        }
+
+        [Test]
+        public void TestAddSubTableListenerNotLocal()
+        {
+            MockTableListener listener = new MockTableListener();
+
+            m_table.AddSubTableListener(listener);
+
+            Thread.Sleep(20);
+
+            m_table.RemoveTableListener(listener);
+
+            Assert.Pass();
+        }
+
+        [Test]
+        public void TestConnectionListener()
+        {
+            MockConnectionListener listener = new MockConnectionListener();
+
+            m_table.AddConnectionListener(listener, true);
+
+            Thread.Sleep(20);
+            m_table.RemoveConnectionListener(listener);
+
+            Assert.Pass("If we have gotten here without an exception we pass. Cannot test more without a remote.");
+        }
     }
 }

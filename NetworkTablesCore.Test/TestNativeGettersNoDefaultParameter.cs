@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NetworkTables;
-using NetworkTables.Native;
+﻿using NetworkTables.Native;
 using NetworkTables.Native.Exceptions;
 using NUnit.Framework;
 
 namespace NetworkTablesCore.Test
 {
     [TestFixture]
-    [Category("Client")]
-    public class TestNativeGettersNoDefaultParameter : ClientTestBase
+    public class TestNativeGettersNoDefaultParameter : TestBase
     {
         [SetUp]
         public void SetUp()

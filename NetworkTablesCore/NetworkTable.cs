@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using NetworkTables.Native;
 using NetworkTables.Native.Exceptions;
 using NetworkTables.Tables;
@@ -261,7 +262,7 @@ namespace NetworkTables
         /// <returns>True if the table contains the key, otherwise false.</returns>
         public bool ContainsKey(string key)
         {
-            return CoreMethods.ContainsKey(key);
+            return CoreMethods.ContainsKey(m_path + PathSeperatorChar + key);
         }
 
         /// <summary>

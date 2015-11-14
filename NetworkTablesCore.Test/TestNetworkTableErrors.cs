@@ -1,19 +1,20 @@
 ﻿using System;
 using NetworkTables;
+using NetworkTables.Native;
 using NetworkTables.Native.Exceptions;
 using NUnit.Framework;
 
 namespace NetworkTablesCore.Test
 {
     [TestFixture]
-    [Category("Client")]
-    public class TestNetworkTableErrors : ClientTestBase
+    public class TestNetworkTableErrors : TestBase
     {
         private NetworkTable m_nt;
 
         [SetUp]
         public void SetUp()
         {
+            CoreMethods.DeleteAllEntries();
             m_nt = NetworkTable.GetTable("");
         }
 

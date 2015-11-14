@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NetworkTables.Native;
 using NUnit.Framework;
 
 namespace NetworkTablesCore.Test
 {
     [TestFixture]
-    [Category("Client")]
-    public class TestNativeStructs : ClientTestBase
+    public class TestNativeStructs : TestBase
     {
         [Test]
         public void TestNtStringWriteCreateAndDispose()

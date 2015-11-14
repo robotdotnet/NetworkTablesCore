@@ -56,13 +56,11 @@ namespace NetworkTables.Native.Rpc
                     double[] dBuf = new double[size];
                     for (int i = 0; i < size; i++)
                     {
-                        dBuf[i] = ReadDouble(buf, m_count);
+                        dBuf[i] = ReadDouble(buf, i * 8);
                     }
                     return RpcValue.MakeDoubleArray(dBuf);
                 case NtType.StringArray:
                     if (!Read8(ref size)) return null;
-                    buf = ReadArray(size * 8);
-                    if (buf == null) return null;
                     string[] sBuf = new string[size];
                     for (int i = 0; i < size; i++)
                     {
@@ -79,9 +77,10 @@ namespace NetworkTables.Native.Rpc
         {
             List<byte> buf = new List<byte>(len);
             if (m_buffer.Length < m_count + len) return null;
-            for (int i = m_count; i < m_count + len; i++)
+            int readTo = m_count + len;
+            for (; m_count < readTo; m_count++)
             {
-                buf.Add(m_buffer[i]);
+                buf.Add(m_buffer[m_count]);
             }
             return buf.ToArray();
         }
@@ -98,6 +97,7 @@ namespace NetworkTables.Native.Rpc
         {
             if (m_buffer.Length < m_count + 2) return false;
             val = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(m_buffer, m_count));
+            m_count += 2;
             return true;
         }
 
@@ -105,6 +105,7 @@ namespace NetworkTables.Native.Rpc
         {
             if (m_buffer.Length < m_count + 4) return false;
             val = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(m_buffer, m_count));
+            m_count += 4;
             return true;
         }
 
@@ -112,6 +113,7 @@ namespace NetworkTables.Native.Rpc
         {
             if (m_buffer.Length < m_count + 8) return false;
             val = ReadDouble(m_buffer, m_count);
+            m_count += 8;
             return true;
         }
 
@@ -123,6 +125,7 @@ namespace NetworkTables.Native.Rpc
 
             if (m_buffer.Length < m_count + len) return false;
             val = Encoding.UTF8.GetString(m_buffer, m_count, len);
+            m_count += len;
             return true;
         }
 
@@ -135,6 +138,8 @@ namespace NetworkTables.Native.Rpc
             if (m_buffer.Length < m_count + len) return false;
             val = new byte[len];
             Array.Copy(m_buffer, m_count, val, 0, len);
+
+            m_count += len;
             return true;
         }
     }

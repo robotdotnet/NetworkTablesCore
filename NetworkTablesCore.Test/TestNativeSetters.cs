@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NetworkTables;
-using NetworkTables.Native;
+﻿using NetworkTables.Native;
 using NetworkTables.Native.Exceptions;
 using NUnit.Framework;
 
@@ -12,8 +6,7 @@ using NUnit.Framework;
 namespace NetworkTablesCore.Test
 {
     [TestFixture]
-    [Category("Client")]
-    public class TestNativeSetters : ClientTestBase
+    public class TestNativeSetters : TestBase
     {
         [SetUp]
         public void SetUp()

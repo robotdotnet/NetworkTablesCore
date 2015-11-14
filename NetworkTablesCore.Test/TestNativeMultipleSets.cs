@@ -5,8 +5,7 @@ using NUnit.Framework;
 namespace NetworkTablesCore.Test
 {
     [TestFixture]
-    [Category("Client")]
-    public class TestNativeMultipleSets : ClientTestBase
+    public class TestNativeMultipleSets : TestBase
     {
         [SetUp]
         public void SetUp()
