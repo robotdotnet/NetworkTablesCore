@@ -19,15 +19,15 @@ build:
 test_script:
 - nuget install NUnit.Console -Pre -OutputDirectory testrunner
 
-- .\packages\OpenCover.4.6.166\tools\OpenCover.Console.exe -register:user -target:testrunner\NUnit.Console.3.0.0-rc-2\tools\nunit3-console.exe -targetargs:".\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll --where "cat==Server"" -filter:"+[Network*]* -[NetworkTablesCore.T*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput -returntargetcode
+- .\packages\OpenCover.4.6.166\tools\OpenCover.Console.exe -register:user -target:testrunner\NUnit.Console.3.0.0-rc-2\tools\nunit3-console.exe -targetargs:".\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll --where "cat==Server" --result=nunit2" -filter:"+[Network*]* -[NetworkTablesCore.T*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput -returntargetcode
 
 - .\packages\OpenCover.4.6.166\tools\OpenCover.Console.exe -register:user -target:testrunner\NUnit.Console.3.0.0-rc-2\tools\nunit3-console.exe -targetargs:".\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll --where "cat==Client"" -filter:"+[Network*]* -[NetworkTablesCore.T*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput -returntargetcode
 
 - cmd: >-
 
-    testrunner\NUnit.Console.3.0.0-rc-2\tools\nunit3-console.exe %APPVEYOR_BUILD_FOLDER%\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll --framework=net-4.0 --where "cat==Server" -x86
+    testrunner\NUnit.Console.3.0.0-rc-2\tools\nunit3-console.exe %APPVEYOR_BUILD_FOLDER%\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll --framework=net-4.0 --where "cat==Server" -x86 --result=nunit2
 
-    testrunner\NUnit.Console.3.0.0-rc-2\tools\nunit3-console.exe %APPVEYOR_BUILD_FOLDER%\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll --framework=net-4.0 --where "cat==Client" -x86
+    testrunner\NUnit.Console.3.0.0-rc-2\tools\nunit3-console.exe %APPVEYOR_BUILD_FOLDER%\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll --framework=net-4.0 --where "cat==Client" -x86 --result=nunit2
 
 - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
 - pip install codecov
