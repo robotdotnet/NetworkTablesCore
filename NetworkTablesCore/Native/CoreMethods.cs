@@ -271,7 +271,6 @@ namespace NetworkTables.Native
             if (ret == IntPtr.Zero)
             {
                 ThrowException(name, namePtr, size, NtType.String);
-                return null;
             }
             string str = ReadUTF8String(ret, stringSize);
             Interop.NT_FreeCharArray(ret);
@@ -288,7 +287,6 @@ namespace NetworkTables.Native
             if (ret == IntPtr.Zero)
             {
                 ThrowException(name, namePtr, size, NtType.Raw);
-                return null;
             }
             byte[] data = GetRawDataFromPtr(ret, stringSize);
             Interop.NT_FreeCharArray(ret);
@@ -305,7 +303,6 @@ namespace NetworkTables.Native
             if (arrPtr == IntPtr.Zero)
             {
                 ThrowException(name, namePtr, size, NtType.DoubleArray);
-                return null;
             }
             double[] arr = GetDoubleArrayFromPtr(arrPtr, arrSize);
             Interop.NT_FreeDoubleArray(arrPtr);
@@ -322,7 +319,6 @@ namespace NetworkTables.Native
             if (arrPtr == IntPtr.Zero)
             {
                 ThrowException(name, namePtr, size, NtType.BooleanArray);
-                return null;
             }
             bool[] arr = GetBooleanArrayFromPtr(arrPtr, arrSize);
             Interop.NT_FreeBooleanArray(arrPtr);
@@ -339,7 +335,6 @@ namespace NetworkTables.Native
             if (arrPtr == IntPtr.Zero)
             {
                 ThrowException(name, namePtr, size, NtType.StringArray);
-                return null;
             }
             string[] arr = GetStringArrayFromPtr(arrPtr, arrSize);
             Interop.NT_FreeStringArray(arrPtr, arrSize);
