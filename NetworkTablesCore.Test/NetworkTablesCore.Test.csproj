@@ -54,7 +54,7 @@
     <Compile Include="GlobalTestConstants.cs" />
     <Compile Include="ServerTestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestEntryListeners.cs" />
+    <Compile Include="TestNativeListeners.cs" />
     <Compile Include="TestNativeForceSet.cs" />
     <Compile Include="TestNativeGettersDefaultParameter.cs" />
     <Compile Include="TestNativeGettersNoDefaultParameter.cs" />

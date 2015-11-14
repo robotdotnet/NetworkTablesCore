@@ -19,14 +19,14 @@ namespace NetworkTablesCore.Test
             {
                 NetworkTable.SetIPAddress("127.0.0.1");
                 NetworkTable.SetPort(10000);
-                NetworkTable.SetClientMode();
+                NetworkTable.SetServerMode();
                 NetworkTable.Initialize();
                 GlobalTestConstants.Started = true;
-                GlobalTestConstants.Server = false;
+                GlobalTestConstants.Server = true;
             }
             else
             {
-                if (GlobalTestConstants.Server)
+                if (GlobalTestConstants.Server == false)
                 {
                     throw new InvalidOperationException("Test can only run either client or Server. Not both.");
                 }

@@ -15,7 +15,8 @@ namespace NetworkTablesCore.Test
             CoreMethods.StopClient();
             CoreMethods.StopServer();
 
-
+            CoreMethods.StopNotifier();
+            CoreMethods.StopRpcServer();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using NetworkTables.Native;
 using NetworkTables.Native.Exceptions;
 using NetworkTables.Tables;
@@ -261,7 +262,7 @@ namespace NetworkTables
         /// <returns>True if the table contains the key, otherwise false.</returns>
         public bool ContainsKey(string key)
         {
-            return CoreMethods.ContainsKey(key);
+            return CoreMethods.ContainsKey(m_path + PathSeperatorChar + key);
         }
 
         /// <summary>
@@ -886,6 +887,7 @@ namespace NetworkTables
         /// <param name="listener">The <see cref="ITableListener"/> to add.</param>
         /// <param name="immediateNotify">True if we want to immediately notify the listener, 
         /// otherwise false.</param>
+        [ExcludeFromCodeCoverage]//Excluding because we cannot test without local notify
         public void AddTableListener(ITableListener listener, bool immediateNotify = false)
         {
             NotifyFlags flags = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
@@ -901,6 +903,7 @@ namespace NetworkTables
         /// <param name="listener">The <see cref="ITableListener"/> to add.</param>
         /// <param name="immediateNotify">True if we want to immediately notify the listener, 
         /// otherwise false.</param>
+        [ExcludeFromCodeCoverage]//Excluding because we cannot test without local notify
         public void AddTableListener(string key, ITableListener listener, bool immediateNotify = false)
         {
             NotifyFlags flags = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
@@ -913,6 +916,7 @@ namespace NetworkTables
         /// Adds a SubTable Listener with the default flags, and without local notify.
         /// </summary>
         /// <param name="listener">The <see cref="ITableListener"/> to add.</param>
+        [ExcludeFromCodeCoverage]//Excluding because we cannot test without local notify
         public void AddSubTableListener(ITableListener listener)
         {
             AddSubTableListener(listener, false);
@@ -944,6 +948,7 @@ namespace NetworkTables
         /// <param name="listener">The <see cref="IRemoteConnectionListener"/> to add.</param>
         /// <param name="immediateNotify">True whether to notify the listener immediately, 
         /// otherwise false.</param>
+        [ExcludeFromCodeCoverage]//Excluding because we cannot test without a remote connection
         public void AddConnectionListener(IRemoteConnectionListener listener, bool immediateNotify)
         {
 
@@ -968,6 +973,7 @@ namespace NetworkTables
         /// Removes a Connection Listener from the network table.
         /// </summary>
         /// <param name="listener">The <see cref="IRemoteConnectionListener"/> to remove.</param>
+        [ExcludeFromCodeCoverage]//Excluding because we cannot test without a remote connection
         public void RemoveConnectionListener(IRemoteConnectionListener listener)
         {
             int val;
@@ -980,6 +986,7 @@ namespace NetworkTables
         /// <summary>
         /// Gets if the NetworkTables is connected to a client or server.
         /// </summary>
+        [ExcludeFromCodeCoverage]//Excluding because we cannot test without a remote connection
         public bool IsConnected
         {
             get
@@ -998,6 +1005,7 @@ namespace NetworkTables
         /// all connections to itself.
         /// </remarks>
         /// <returns>An array of all connections attached to this instance.</returns>
+        [ExcludeFromCodeCoverage]//Excluding because we cannot test without a remote connection
         public static ConnectionInfo[] Connections()
         {
             return CoreMethods.GetConnections();

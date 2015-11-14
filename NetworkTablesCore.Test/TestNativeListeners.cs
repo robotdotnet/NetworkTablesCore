@@ -11,7 +11,7 @@ namespace NetworkTablesCore.Test
 {
     [TestFixture]
     [Category("Server")]
-    public class TestEntryListeners : ServerTestBase
+    public class TestNativeListeners : ServerTestBase
     {
         [SetUp]
         public void SetUp()
@@ -346,6 +346,21 @@ namespace NetworkTablesCore.Test
             Assert.That(receivedFlags.HasFlag(NotifyFlags.NotifyImmediate));
 
             CoreMethods.RemoveEntryListener(listener);
+        }
+
+        [Test]
+        public void TestAddRemoveConnectionListener()
+        {
+            ConnectionListenerFunction callback = (uid, connected, conn) =>
+            {
+
+            };
+
+            int id = CoreMethods.AddConnectionListener(callback, true);
+
+            Assert.That(id, Is.Not.EqualTo(0));
+
+            CoreMethods.RemoveEntryListener(id);
         }
     }
 }

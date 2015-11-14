@@ -35,6 +35,26 @@ namespace NetworkTablesCore.Test
         }
 
         [Test]
+        public void TestIsServer()
+        {
+            Assert.That(m_table.IsServer);
+        } 
+
+        [Test]
+        public void TestContainsKeyNo()
+        {
+            Assert.That(!m_table.ContainsKey("Key"));
+        }
+
+        [Test]
+        public void TestContainsKeyYes()
+        {
+            string key = "key";
+            m_table.PutString(key, "value");
+            Assert.That(m_table.ContainsKey(key));
+        }
+
+        [Test]
         public void TestContainsSubTableFalse()
         {
             Assert.That(!m_table.ContainsSubTable("SubTable"));

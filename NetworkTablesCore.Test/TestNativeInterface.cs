@@ -264,6 +264,15 @@ namespace NetworkTablesCore.Test
             Assert.That(flags, Is.EqualTo(EntryFlags.Persistent));
         }
 
+        [Test]
+        public void TestSetNetworkIdentity()
+        {
+            CoreMethods.SetNetworkIdentity("UnitTests");
+
+            Assert.Pass("Passes if the core method does not throw an exception");
+        }
+
+        
 
     }
 }
