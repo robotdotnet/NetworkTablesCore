@@ -13,7 +13,7 @@ namespace NetworkTablesCore.Test
     [Category("Client")]
     public class TestNetworkTablesApi : ClientTestBase
     {
-        [OneTimeSetUp]
+        [TestFixtureSetUp]
         public void FixtureSetup()
         {
 

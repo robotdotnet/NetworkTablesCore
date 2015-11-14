@@ -10,9 +10,8 @@ addons:
 
 install:
   - nuget restore NetworkTablesCore.sln
-  - nuget install NUnit.Console -Pre -OutputDirectory testrunner
+  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
 script:
   - xbuild /p:Configuration=Release NetworkTablesCore.sln
-  - mono ./testrunner/NUnit.Console.3.0.0-rc-2/tools/nunit3-console.exe ./NetworkTablesCore.Test/Output/NetworkTablesCore.Test.dll --where "cat == Client"
-  - mono ./testrunner/NUnit.Console.3.0.0-rc-2/tools/nunit3-console.exe ./NetworkTablesCore.Test/Output/NetworkTablesCore.Test.dll --where "cat == Server"
-
+  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./NetworkTablesCore.Test/Output/NetworkTablesCore.Test.dll -include:Client
+  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./NetworkTablesCore.Test/Output/NetworkTablesCore.Test.dll -include:Server

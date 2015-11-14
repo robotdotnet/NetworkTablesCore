@@ -9,7 +9,7 @@ namespace NetworkTablesCore.Test
         internal static bool Started = false;
         internal static bool Server = false;
 
-        [OneTimeTearDown]
+        [TearDown]
         public void TearDown()
         {
             CoreMethods.StopClient();
