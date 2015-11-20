@@ -169,7 +169,7 @@ namespace NetworkTables
         }
 
         /// <summary>
-        /// Sets the team the robot is configured for. This will set the IP
+        /// Sets the team the robot is configured for. This will set the Mdns
         /// address that NetworkTables will connect to in client mode.
         /// </summary>
         /// <param name="team">The team number</param>
@@ -177,7 +177,7 @@ namespace NetworkTables
         /// <see cref="GetTable(string)"/> if the system is a client.</remarks>
         public static void SetTeam(int team)
         {
-            SetIPAddress($"10.{team / 100}.{team % 100}.2");
+            SetIPAddress($"roboRIO-{team}.local");
         }
 
         /// <summary>
