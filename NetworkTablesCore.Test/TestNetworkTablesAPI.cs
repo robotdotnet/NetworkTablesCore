@@ -775,6 +775,79 @@ namespace NetworkTablesCore.Test
 
 
 
+        [Test]
+        public void TestPutAndGetRawValid()
+        {
+            string key = "key";
+            byte[] setVal = {
+                123,
+                5,
+                6,
+            };
+            Assert.That(m_table.PutRaw(key, setVal));
+
+            Assert.That(m_table.GetRaw(key), Is.EquivalentTo(setVal));
+        }
+
+        [Test]
+        public void TestPutAndGetRawValidDefault()
+        {
+            string key = "key";
+            byte[] setVal = {
+                123,
+                5,
+                6,
+            };
+            Assert.That(m_table.PutRaw(key, setVal));
+
+            Assert.That(m_table.GetRaw(key, new byte[] { 0 }), Is.EquivalentTo(setVal));
+        }
+
+        [Test]
+        public void TestPutRawIntoWrongType()
+        {
+            string key = "key";
+            byte[] setVal = {
+                123,
+                5,
+                6,
+            };
+            m_table.PutBoolean(key, true);
+            Assert.That(!m_table.PutRaw(key, setVal));
+        }
+
+        [Test]
+        public void TestGetRawErrorDefault()
+        {
+            string key = "key";
+
+            byte[] defaultVal = {
+                123,
+                5,
+                6,
+            };
+            Assert.That(m_table.GetRaw(key, defaultVal), Is.EquivalentTo(defaultVal));
+        }
+
+        [Test]
+        public void TestGetRawErrorThrowsWrongType()
+        {
+            string key = "key";
+            m_table.PutBoolean(key, true);
+
+            Assert.Throws<TableKeyDifferentTypeException>(() => m_table.GetRaw(key));
+        }
+
+        [Test]
+        public void TestGetRawErrorThrowsNotDefined()
+        {
+            string key = "key";
+
+            Assert.Throws<TableKeyNotDefinedException>(() => m_table.GetRaw(key));
+        }
+
+
+
 
         [Test]
         public void TestPutAndGetBooleanArrayValid()

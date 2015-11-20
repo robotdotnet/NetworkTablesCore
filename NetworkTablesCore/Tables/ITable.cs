@@ -104,6 +104,8 @@ namespace NetworkTables.Tables
         /// <returns>The requested value.</returns>
         /// <exception cref="TableKeyNotDefinedException">Thrown if the key does not 
         /// exist in the table, or if the key is null.</exception>
+        /// <exception cref="TableKeyDifferentTypeException">Thrown if the key exists
+        /// as a different type in the table.</exception>
         object GetValue(string key);
 
         /// <summary>
@@ -147,6 +149,8 @@ namespace NetworkTables.Tables
         /// <returns>The requested value.</returns>
         /// <exception cref="TableKeyNotDefinedException">Thrown if the key does not 
         /// exist in the table, or if the key is null.</exception>
+        /// <exception cref="TableKeyDifferentTypeException">Thrown if the key exists
+        /// as a different type in the table.</exception>
         double GetNumber(string key);
 
         /// <summary>
@@ -176,6 +180,8 @@ namespace NetworkTables.Tables
         /// <returns>The requested value.</returns>
         /// <exception cref="TableKeyNotDefinedException">Thrown if the key does not 
         /// exist in the table, or if the key is null.</exception>
+        /// <exception cref="TableKeyDifferentTypeException">Thrown if the key exists
+        /// as a different type in the table.</exception>
         string GetString(string key);
 
         /// <summary>
@@ -205,6 +211,8 @@ namespace NetworkTables.Tables
         /// <returns>The requested value.</returns>
         /// <exception cref="TableKeyNotDefinedException">Thrown if the key does not 
         /// exist in the table, or if the key is null.</exception>
+        /// <exception cref="TableKeyDifferentTypeException">Thrown if the key exists
+        /// as a different type in the table.</exception>
         bool GetBoolean(string key);
 
         //TODO: Add Commenting to Array Types
@@ -228,6 +236,8 @@ namespace NetworkTables.Tables
         /// <returns>The requested value array.</returns>
         /// <exception cref="TableKeyNotDefinedException">Thrown if the key does not 
         /// exist in the table, or if the key is null.</exception>
+        /// <exception cref="TableKeyDifferentTypeException">Thrown if the key exists
+        /// as a different type in the table.</exception>
         bool[] GetBooleanArray(string key);
 
         /// <summary>
@@ -256,6 +266,8 @@ namespace NetworkTables.Tables
         /// <returns>The requested value array.</returns>
         /// <exception cref="TableKeyNotDefinedException">Thrown if the key does not 
         /// exist in the table, or if the key is null.</exception>
+        /// <exception cref="TableKeyDifferentTypeException">Thrown if the key exists
+        /// as a different type in the table.</exception>
         double[] GetNumberArray(string key);
 
         /// <summary>
@@ -285,6 +297,8 @@ namespace NetworkTables.Tables
         /// <returns>The requested value array.</returns>
         /// <exception cref="TableKeyNotDefinedException">Thrown if the key does not 
         /// exist in the table, or if the key is null.</exception>
+        /// <exception cref="TableKeyDifferentTypeException">Thrown if the key exists
+        /// as a different type in the table.</exception>
         string[] GetStringArray(string key);
 
         /// <summary>
@@ -294,6 +308,34 @@ namespace NetworkTables.Tables
         /// <param name="defaultValue">The default value if the key does not exist or is null</param>
         /// <returns>The value array requested, or defaultValue if the key does not exist or is null.</returns>
         string[] GetStringArray(string key, string[] defaultValue);
+
+        /// <summary>
+        /// Put a raw value (byte array) in the table.
+        /// </summary>
+        /// <param name="key">The key to be assigned to.</param>
+        /// <param name="value">The value that will be assigned.</param>
+        /// <returns>False if the table key already exists with a different type.</returns>
+        bool PutRaw(string key, byte[] value);
+
+        /// <summary>
+        /// Returns the value array that the key maps to.
+        /// </summary>
+        /// <param name="key">The key name.</param>
+        /// <returns>The requested value array.</returns>
+        /// <exception cref="TableKeyNotDefinedException">Thrown if the key does not 
+        /// exist in the table, or if the key is null.</exception>
+        /// <exception cref="TableKeyDifferentTypeException">Thrown if the key exists
+        /// as a different type in the table.</exception>
+        byte[] GetRaw(string key);
+
+        /// <summary>
+        /// Returns the value array that the key maps to.
+        /// </summary>
+        /// <param name="key">The key name.</param>
+        /// <param name="defaultValue">The default value if the key does not exist or is null</param>
+        /// <returns>The value array requested, or defaultValue if the key does not exist or is null.</returns>
+        byte[] GetRaw(string key, byte[] defaultValue);
+
 
         /// <summary>
         /// Add a listener to changes to the table.

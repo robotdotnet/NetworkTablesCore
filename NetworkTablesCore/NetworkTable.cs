@@ -774,6 +774,22 @@ namespace NetworkTables
             return CoreMethods.GetEntryBooleanArray(m_path + PathSeperatorChar + key);
         }
 
+        ///<inheritdoc/>
+        public bool PutRaw(string key, byte[] value)
+        {
+            return CoreMethods.SetEntryRaw(m_path + PathSeperatorChar + key, value);
+        }
+        ///<inheritdoc/>
+        public byte[] GetRaw(string key)
+        {
+            return CoreMethods.GetEntryRaw(m_path + PathSeperatorChar + key);
+        }
+        ///<inheritdoc/>
+        public byte[] GetRaw(string key, byte[] defaultValue)
+        {
+            return CoreMethods.GetEntryRaw(m_path + PathSeperatorChar + key, defaultValue);
+        }
+
         /// <summary>
         /// Returns the value array that the key maps to.
         /// </summary>
