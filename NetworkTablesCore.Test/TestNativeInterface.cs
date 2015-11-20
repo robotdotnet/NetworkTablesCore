@@ -266,6 +266,7 @@ namespace NetworkTablesCore.Test
             Assert.Pass();
         }
 
+        [Test]
         public void TestFlush()
         {
             CoreMethods.Flush();
@@ -273,11 +274,13 @@ namespace NetworkTablesCore.Test
             Assert.Pass();
         }
 
+        [Test]
         public void TestNow()
         {
             Assert.That(CoreMethods.Now(), Is.GreaterThan(0));
         }
 
+        [Test]
         public void TestSetUpdateRate()
         {
             CoreMethods.SetUpdateRate(100);

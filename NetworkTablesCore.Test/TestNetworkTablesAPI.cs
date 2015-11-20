@@ -865,9 +865,26 @@ namespace NetworkTablesCore.Test
             Assert.That(NetworkTable.Connections(), Has.Length.EqualTo(0));
         }
 
+        [Test]
         public void TestIsConnected()
         {
             Assert.That(!m_table.IsConnected);
+        }
+
+        [Test]
+        public void TestFlush()
+        {
+            NetworkTable.Flush();
+
+            Assert.Pass();
+        }
+
+        [Test]
+        public void TestSetUpdateRate()
+        {
+            NetworkTable.SetUpdateRate(100);
+
+            Assert.Pass();
         }
     }
 }
