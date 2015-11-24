@@ -13,4 +13,7 @@
     <copyright>Copyright 2015-2016</copyright>
     <tags>WPILib FRC FIRST RoboRIO</tags>
   </metadata>
+  	  <files>
+  <file src="Output\*Full.xml" target="tools" /> 
+  </files>
 </package>
