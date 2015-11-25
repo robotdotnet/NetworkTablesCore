@@ -12,6 +12,8 @@ namespace NetworkTables.Native
         Windows64,
         Linux32,
         Linux64,
+        MacOs32,
+        MacOs64,
         ArmLinux,
         RoboRio
     }
@@ -21,7 +23,7 @@ namespace NetworkTables.Native
         internal static OsType GetOsType()
         {
             var platform = (int)Environment.OSVersion.Platform;
-            if (platform == 4 || platform == 6 || platform == 128)
+            if (platform == 4 || platform == 128)
             {
                 //These 3 mean we are running on a unix based system
                 if (Environment.Is64BitProcess)
@@ -33,6 +35,17 @@ namespace NetworkTables.Native
                 {
                     //We need to check for the RIO
                     return File.Exists("/usr/local/frc/bin/frcRunRobot.sh") ? OsType.RoboRio : OsType.Linux32;
+                }
+            }
+            else if (platform == 6)
+            {
+                if (Environment.Is64BitProcess)
+                {
+                    return OsType.MacOs64;
+                }
+                else
+                {
+                    return OsType.MacOs32;
                 }
             }
             else
@@ -54,6 +67,12 @@ namespace NetworkTables.Native
                     return true;
                 case OsType.Linux64:
                     return true;
+                case OsType.MacOs32:
+                    return false;
+                case OsType.MacOs64:
+                    return false;
+                case OsType.ArmLinux:
+                    return true;
                 case OsType.RoboRio:
                     return true;
                 default:
@@ -63,8 +82,8 @@ namespace NetworkTables.Native
 
 #if NativeDebug
 
-        private const string Debugx64Windows = @"C:\Users\thad\Documents\GitHub\PeterJohnson\ntcore\build\binaries\ntcoreSharedLibrary\x64\ntcore.dll";
-        private const string Debugx32Windows = @"C:\Users\thad\Documents\GitHub\PeterJohnson\ntcore\build\binaries\ntcoreSharedLibrary\x86\ntcore.dll";
+        private const string Debug64 = @"C:\Users\thad\Documents\GitHub\PeterJohnson\ntcore\build\binaries\ntcoreSharedLibrary\x64\ntcore.dll";
+        private const string Debug32 = @"C:\Users\thad\Documents\GitHub\PeterJohnson\ntcore\build\binaries\ntcoreSharedLibrary\x86\ntcore.dll";
         private const bool debug = true;
 #else
         private const bool debug = false;
@@ -80,10 +99,10 @@ namespace NetworkTables.Native
                 switch (type)
                 {
                     case OsType.Windows32:
-                        return Debugx32Windows;
+                        return Debug32;
                         break;
                     case OsType.Windows64:
-                        return Debugx64Windows;
+                        return Debug64;
                         break;
                 }
             }
@@ -95,23 +114,32 @@ namespace NetworkTables.Native
             switch (type)
             {
                 case OsType.Windows32:
-                    inputName = "NetworkTables.NativeLibraries.ntcore32.dll";
-                    outputName = "ntcore.dlln";
+                    inputName = "NetworkTables.NativeLibraries.x86.ntcore.dll";
+                    outputName = "ntcore.dll";
                     break;
                 case OsType.Windows64:
-                    inputName = "NetworkTables.NativeLibraries.ntcore64.dll";
-                    outputName = "ntcore.dlln";
+                    inputName = "NetworkTables.NativeLibraries.amd64.ntcore.dll";
+                    outputName = "ntcore.dll";
                     break;
                 case OsType.Linux32:
-                    inputName = "NetworkTables.NativeLibraries.libntcore32.so";
+                    inputName = "NetworkTables.NativeLibraries.x86.libntcore.so";
                     outputName = "libntcore.so";
                     break;
                 case OsType.Linux64:
-                    inputName = "NetworkTables.NativeLibraries.libntcore64.so";
+                    inputName = "NetworkTables.NativeLibraries.amd64.libntcore.so";
                     outputName = "libntcore.so";
                     break;
+                case OsType.MacOs32:
+                    inputName = "NetworkTables.NativeLibraries.x86.libntcore.dylib";
+                    outputName = "libntcore.dylib";
+                    break;
+                case OsType.MacOs64:
+                    inputName = "NetworkTables.NativeLibraries.amd64.libntcore.dylib";
+                    outputName = "libntcore.dylib";
+                    break;
                 case OsType.RoboRio:
-                    inputName = "NetworkTables.NativeLibraries.libntcorearm.so";
+                case OsType.ArmLinux:
+                    inputName = "NetworkTables.NativeLibraries.arm.libntcore.so";
                     outputName = "libntcore.so";
                     break;
                 default:
@@ -184,6 +212,10 @@ namespace NetworkTables.Native
                 case OsType.Linux32:
                 case OsType.Linux64:
                     loader = new LinuxLibraryLoader();
+                    return loader.LoadLibrary(dllLoc);
+                case OsType.MacOs32:
+                case OsType.MacOs64:
+                    loader = new MacOsLibraryLoader();
                     return loader.LoadLibrary(dllLoc);
                 case OsType.RoboRio:
                     loader = new RoboRioLibraryLoader();

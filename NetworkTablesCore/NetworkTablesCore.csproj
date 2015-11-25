@@ -77,13 +77,19 @@
     <Compile Include="Tables\ITableListener.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NativeLibraries\libntcore32.so" />
-    <EmbeddedResource Include="NativeLibraries\libntcore64.so" />
-    <EmbeddedResource Include="NativeLibraries\libntcorearm.so" />
+    <EmbeddedResource Include="NativeLibraries\x86\libntcore.so" />
+    <EmbeddedResource Include="NativeLibraries\amd64\libntcore.so" />
+    <EmbeddedResource Include="NativeLibraries\arm\libntcore.so" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NativeLibraries\ntcore32.dll" />
-    <EmbeddedResource Include="NativeLibraries\ntcore64.dll" />
+    <EmbeddedResource Include="NativeLibraries\x86\ntcore.dll" />
+    <EmbeddedResource Include="NativeLibraries\amd64\ntcore.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="NativeLibraries\amd64\libntcore.dylib" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="NativeLibraries\x86\libntcore.dylib" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

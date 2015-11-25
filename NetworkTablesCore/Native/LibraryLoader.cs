@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace NetworkTables.Native
@@ -70,6 +71,44 @@ namespace NetworkTables.Native
         private static extern IntPtr dlsym(IntPtr handle, string symbol);
 
         [DllImport("libdl.so")]
+        private static extern IntPtr dlerror();
+    }
+
+
+    [ExcludeFromCodeCoverage]
+    internal class MacOsLibraryLoader : ILibraryLoader
+    {
+        IntPtr ILibraryLoader.LoadLibrary(string filename)
+        {
+            IntPtr dl = dlopen(filename, 2);
+            if (dl != IntPtr.Zero) return dl;
+            IntPtr err = dlerror();
+            if (err != IntPtr.Zero)
+            {
+                throw new DllNotFoundException($"Library Could not be opened: {Marshal.PtrToStringAnsi(err)}");
+            }
+            return dl;
+        }
+
+        IntPtr ILibraryLoader.GetProcAddress(IntPtr dllHandle, string name)
+        {
+            dlerror();
+            IntPtr result = dlsym(dllHandle, name);
+            IntPtr err = dlerror();
+            if (err != IntPtr.Zero)
+            {
+                throw new EntryPointNotFoundException($"Method not found: {Marshal.PtrToStringAnsi(err)}");
+            }
+            return result;
+        }
+
+        [DllImport("libdl.dylib")]
+        private static extern IntPtr dlopen(string fileName, int flags);
+
+        [DllImport("libdl.dylib")]
+        private static extern IntPtr dlsym(IntPtr handle, string symbol);
+
+        [DllImport("libdl.dylib")]
         private static extern IntPtr dlerror();
     }
 
