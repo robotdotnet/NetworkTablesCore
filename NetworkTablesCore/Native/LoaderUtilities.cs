@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace NetworkTables.Native
 {
@@ -17,38 +18,63 @@ namespace NetworkTables.Native
         ArmLinux,
         RoboRio
     }
+
     [ExcludeFromCodeCoverage]
     internal static class LoaderUtilities
     {
+
+        [DllImport("libc")]
+        static extern int uname(IntPtr buf);
+
+        static bool IsRunningOnMac()
+        {
+            IntPtr buf = IntPtr.Zero;
+            try
+            {
+                buf = Marshal.AllocHGlobal(8192);
+                // This is a hacktastic way of getting sysname from uname () 
+                if (uname(buf) == 0)
+                {
+                    string os = Marshal.PtrToStringAnsi(buf);
+                    if (os == "Darwin") return true;
+                }
+            }
+            catch { }
+            finally
+            {
+                if (buf != IntPtr.Zero) Marshal.FreeHGlobal(buf);
+            }
+            return false;
+        }
+
         internal static OsType GetOsType()
         {
             Console.WriteLine((int)Environment.OSVersion.Platform);
 
             var platform = (int)Environment.OSVersion.Platform;
-            if (platform == 4 || platform == 128)
+            if (platform == 4 || platform == 6 || platform == 128)
             {
                 //These 3 mean we are running on a unix based system
+                //Check for RIO first
+                if (File.Exists("/usr/local/frc/bin/frcRunRobot.sh")) return OsType.RoboRio;
+
+                //TODO: Add check for Arm vs x86/amd64
+
+                //Check for Bitness
                 if (Environment.Is64BitProcess)
                 {
-                    //We are 64 bit. RIO is not 64 bit, so we can force return.
+                    //We are 64 bit.
+                    if (IsRunningOnMac()) return OsType.MacOs64;
                     return OsType.Linux64;
                 }
                 else
                 {
-                    //We need to check for the RIO
-                    return File.Exists("/usr/local/frc/bin/frcRunRobot.sh") ? OsType.RoboRio : OsType.Linux32;
+                    //We are 64 32 bit process.
+                    if (IsRunningOnMac()) return OsType.MacOs32;
+                    return OsType.Linux32;
                 }
-            }
-            else if (platform == 6)
-            {
-                if (Environment.Is64BitProcess)
-                {
-                    return OsType.MacOs64;
-                }
-                else
-                {
-                    return OsType.MacOs32;
-                }
+
+
             }
             else
             {

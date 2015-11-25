@@ -108,7 +108,7 @@ namespace NetworkTables.Native
         [DllImport("dl")]
         private static extern IntPtr dlsym(IntPtr handle, string symbol);
 
-        [DllImport("libdl.dylib")]
+        [DllImport("dl")]
         private static extern IntPtr dlerror();
     }
 
