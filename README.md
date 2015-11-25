@@ -1,6 +1,6 @@
 **Build Status**
 
-| Windows                 | Linux                   | Code Coverage         |
+| Windows                 |  Linux/Mac OS           | Code Coverage         |
 | ------------------------|-------------------------|-----------------------|
 | [![Build status][1]][2] | [![Build Status][3]][4] | [![codecov.io][5]][6] |
 
