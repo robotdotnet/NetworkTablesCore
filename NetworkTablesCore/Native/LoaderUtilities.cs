@@ -22,6 +22,8 @@ namespace NetworkTables.Native
     {
         internal static OsType GetOsType()
         {
+            Console.WriteLine((int)Environment.OSVersion.Platform);
+
             var platform = (int)Environment.OSVersion.Platform;
             if (platform == 4 || platform == 128)
             {
@@ -68,9 +70,9 @@ namespace NetworkTables.Native
                 case OsType.Linux64:
                     return true;
                 case OsType.MacOs32:
-                    return false;
+                    return true;
                 case OsType.MacOs64:
-                    return false;
+                    return true;
                 case OsType.ArmLinux:
                     return true;
                 case OsType.RoboRio:
