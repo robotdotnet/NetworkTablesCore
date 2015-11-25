@@ -1,6 +1,10 @@
 language: csharp
 solution: NetworkTablesCore.sln
 
+os:
+  - linux
+  - osx
+
 addons:
   apt:
     sources:
