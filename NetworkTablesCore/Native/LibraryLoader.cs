@@ -64,13 +64,13 @@ namespace NetworkTables.Native
             return result;
         }
 
-        [DllImport("libdl.so")]
+        [DllImport("dl")]
         private static extern IntPtr dlopen(string fileName, int flags);
 
-        [DllImport("libdl.so")]
+        [DllImport("dl")]
         private static extern IntPtr dlsym(IntPtr handle, string symbol);
 
-        [DllImport("libdl.so")]
+        [DllImport("dl")]
         private static extern IntPtr dlerror();
     }
 
@@ -102,10 +102,10 @@ namespace NetworkTables.Native
             return result;
         }
 
-        [DllImport("libdl.dylib")]
+        [DllImport("dl")]
         private static extern IntPtr dlopen(string fileName, int flags);
 
-        [DllImport("libdl.dylib")]
+        [DllImport("dl")]
         private static extern IntPtr dlsym(IntPtr handle, string symbol);
 
         [DllImport("libdl.dylib")]
