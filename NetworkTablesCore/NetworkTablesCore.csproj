@@ -69,6 +69,7 @@
     <Compile Include="Native\Rpc\RpcDecoder.cs" />
     <Compile Include="Native\Rpc\RpcEncoder.cs" />
     <Compile Include="Native\Structs.cs" />
+    <Compile Include="Native\Uname.cs" />
     <Compile Include="NetworkTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tables\IRemote.cs" />
