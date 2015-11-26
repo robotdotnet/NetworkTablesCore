@@ -1,45 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetworkTables.Native
 {
-    [AttributeUsage(
-        AttributeTargets.Class |
-        AttributeTargets.Delegate |
-        AttributeTargets.Enum |
-        AttributeTargets.Field |
-        AttributeTargets.Struct)]
-    internal class MapAttribute : Attribute
-    {
-        private string nativeType;
-        private string suppressFlags;
-
-        public MapAttribute()
-        {
-        }
-
-        public MapAttribute(string nativeType)
-        {
-            this.nativeType = nativeType;
-        }
-
-        public string NativeType
-        {
-            get { return nativeType; }
-        }
-
-        public string SuppressFlags
-        {
-            get { return suppressFlags; }
-            set { suppressFlags = value; }
-        }
-    }
-
     internal sealed class Utsname
         : IEquatable<Utsname>
     {
@@ -90,7 +55,7 @@ namespace NetworkTables.Native
         }
     }
 
-    [Map]
+    [StructLayout(LayoutKind.Sequential)]
     internal struct _Utsname
     {
         public IntPtr sysname;

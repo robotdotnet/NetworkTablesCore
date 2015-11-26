@@ -29,6 +29,7 @@ namespace NetworkTables.Native
 
                     string loadedPath = LoaderUtilities.ExtractLibrary(type);
                     if (string.IsNullOrEmpty(loadedPath)) throw new FileNotFoundException("Library file could not be found in the resorces. Please contact RobotDotNet for support for this issue");
+                    Console.WriteLine(loadedPath);
 
                     s_library = LoaderUtilities.LoadLibrary(loadedPath, type, out s_loader);
 

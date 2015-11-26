@@ -15,50 +15,19 @@ namespace NetworkTables.Native
         Linux64,
         MacOs32,
         MacOs64,
-        ArmLinux,
-        RoboRio
+        Armv6HardFloat,
+        Armv7HardFloat,
+        RoboRio//RoboRIO is Armv7 Soft Float
     }
 
     [ExcludeFromCodeCoverage]
     internal static class LoaderUtilities
     {
-
-        [DllImport("libc")]
-        static extern int uname(IntPtr buf);
-
-        static bool IsRunningOnMac()
-        {
-            Utsname name;
-            Uname.uname(out name);
-
-            Console.WriteLine(name.ToString());
-
-            if (name.sysname == "Darwin") return true;
-            return false;
-            /*
-            IntPtr buf = IntPtr.Zero;
-            try
-            {
-                buf = Marshal.AllocHGlobal(8192);
-                // This is a hacktastic way of getting sysname from uname () 
-                if (uname(buf) == 0)
-                {
-                    string os = Marshal.PtrToStringAnsi(buf);
-                    if (os == "Darwin") return true;
-                }
-            }
-            catch { }
-            finally
-            {
-                if (buf != IntPtr.Zero) Marshal.FreeHGlobal(buf);
-            }
-            return false;
-            */
-        }
-
         internal static OsType GetOsType()
         {
             Console.WriteLine((int)Environment.OSVersion.Platform);
+
+
 
             var platform = (int)Environment.OSVersion.Platform;
             if (platform == 4 || platform == 6 || platform == 128)
@@ -67,19 +36,29 @@ namespace NetworkTables.Native
                 //Check for RIO first
                 if (File.Exists("/usr/local/frc/bin/frcRunRobot.sh")) return OsType.RoboRio;
 
-                //TODO: Add check for Arm vs x86/amd64
+                Utsname uname;
+                int r = Uname.uname(out uname);
+
+                Console.WriteLine(uname.ToString());
+
+                bool mac = (uname.sysname == "Darwin");
+                bool armv6 = uname.machine.ToLower().Contains("armv6");
+                bool armv7 = uname.machine.ToLower().Contains("armv7");
+
+                if (armv6) return OsType.Armv6HardFloat;
+                if (armv7) return OsType.Armv6HardFloat;
 
                 //Check for Bitness
                 if (Environment.Is64BitProcess)
                 {
                     //We are 64 bit.
-                    if (IsRunningOnMac()) return OsType.MacOs64;
+                    if (mac) return OsType.MacOs64;
                     return OsType.Linux64;
                 }
                 else
                 {
                     //We are 64 32 bit process.
-                    if (IsRunningOnMac()) return OsType.MacOs32;
+                    if (mac) return OsType.MacOs32;
                     return OsType.Linux32;
                 }
 
@@ -94,6 +73,7 @@ namespace NetworkTables.Native
 
         internal static bool CheckOsValid(OsType type)
         {
+            Console.WriteLine(type);
             switch (type)
             {
                 case OsType.Windows32:
@@ -108,8 +88,10 @@ namespace NetworkTables.Native
                     return true;
                 case OsType.MacOs64:
                     return true;
-                case OsType.ArmLinux:
+                case OsType.Armv6HardFloat:
                     return true;
+                case OsType.Armv7HardFloat:
+                    return false; //Do not have a build yet
                 case OsType.RoboRio:
                     return true;
                 default:
@@ -175,8 +157,11 @@ namespace NetworkTables.Native
                     outputName = "libntcore.dylib";
                     break;
                 case OsType.RoboRio:
-                case OsType.ArmLinux:
-                    inputName = "NetworkTables.NativeLibraries.arm.libntcore.so";
+                    inputName = "NetworkTables.NativeLibraries.roborio.libntcore.so";
+                    outputName = "libntcore.so";
+                    break;
+                case OsType.Armv6HardFloat:
+                    inputName = "NetworkTables.NativeLibraries.armv6.libntcore.so";
                     outputName = "libntcore.so";
                     break;
                 default:
@@ -248,6 +233,8 @@ namespace NetworkTables.Native
                     return loader.LoadLibrary(dllLoc);
                 case OsType.Linux32:
                 case OsType.Linux64:
+                case OsType.Armv6HardFloat:
+                case OsType.Armv7HardFloat:
                     loader = new LinuxLibraryLoader();
                     return loader.LoadLibrary(dllLoc);
                 case OsType.MacOs32:
