@@ -3,7 +3,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
 
 namespace NetworkTables.Native
 {
@@ -46,7 +45,7 @@ namespace NetworkTables.Native
                 bool armv7 = uname.machine.ToLower().Contains("armv7");
 
                 if (armv6) return OsType.Armv6HardFloat;
-                if (armv7) return OsType.Armv6HardFloat;
+                if (armv7) return OsType.Armv7HardFloat;
 
                 //Check for Bitness
                 if (Environment.Is64BitProcess)
@@ -91,7 +90,7 @@ namespace NetworkTables.Native
                 case OsType.Armv6HardFloat:
                     return true;
                 case OsType.Armv7HardFloat:
-                    return false; //Do not have a build yet
+                    return true;
                 case OsType.RoboRio:
                     return true;
                 default:
@@ -162,6 +161,10 @@ namespace NetworkTables.Native
                     break;
                 case OsType.Armv6HardFloat:
                     inputName = "NetworkTables.NativeLibraries.armv6.libntcore.so";
+                    outputName = "libntcore.so";
+                    break;
+                case OsType.Armv7HardFloat:
+                    inputName = "NetworkTables.NativeLibraries.armv7.libntcore.so";
                     outputName = "libntcore.so";
                     break;
                 default:
