@@ -80,7 +80,7 @@
   <ItemGroup>
     <EmbeddedResource Include="NativeLibraries\x86\libntcore.so" />
     <EmbeddedResource Include="NativeLibraries\amd64\libntcore.so" />
-    <EmbeddedResource Include="NativeLibraries\armv7\libntcore.so" />
+    <EmbeddedResource Include="NativeLibraries\roborio\libntcore.so" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="NativeLibraries\x86\ntcore.dll" />
