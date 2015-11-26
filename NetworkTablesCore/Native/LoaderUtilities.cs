@@ -28,6 +28,14 @@ namespace NetworkTables.Native
 
         static bool IsRunningOnMac()
         {
+            Utsname name;
+            Uname.uname(out name);
+
+            Console.WriteLine(name.ToString());
+
+            if (name.sysname == "Darwin") return true;
+            return false;
+            /*
             IntPtr buf = IntPtr.Zero;
             try
             {
@@ -45,6 +53,7 @@ namespace NetworkTables.Native
                 if (buf != IntPtr.Zero) Marshal.FreeHGlobal(buf);
             }
             return false;
+            */
         }
 
         internal static OsType GetOsType()
