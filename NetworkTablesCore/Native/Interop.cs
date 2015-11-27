@@ -27,13 +27,26 @@ namespace NetworkTables.Native
                     if (!LoaderUtilities.CheckOsValid(type))
                         throw new InvalidOperationException("OS Not Supported");
 
-                    string loadedPath = LoaderUtilities.ExtractLibrary(type);
-                    if (string.IsNullOrEmpty(loadedPath)) throw new FileNotFoundException("Library file could not be found in the resorces. Please contact RobotDotNet for support for this issue");
-                    Console.WriteLine(loadedPath);
+                    string embeddedResourceLocation, extractedLocation;
+                    LoaderUtilities.GetLibraryName(type, out embeddedResourceLocation, out extractedLocation);
 
-                    s_library = LoaderUtilities.LoadLibrary(loadedPath, type, out s_loader);
+                    bool successfullyExtracted;
 
-                    if (s_library == IntPtr.Zero) throw new BadImageFormatException($"Library file {loadedPath} could not be loaded successfully.");
+                    //Null if we are in debug mode and running preextracted
+                    if (embeddedResourceLocation == null)
+                    {
+                        successfullyExtracted = true;
+                    }
+                    else
+                    {
+                        successfullyExtracted = LoaderUtilities.ExtractLibrary(embeddedResourceLocation, extractedLocation);
+                    }
+                    if (!successfullyExtracted) throw new FileNotFoundException("Library file could not be found in the resorces. Please contact RobotDotNet for support for this issue");
+                    Console.WriteLine(extractedLocation);
+
+                    s_library = LoaderUtilities.LoadLibrary(extractedLocation, type, out s_loader);
+
+                    if (s_library == IntPtr.Zero) throw new BadImageFormatException($"Library file {extractedLocation} could not be loaded successfully.");
 
                     InitializeDelegates(s_library, s_loader);
                 }

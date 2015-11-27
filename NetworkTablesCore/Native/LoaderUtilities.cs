@@ -110,96 +110,81 @@ namespace NetworkTables.Native
         }
 
 #if NativeDebug
-
-        private const string Debug64 = @"C:\Users\thad\Documents\GitHub\PeterJohnson\ntcore\build\binaries\ntcoreSharedLibrary\x64\ntcore.dll";
-        private const string Debug32 = @"C:\Users\thad\Documents\GitHub\PeterJohnson\ntcore\build\binaries\ntcoreSharedLibrary\x86\ntcore.dll";
-        private const bool debug = true;
-#else
-        private const bool debug = false;
+        private const string DebugLocation = @"C:\Users\thad\Documents\GitHub\PeterJohnson\ntcore\build\binaries\ntcoreSharedLibrary\x64\ntcore.dll";
 #endif
 
-
-        internal static string ExtractLibrary(OsType type)
+        internal static void GetLibraryName(OsType type, out string embeddedResourceLocation, out string extractLocation)
         {
-
 #if NativeDebug
-            if (debug)
-            {
-                switch (type)
-                {
-                    case OsType.Windows32:
-                        return Debug32;
-                        break;
-                    case OsType.Windows64:
-                        return Debug64;
-                        break;
-                }
-            }
+            embeddedResourceLocation = null;
+            extractLocation = DebugLocation;
+            return;
 #endif
-
-
-            string inputName;
-            string outputName;
             switch (type)
             {
                 case OsType.Windows32:
-                    inputName = "NetworkTables.NativeLibraries.x86.ntcore.dll";
-                    outputName = "ntcore.dll";
+                    embeddedResourceLocation = "NetworkTables.NativeLibraries.x86.ntcore.dll";
+                    extractLocation = "ntcore.dll";
                     break;
                 case OsType.Windows64:
-                    inputName = "NetworkTables.NativeLibraries.amd64.ntcore.dll";
-                    outputName = "ntcore.dll";
+                    embeddedResourceLocation = "NetworkTables.NativeLibraries.amd64.ntcore.dll";
+                    extractLocation = "ntcore.dll";
                     break;
                 case OsType.Linux32:
-                    inputName = "NetworkTables.NativeLibraries.x86.libntcore.so";
-                    outputName = "libntcore.so";
+                    embeddedResourceLocation = "NetworkTables.NativeLibraries.x86.libntcore.so";
+                    extractLocation = "libntcore.so";
                     break;
                 case OsType.Linux64:
-                    inputName = "NetworkTables.NativeLibraries.amd64.libntcore.so";
-                    outputName = "libntcore.so";
+                    embeddedResourceLocation = "NetworkTables.NativeLibraries.amd64.libntcore.so";
+                    extractLocation = "libntcore.so";
                     break;
                 case OsType.MacOs32:
-                    inputName = "NetworkTables.NativeLibraries.x86.libntcore.dylib";
-                    outputName = "libntcore.dylib";
+                    embeddedResourceLocation = "NetworkTables.NativeLibraries.x86.libntcore.dylib";
+                    extractLocation = "libntcore.dylib";
                     break;
                 case OsType.MacOs64:
-                    inputName = "NetworkTables.NativeLibraries.amd64.libntcore.dylib";
-                    outputName = "libntcore.dylib";
+                    embeddedResourceLocation = "NetworkTables.NativeLibraries.amd64.libntcore.dylib";
+                    extractLocation = "libntcore.dylib";
                     break;
                 case OsType.RoboRio:
-                    inputName = "NetworkTables.NativeLibraries.roborio.libntcore.so";
-                    outputName = "libntcore.so";
+                    embeddedResourceLocation = "NetworkTables.NativeLibraries.roborio.libntcore.so";
+                    extractLocation = "libntcore.so";
                     break;
                 case OsType.Armv6HardFloat:
-                    inputName = "NetworkTables.NativeLibraries.armv6.libntcore.so";
-                    outputName = "libntcore.so";
+                    embeddedResourceLocation = "NetworkTables.NativeLibraries.armv6.libntcore.so";
+                    extractLocation = "libntcore.so";
                     break;
                 // Assume android is Arm v7 since v6 devices are long since unsupported.
                 case OsType.Android:
                 case OsType.Armv7HardFloat:
-                    inputName = "NetworkTables.NativeLibraries.armv7.libntcore.so";
-                    outputName = "libntcore.so";
+                    embeddedResourceLocation = "NetworkTables.NativeLibraries.armv7.libntcore.so";
+                    extractLocation = "libntcore.so";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
-            outputName = Path.GetTempPath() + outputName;
+            extractLocation = Path.GetTempPath() + extractLocation;
+        }
+
+
+        internal static bool ExtractLibrary(string embeddedResourceLocation, string extractLocation)
+        {           
             byte[] bytes;
             //Load our resource file into memory
-            using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(inputName))
+            using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedResourceLocation))
             {
                 if (s == null || s.Length == 0)
-                    return null;
+                    return false;
                 bytes = new byte[(int)s.Length];
                 s.Read(bytes, 0, (int)s.Length);
             }
             bool isFileSame = true;
 
             //If file exists
-            if (File.Exists(outputName))
+            if (File.Exists(extractLocation))
             {
                 //Load existing file into memory
-                byte[] existingFile = File.ReadAllBytes(outputName);
+                byte[] existingFile = File.ReadAllBytes(extractLocation);
                 //If files are different length they are different,
                 //and we can automatically assume they are different.
                 if (existingFile.Length != bytes.Length)
@@ -228,14 +213,14 @@ namespace NetworkTables.Native
             //If file is different write the new file
             if (!isFileSame)
             {
-                if (File.Exists(outputName))
-                    File.Delete(outputName);
-                File.WriteAllBytes(outputName, bytes);
+                if (File.Exists(extractLocation))
+                    File.Delete(extractLocation);
+                File.WriteAllBytes(extractLocation, bytes);
             }
             //Force a garbage collection, since we just wasted about 12 MB of RAM.
             GC.Collect();
 
-            return outputName;
+            return true;
 
         }
 
