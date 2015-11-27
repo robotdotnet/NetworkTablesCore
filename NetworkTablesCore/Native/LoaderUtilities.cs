@@ -16,6 +16,7 @@ namespace NetworkTables.Native
         MacOs64,
         Armv6HardFloat,
         Armv7HardFloat,
+        Android,
         RoboRio//RoboRIO is Armv7 Soft Float
     }
 
@@ -27,7 +28,6 @@ namespace NetworkTables.Native
             Console.WriteLine((int)Environment.OSVersion.Platform);
 
 
-
             var platform = (int)Environment.OSVersion.Platform;
             if (platform == 4 || platform == 6 || platform == 128)
             {
@@ -36,7 +36,16 @@ namespace NetworkTables.Native
                 if (File.Exists("/usr/local/frc/bin/frcRunRobot.sh")) return OsType.RoboRio;
 
                 Utsname uname;
-                int r = Uname.uname(out uname);
+                try
+                {
+                    //Try to grab uname. On android this fails, so we can assume android
+                    int r = Uname.uname(out uname);
+                }
+                catch
+                {
+                    return OsType.Android;
+                }
+
 
                 Console.WriteLine(uname.ToString());
 
@@ -91,6 +100,8 @@ namespace NetworkTables.Native
                     return true;
                 case OsType.Armv7HardFloat:
                     return true;
+                case OsType.Android:
+                    return false; //The ArmV7 binary is not working currently for android. Need to get that working.
                 case OsType.RoboRio:
                     return true;
                 default:
@@ -163,6 +174,8 @@ namespace NetworkTables.Native
                     inputName = "NetworkTables.NativeLibraries.armv6.libntcore.so";
                     outputName = "libntcore.so";
                     break;
+                // Assume android is Arm v7 since v6 devices are long since unsupported.
+                case OsType.Android:
                 case OsType.Armv7HardFloat:
                     inputName = "NetworkTables.NativeLibraries.armv7.libntcore.so";
                     outputName = "libntcore.so";
@@ -246,6 +259,9 @@ namespace NetworkTables.Native
                     return loader.LoadLibrary(dllLoc);
                 case OsType.RoboRio:
                     loader = new RoboRioLibraryLoader();
+                    return loader.LoadLibrary(dllLoc);
+                case OsType.Android:
+                    loader = new AndroidLibraryLoader();
                     return loader.LoadLibrary(dllLoc);
                 default:
                     loader = null;
