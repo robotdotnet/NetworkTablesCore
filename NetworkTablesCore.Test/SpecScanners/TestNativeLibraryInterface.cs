@@ -29,7 +29,8 @@ namespace NetworkTablesCore.Test.SpecScanners
         public static List<HALDelegateClass> GetDelegates()
         {
             List<HALDelegateClass> halBaseMethods = new List<HALDelegateClass>();
-            var file = "..\\..\\NetworkTablesCore\\Native\\Interop.cs";
+            var p = Path.DirectorySeparatorChar;
+            var file = $"..{p}..{p}NetworkTablesCore{p}Native{p}Interop.cs";
             HALDelegateClass cs = new HALDelegateClass
             {
                 ClassName = "",
@@ -59,8 +60,8 @@ namespace NetworkTablesCore.Test.SpecScanners
         public static List<string> GetRequestedNativeSymbols()
         {
             List<string> nativeFunctions = new List<string>();
-
-            var dir = "..\\..\\NetworkTablesCore\\Native";
+            var p = Path.DirectorySeparatorChar;
+            var dir = $"..{p}..{p}NetworkTablesCore{p}Native";
             foreach (var file in Directory.GetFiles(dir, "*.cs"))
             {
                 if (!file.ToLower().Contains("Interop")) continue;
@@ -95,6 +96,11 @@ namespace NetworkTablesCore.Test.SpecScanners
         [Test]
         public void TestRoboRioMapsToNativeAssemblySymbols()
         {
+            OsType type = LoaderUtilities.GetOsType();
+
+            //Only run the roboRIO symbol test on windows.
+            if (type != OsType.Windows32 || type != OsType.Windows64) Assert.Pass();
+
             var roboRIOSymbols = GetRequestedNativeSymbols();
 
             // Start the child process.
