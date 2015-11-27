@@ -1,6 +1,6 @@
 **Build Status**
 
-| Windows                 |  Linux/Mac OS           | Code Coverage         |
+| Windows                 |  Linux                  | Code Coverage         |
 | ------------------------|-------------------------|-----------------------|
 | [![Build status][1]][2] | [![Build Status][3]][4] | [![codecov.io][5]][6] |
 
@@ -15,7 +15,7 @@ This is a DotNet implementation of NetworkTables, using the new ntcore native li
 
 The program uses C# 6.0 features, and comes precompiled for .NET 4.5. However, as long as you have VS 2015, it will compile down to .NET 3.5 with only minor changes. 
 
-Currently supports Windows, Mac OS X, and Linux in both 32 and 64 bit configurations, and the RoboRIO. Arm support other then the RoboRIO should be easy to enable, and should happen soon.
+Currently supports Windows, Mac OS X, and Linux in both 32 and 64 bit configurations, and Arm v6 and v7 support. Android is not currently supported, but could be with the proper native builds.
 
 
 Please note that NetworkTables is a protocol used for robot communication in the FIRST Robotics Competition, and can be used to talk to SmartDashboard/SFX. It does not have any security, and should never be used on untrusted networks.
@@ -31,13 +31,15 @@ Supported Platforms
 * Windows 64 Bit (CI Tested)
 * Linux 32 Bit - Mono won't let you switch between 32 and 64 bit, so if you have a 64 bit system it will run in 64 bit mode.
 * Linux 64 Bit (CI Tested)
-* Mac OSX 32 Bit (CI Tested)
-* Mac OSX 64 Bit - Mono defaults to 32 bit on Mac OS X, so unless you custom compile mono it will run in 32 bit mode.
+* Mac OSX 32 Bit
+* Mac OSX 64 Bit
+* Arm v6 Hard Float (i.e Raspberry Pi 1)
+* Arm v7 Hard Float (i.e BeagleBoneBlack)
 * RoboRIO
  
 Future Supported Platforms
 --------------------------
-* Arm Linux 32 Bit (other then RoboRIO)
+* Android (Has issues with the Arm v7 Hard Float binary. Need a compiled native library)
 
 Installation
 ------------
