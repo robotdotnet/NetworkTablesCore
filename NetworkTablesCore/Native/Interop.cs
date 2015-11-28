@@ -46,7 +46,6 @@ namespace NetworkTables.Native
                         successfullyExtracted = LoaderUtilities.ExtractLibrary(embeddedResourceLocation, extractedLocation);
                     }
                     if (!successfullyExtracted) throw new FileNotFoundException("Library file could not be found in the resorces. Please contact RobotDotNet for support for this issue");
-                    Console.WriteLine(extractedLocation);
 
                     s_library = LoaderUtilities.LoadLibrary(extractedLocation, type, out s_loader);
 
