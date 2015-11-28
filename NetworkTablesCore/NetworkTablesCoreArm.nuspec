@@ -14,7 +14,7 @@
     <tags>WPILib FRC FIRST RoboRIO</tags>
   </metadata>
   <files>
-	<file src="Output\ArmStandalone\NetworkTables.dll" target="lib\net45\" />
-	<file src="Output\ArmStandalone\NetworkTables.xml" target="lib\net45\" />
+	<file src="Output\ArmStandalone\NetworkTables.dll" target="lib\" />
+	<file src="Output\ArmStandalone\NetworkTables.xml" target="lib\" />
   </files>
 </package>
