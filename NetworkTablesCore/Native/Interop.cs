@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -7,6 +6,11 @@ using System.Security;
 
 namespace NetworkTables.Native
 {
+    internal class ExcludeFromCodeCoverageAttribute : Attribute
+    {
+        
+    }
+
     [SuppressUnmanagedCodeSecurity]
     [ExcludeFromCodeCoverage]
     internal class Interop

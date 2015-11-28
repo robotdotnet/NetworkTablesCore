@@ -1,6 +1,5 @@
 ﻿//#define NativeDebug //Uncomment this to enable easy native debugging. Then change the DebugxWindows to be the native lib location
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 
@@ -25,9 +24,6 @@ namespace NetworkTables.Native
     {
         internal static OsType GetOsType()
         {
-            Console.WriteLine((int)Environment.OSVersion.Platform);
-
-
             var platform = (int)Environment.OSVersion.Platform;
             if (platform == 4 || platform == 6 || platform == 128)
             {
@@ -81,7 +77,33 @@ namespace NetworkTables.Native
 
         internal static bool CheckOsValid(OsType type)
         {
-            Console.WriteLine(type);
+#if ARMSTANDALONE
+            switch (type)
+            {
+                case OsType.Windows32:
+                    return false;
+                case OsType.Windows64:
+                    return false;
+                case OsType.Linux32:
+                    return false;
+                case OsType.Linux64:
+                    return false;
+                case OsType.MacOs32:
+                    return false;
+                case OsType.MacOs64:
+                    return false;
+                case OsType.Armv6HardFloat:
+                    return true;
+                case OsType.Armv7HardFloat:
+                    return true;
+                case OsType.Android:
+                    return true; //The ArmV7 binary is not working currently for android. Need to get that working.
+                case OsType.RoboRio:
+                    return true;
+                default:
+                    return false;
+            }
+#else
             switch (type)
             {
                 case OsType.Windows32:
@@ -97,9 +119,9 @@ namespace NetworkTables.Native
                 case OsType.MacOs64:
                     return true;
                 case OsType.Armv6HardFloat:
-                    return true;
+                    return false;
                 case OsType.Armv7HardFloat:
-                    return true;
+                    return false;
                 case OsType.Android:
                     return false; //The ArmV7 binary is not working currently for android. Need to get that working.
                 case OsType.RoboRio:
@@ -107,6 +129,7 @@ namespace NetworkTables.Native
                 default:
                     return false;
             }
+#endif
         }
 
 #if NativeDebug
@@ -154,8 +177,11 @@ namespace NetworkTables.Native
                     embeddedResourceLocation = "NetworkTables.NativeLibraries.armv6.libntcore.so";
                     extractLocation = "libntcore.so";
                     break;
-                // Assume android is Arm v7 since v6 devices are long since unsupported.
+                // Android is only Arm Android. Don't currently have a way to detect otherwise.
                 case OsType.Android:
+                    embeddedResourceLocation = "NetworkTables.NativeLibraries.android.libntcore.so";
+                    extractLocation = "libntcore.so";
+                    break;
                 case OsType.Armv7HardFloat:
                     embeddedResourceLocation = "NetworkTables.NativeLibraries.armv7.libntcore.so";
                     extractLocation = "libntcore.so";

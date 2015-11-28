@@ -1,7 +1,9 @@
 version: 2016.0.0.{build}
 skip_tags: true
 os: Visual Studio 2015
-configuration: AppVeyor
+configuration:
+- AppVeyor
+- ArmStandalone
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
@@ -41,6 +43,8 @@ on_success:
      & 'C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe' Sandcastle\SandcastleLocalBuildsOnly.shfbproj /property:Configuration=Release
 
     ./nuget pack "$env:APPVEYOR_BUILD_FOLDER\NetworkTablesCore\NetworkTablesCore.csproj" -Properties "Configuration=Release;Platform=AnyCPU" -Symbols
+
+    ./nuget pack "$env:APPVEYOR_BUILD_FOLDER\NetworkTablesCore\NetworkTablesCoreArm.nuspec" -Properties "Configuration=ArmStandalone;Platform=AnyCPU" -Version $env:APPVEYOR_BUILD_VERSION
 
     Get-ChildItem .\*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
     }

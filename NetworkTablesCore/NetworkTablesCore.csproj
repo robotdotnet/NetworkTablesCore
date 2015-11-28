@@ -41,6 +41,16 @@
   <PropertyGroup>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ArmStandalone|AnyCPU'">
+    <OutputPath>Output\ArmStandalone\</OutputPath>
+    <DefineConstants>TRACE;ARMSTANDALONE</DefineConstants>
+    <DocumentationFile>Output\ArmStandalone\NetworkTables.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -72,25 +82,18 @@
     <Compile Include="Tables\ITableListener.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NativeLibraries\x86\libntcore.so" />
-    <EmbeddedResource Include="NativeLibraries\amd64\libntcore.so" />
     <EmbeddedResource Include="NativeLibraries\roborio\libntcore.so" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="NativeLibraries\x86\ntcore.dll" />
-    <EmbeddedResource Include="NativeLibraries\amd64\ntcore.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="NativeLibraries\amd64\libntcore.dylib" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="NativeLibraries\x86\libntcore.dylib" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="NativeLibraries\armv7\libntcore.so" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="NativeLibraries\armv6\libntcore.so" />
+    <EmbeddedResource Condition=" '$(Configuration)' != 'ArmStandalone' " Include="NativeLibraries\x86\libntcore.so" />
+    <EmbeddedResource Condition=" '$(Configuration)' != 'ArmStandalone' " Include="NativeLibraries\amd64\libntcore.so" />
+    <EmbeddedResource Condition=" '$(Configuration)' != 'ArmStandalone' " Include="NativeLibraries\x86\ntcore.dll" />
+    <EmbeddedResource Condition=" '$(Configuration)' != 'ArmStandalone' " Include="NativeLibraries\amd64\ntcore.dll" />
+    <EmbeddedResource Condition=" '$(Configuration)' != 'ArmStandalone' " Include="NativeLibraries\amd64\libntcore.dylib" />
+    <EmbeddedResource Condition=" '$(Configuration)' != 'ArmStandalone' " Include="NativeLibraries\x86\libntcore.dylib" />
+
+    <EmbeddedResource Condition=" '$(Configuration)' == 'ArmStandalone' " Include="NativeLibraries\armv7\libntcore.so" />
+    <EmbeddedResource Condition=" '$(Configuration)' == 'ArmStandalone' " Include="NativeLibraries\armv6\libntcore.so" />
+    <EmbeddedResource Condition=" '$(Configuration)' == 'ArmStandalone' " Include="NativeLibraries\android\libntcore.so" />
+	
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
