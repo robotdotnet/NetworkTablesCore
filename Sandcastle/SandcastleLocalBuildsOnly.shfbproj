@@ -103,7 +103,8 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>xcopy Help\NetworkTables.xml ..\NetworkTablesCore\Output /y</PostBuildEvent>
+    <PostBuildEvent>xcopy Help\NetworkTables.xml ..\NetworkTablesCore\Output /y
+	xcopy Help\NetworkTables.xml ..\NetworkTablesCore\Output\ArmStandalone /y</PostBuildEvent>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
 </Project>

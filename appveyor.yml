@@ -1,9 +1,6 @@
 version: 2016.0.0.{build}
 skip_tags: true
-os: Visual Studio 2015
-configuration:
-- AppVeyor
-- ArmStandalone
+os: Visual Studio 2015
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
@@ -14,11 +11,9 @@ nuget:
   disable_publish_on_pr: true
 before_build:
 - cmd: nuget restore
-build:
-  project: NetworkTablesCore.sln
-
-  verbosity: minimal
-
+build_script:
+- cmd: msbuild "NetworkTablesCore.sln" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /property:Configuration=AppVeyor
+- cmd: msbuild "NetworkTablesCore.sln" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /property:Configuration=ArmStandalone
 test_script:
 - .\packages\OpenCover.4.6.166\tools\OpenCover.Console.exe -register:user -target:nunit-console.exe -targetargs:".\NetworkTablesCore.Test\Output\NetworkTablesCore.Test.dll /noshadow /framework:net-4.0 " -filter:"+[Network*]* -[NetworkTablesCore.T*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput -returntargetcode
 
