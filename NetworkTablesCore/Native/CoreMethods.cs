@@ -523,11 +523,15 @@ namespace NetworkTables.Native
 
         internal static void StopClient()
         {
+            StopRpcServer();
+            StopNotifier();
             Interop.NT_StopClient();
         }
 
         internal static void StopServer()
         {
+            StopRpcServer();
+            StopNotifier();
             Interop.NT_StopServer();
         }
 
