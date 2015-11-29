@@ -15,15 +15,61 @@ namespace NetworkTables.Native.Rpc
         private readonly byte[] m_buffer;
         private int m_count;
 
+        public string Error { get; private set; } = null;
+
         public WireDecoder(byte[] buffer)
         {
             m_buffer = buffer;
+        }
+
+        public void Reset()
+        {
+            Error = null;
+        }
+
+        public bool ReadType(ref NtType type)
+        {
+            byte itype = 0;
+            if (!Read8(ref itype)) return false;
+            switch (itype)
+            {
+                case 0x00:
+                    type = NtType.Boolean;
+                    break;
+                case 0x01:
+                    type = NtType.Double;
+                    break;
+                case 0x02:
+                    type = NtType.String;
+                    break;
+                case 0x03:
+                    type = NtType.Raw;
+                    break;
+                case 0x10:
+                    type = NtType.BooleanArray;
+                    break;
+                case 0x11:
+                    type = NtType.DoubleArray;
+                    break;
+                case 0x12:
+                    type = NtType.StringArray;
+                    break;
+                case 0x20:
+                    type = NtType.Rpc;
+                    break;
+                default:
+                    type = NtType.Unassigned;
+                    Error = "unrecognized value type";
+                    return false;
+            }
+            return true;
         }
 
         public RpcValue ReadValue(NtType type)
         {
             byte size = 0;
             byte[] buf;
+            Error = null;
             switch (type)
             {
                 case NtType.Boolean:
@@ -68,6 +114,7 @@ namespace NetworkTables.Native.Rpc
                     }
                     return RpcValue.MakeStringArray(sBuf);
                 default:
+                    Error = "invalid type when trying to read value";
                     Console.WriteLine("invalid type when trying to read value");
                     return null;
             }
@@ -141,6 +188,11 @@ namespace NetworkTables.Native.Rpc
 
             m_count += len;
             return true;
+        }
+
+        public bool ReadUleb128(ref ulong val)
+        {
+            return Leb128.ReadUleb128(m_buffer, ref m_count, out val) != 0;
         }
     }
 }

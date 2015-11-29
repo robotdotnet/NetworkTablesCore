@@ -96,7 +96,7 @@ namespace NetworkTablesCore.Test
             e.WriteDouble(0.0);
             e.WriteDouble(2.3e5);
             e.WriteDouble(double.PositiveInfinity);
-            e.WriteDouble(2.2250738585072014e-308);
+            e.WriteDouble(2.2250738585072014e-308);//Minimum double size
             e.WriteDouble(double.MaxValue);
 
             Assert.That(e.Buffer.Length - off, Is.EqualTo(40));

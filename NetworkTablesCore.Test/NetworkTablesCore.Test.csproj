@@ -92,6 +92,7 @@
     <Compile Include="TestNativeStructs.cs" />
     <Compile Include="TestNetworkTablesAPI.cs" />
     <Compile Include="TestRPC.cs" />
+    <Compile Include="TestWireDecoder.cs" />
     <Compile Include="TestWireEncoder.cs" />
   </ItemGroup>
   <ItemGroup>

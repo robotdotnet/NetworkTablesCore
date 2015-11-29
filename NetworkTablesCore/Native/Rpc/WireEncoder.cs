@@ -11,7 +11,7 @@ namespace NetworkTables.Native.Rpc
 
         public byte[] Buffer => m_buffer.ToArray();
 
-        public string Error { get; private set; }
+        public string Error { get; private set; } = null;
 
         public void WriteDouble(double val)
         {

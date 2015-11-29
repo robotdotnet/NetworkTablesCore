@@ -39,6 +39,11 @@ namespace NetworkTables.Native.Rpc
 
             while (true)
             {
+                if (start >= addr.Length)
+                {
+                    ret = 0;
+                    return 0;
+                }
                 byte b = addr[start];
                 start++;
                 count++;
