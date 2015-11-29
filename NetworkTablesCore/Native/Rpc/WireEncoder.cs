@@ -87,7 +87,7 @@ namespace NetworkTables.Native.Rpc
         }
         public int GetValueSize(RpcValue value)
         {
-            if (value == null) return -1;
+            if (value == null) return 0;
             int size;
             switch (value.Type)
             {
@@ -119,13 +119,17 @@ namespace NetworkTables.Native.Rpc
                     }
                     return len;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    return 0;
             }
         }
 
         public void WriteValue(RpcValue value)
         {
-            if (value == null) return;
+            if (value == null)
+            {
+                Error = "Value cannot be null";
+                return;
+            }
             switch (value.Type)
             {
                 case NtType.Boolean:
@@ -172,9 +176,11 @@ namespace NetworkTables.Native.Rpc
                     }
                     break;
                 default:
+                    Error = "unrecognized type when writing value";
                     Console.WriteLine("unrecognized type when writing value");
                     return;
             }
+            Error = null;
         }
 
         public int GetRawSize(byte[] raw)

@@ -69,6 +69,7 @@
     <Compile Include="Native\LoaderUtilities.cs" />
     <Compile Include="Native\RemoteProcedureCall.cs" />
     <Compile Include="Native\RpcStructs.cs" />
+    <Compile Include="Native\RpcValue.cs" />
     <Compile Include="Native\Rpc\Leb128.cs" />
     <Compile Include="Native\Rpc\WireDecoder.cs" />
     <Compile Include="Native\Rpc\WireEncoder.cs" />

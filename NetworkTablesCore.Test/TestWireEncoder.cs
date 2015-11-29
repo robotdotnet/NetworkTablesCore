@@ -182,6 +182,7 @@ namespace NetworkTablesCore.Test
             Assert.That(e.Buffer, Is.Empty);
         }
 
+        private RpcValue v_empty = RpcValue.MakeEmpty();
         RpcValue v_boolean = RpcValue.MakeBoolean(true);
         RpcValue v_double = RpcValue.MakeDouble(1.0);
         RpcValue v_string = RpcValue.MakeString("hello");
@@ -232,6 +233,8 @@ namespace NetworkTablesCore.Test
         public void TestGetValueSize()
         {
             WireEncoder e = new WireEncoder();
+            Assert.That(e.GetValueSize(null), Is.EqualTo(0));
+            Assert.That(e.GetValueSize(v_empty), Is.EqualTo(0));
             Assert.That(e.GetValueSize(v_boolean), Is.EqualTo(1));
             Assert.That(e.GetValueSize(v_double), Is.EqualTo(8));
             Assert.That(e.GetValueSize(v_string), Is.EqualTo(6));
@@ -317,9 +320,9 @@ namespace NetworkTablesCore.Test
             }));
 
             e.Reset();
-            e.WriteValue(v_boolArrayBig);
+            e.WriteValue(v_doubleArrayBig);
             Assert.That(e.Error, Is.Null);
-            Assert.That(e.Buffer.Length, Is.EqualTo(1 + 255));
+            Assert.That(e.Buffer.Length, Is.EqualTo(1 + 255 * 8));
             Assert.That(new[] { e.Buffer[0], e.Buffer[1] }, Is.EquivalentTo(new byte[] { 0xff, 0x00 }));
         }
 
@@ -380,6 +383,24 @@ namespace NetworkTablesCore.Test
             Assert.That(e.Buffer[65537], Is.EqualTo((byte)'x'));
             Assert.That(e.Buffer[65538], Is.EqualTo((byte)'x'));
             Assert.That(e.Buffer[65539], Is.EqualTo((byte)'x'));
+        }
+
+        [Test]
+        public void TestWriteValueError()
+        {
+            WireEncoder e = new WireEncoder();
+            e.WriteValue(v_empty);
+            Assert.That(e.Buffer.Length, Is.EqualTo(0));
+            Assert.That(e.Error, Is.Not.Null);
+        }
+
+        [Test]
+        public void TestWriteValueNull()
+        {
+            WireEncoder e = new WireEncoder();
+            e.WriteValue(null);
+            Assert.That(e.Buffer.Length, Is.EqualTo(0));
+            Assert.That(e.Error, Is.Not.Null);
         }
     }
 }
