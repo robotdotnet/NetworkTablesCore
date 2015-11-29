@@ -5,7 +5,7 @@ using System.Text;
 
 namespace NetworkTables.Native.Rpc
 {
-    internal class RpcDecoder
+    internal class WireDecoder
     {
         public static double ReadDouble(byte[] buf, int start)
         {
@@ -15,7 +15,7 @@ namespace NetworkTables.Native.Rpc
         private readonly byte[] m_buffer;
         private int m_count;
 
-        public RpcDecoder(byte[] buffer)
+        public WireDecoder(byte[] buffer)
         {
             m_buffer = buffer;
         }

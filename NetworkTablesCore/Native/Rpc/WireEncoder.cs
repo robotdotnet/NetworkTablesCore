@@ -5,7 +5,7 @@ using System.Text;
 
 namespace NetworkTables.Native.Rpc
 {
-    internal class RpcEncoder
+    internal class WireEncoder
     {
         private readonly List<byte> m_buffer = new List<byte>(1024);
 

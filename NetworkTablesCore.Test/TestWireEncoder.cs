@@ -18,7 +18,7 @@ namespace NetworkTablesCore.Test
         public void TestWireEncoderWrite8()
         {
             int off = BUFSIZE - 1;
-            RpcEncoder e = new RpcEncoder();
+            WireEncoder e = new WireEncoder();
             for (int i = 0; i < off; i++)
             {
                 e.Write8(0);
@@ -41,7 +41,7 @@ namespace NetworkTablesCore.Test
         public void TestWireEncoderWrite16()
         {
             int off = BUFSIZE - 2;
-            RpcEncoder e = new RpcEncoder();
+            WireEncoder e = new WireEncoder();
             for (int i = 0; i < off; i++)
             {
                 e.Write8(0);
@@ -65,7 +65,7 @@ namespace NetworkTablesCore.Test
         public void TestWireEncoderWrite32()
         {
             int off = BUFSIZE - 4;
-            RpcEncoder e = new RpcEncoder();
+            WireEncoder e = new WireEncoder();
             for (int i = 0; i < off; i++)
             {
                 e.Write8(0);
@@ -88,7 +88,7 @@ namespace NetworkTablesCore.Test
         public void TestWireEncoderWriteDouble()
         {
             int off = BUFSIZE - 8;
-            RpcEncoder e = new RpcEncoder();
+            WireEncoder e = new WireEncoder();
             for (int i = 0; i < off; i++)
             {
                 e.Write8(0);
@@ -117,7 +117,7 @@ namespace NetworkTablesCore.Test
         public void TestWireEncoderWriteLeb128()
         {
             int off = BUFSIZE - 2;
-            RpcEncoder e = new RpcEncoder();
+            WireEncoder e = new WireEncoder();
             for (int i = 0; i < off; i++)
             {
                 e.Write8(0);
@@ -138,7 +138,7 @@ namespace NetworkTablesCore.Test
         public void TestWireEncoderWriteType()
         {
             int off = BUFSIZE - 1;
-            RpcEncoder e = new RpcEncoder();
+            WireEncoder e = new WireEncoder();
             for (int i = 0; i < off; i++)
             {
                 e.Write8(0);
@@ -162,7 +162,7 @@ namespace NetworkTablesCore.Test
         [Test]
         public void TestWriteTypeError()
         {
-            RpcEncoder e = new RpcEncoder();
+            WireEncoder e = new WireEncoder();
             e.WriteType(NtType.Unassigned);
             Assert.That(e.Error, Is.EqualTo("Unrecognized Type"));
         }
@@ -170,7 +170,7 @@ namespace NetworkTablesCore.Test
         [Test]
         public void TestReset()
         {
-            RpcEncoder e = new RpcEncoder();
+            WireEncoder e = new WireEncoder();
             e.WriteType(NtType.Unassigned);
             Assert.That(e.Error, Is.Not.Null);
             e.Reset();
@@ -231,7 +231,7 @@ namespace NetworkTablesCore.Test
         [Test]
         public void TestGetValueSize()
         {
-            RpcEncoder e = new RpcEncoder();
+            WireEncoder e = new WireEncoder();
             Assert.That(e.GetValueSize(v_boolean), Is.EqualTo(1));
             Assert.That(e.GetValueSize(v_double), Is.EqualTo(8));
             Assert.That(e.GetValueSize(v_string), Is.EqualTo(6));
@@ -248,7 +248,7 @@ namespace NetworkTablesCore.Test
         [Test]
         public void TestWriteBooleanValue()
         {
-            RpcEncoder e = new RpcEncoder();
+            WireEncoder e = new WireEncoder();
             e.WriteValue(v_boolean);
             var v_false = RpcValue.MakeBoolean(false);
             e.WriteValue(v_false);
@@ -260,7 +260,7 @@ namespace NetworkTablesCore.Test
         [Test]
         public void TestWriteDoubleValue()
         {
-            RpcEncoder e = new RpcEncoder();
+            WireEncoder e = new WireEncoder();
             e.WriteValue(v_double);
             Assert.That(e.Error, Is.Null);
             Assert.That(e.Buffer.Length, Is.EqualTo(8));
@@ -270,7 +270,7 @@ namespace NetworkTablesCore.Test
         [Test]
         public void TestWriteStringValue()
         {
-            RpcEncoder e = new RpcEncoder();
+            WireEncoder e = new WireEncoder();
             e.WriteValue(v_string);
             Assert.That(e.Error, Is.Null);
             Assert.That(e.Buffer.Length, Is.EqualTo(6));
@@ -280,7 +280,7 @@ namespace NetworkTablesCore.Test
         [Test]
         public void TestWriteRawArray()
         {
-            RpcEncoder e = new RpcEncoder();
+            WireEncoder e = new WireEncoder();
             e.WriteValue(v_raw);
             Assert.That(e.Error, Is.Null);
             Assert.That(e.Buffer.Length, Is.EqualTo(6));
@@ -290,7 +290,7 @@ namespace NetworkTablesCore.Test
         [Test]
         public void TestWriteBooleanArrayValue()
         {
-            RpcEncoder e = new RpcEncoder();
+            WireEncoder e = new WireEncoder();
             e.WriteValue(v_boolArray);
             Assert.That(e.Error, Is.Null);
             Assert.That(e.Buffer.Length, Is.EqualTo(1 + 3));
@@ -306,7 +306,7 @@ namespace NetworkTablesCore.Test
         [Test]
         public void TestWriteDoubleArrayValue()
         {
-            RpcEncoder e = new RpcEncoder();
+            WireEncoder e = new WireEncoder();
             e.WriteValue(v_doubleArray);
             Assert.That(e.Error, Is.Null);
             Assert.That(e.Buffer.Length, Is.EqualTo(1 + 2 * 8));
@@ -326,7 +326,7 @@ namespace NetworkTablesCore.Test
         [Test]
         public void TestWriteStringArrayValue()
         {
-            RpcEncoder e = new RpcEncoder();
+            WireEncoder e = new WireEncoder();
             e.WriteValue(v_stringArray);
             Assert.That(e.Error, Is.Null);
             Assert.That(e.Buffer.Length, Is.EqualTo(1 + +6 + 8));
@@ -346,7 +346,7 @@ namespace NetworkTablesCore.Test
         [Test]
         public void TestGetStringSize()
         {
-            RpcEncoder e = new RpcEncoder();
+            WireEncoder e = new WireEncoder();
             Assert.That(e.GetStringSize(s_normal), Is.EqualTo(6));
             Assert.That(e.GetStringSize(s_long), Is.EqualTo(130));
             Assert.That(e.GetStringSize(s_big), Is.EqualTo(65540));
@@ -355,7 +355,7 @@ namespace NetworkTablesCore.Test
         [Test]
         public void TestWriteString()
         {
-            RpcEncoder e = new RpcEncoder();
+            WireEncoder e = new WireEncoder();
             e.WriteString(s_normal);
             Assert.That(e.Error, Is.Null);
             Assert.That(e.Buffer.Length, Is.EqualTo(6));

@@ -70,8 +70,8 @@
     <Compile Include="Native\RemoteProcedureCall.cs" />
     <Compile Include="Native\RpcStructs.cs" />
     <Compile Include="Native\Rpc\Leb128.cs" />
-    <Compile Include="Native\Rpc\RpcDecoder.cs" />
-    <Compile Include="Native\Rpc\RpcEncoder.cs" />
+    <Compile Include="Native\Rpc\WireDecoder.cs" />
+    <Compile Include="Native\Rpc\WireEncoder.cs" />
     <Compile Include="Native\Structs.cs" />
     <Compile Include="Native\Uname.cs" />
     <Compile Include="NetworkTable.cs" />
@@ -89,11 +89,9 @@
     <EmbeddedResource Condition=" '$(Configuration)' != 'ArmStandalone' " Include="NativeLibraries\amd64\ntcore.dll" />
     <EmbeddedResource Condition=" '$(Configuration)' != 'ArmStandalone' " Include="NativeLibraries\amd64\libntcore.dylib" />
     <EmbeddedResource Condition=" '$(Configuration)' != 'ArmStandalone' " Include="NativeLibraries\x86\libntcore.dylib" />
-
     <EmbeddedResource Condition=" '$(Configuration)' == 'ArmStandalone' " Include="NativeLibraries\armv7\libntcore.so" />
     <EmbeddedResource Condition=" '$(Configuration)' == 'ArmStandalone' " Include="NativeLibraries\armv6\libntcore.so" />
     <EmbeddedResource Condition=" '$(Configuration)' == 'ArmStandalone' " Include="NativeLibraries\android\libntcore.so" />
-	
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -11,7 +11,7 @@ namespace NetworkTables.Native
 
         public static byte[] PackRpcValues(params RpcValue[] values)
         {
-            RpcEncoder enc = new RpcEncoder();
+            WireEncoder enc = new WireEncoder();
             foreach (var value in values)
             {
                 enc.WriteValue(value);
@@ -21,7 +21,7 @@ namespace NetworkTables.Native
 
         public static List<RpcValue> UnpackRpcValues(byte[] packed, params NtType[] types)
         {
-            RpcDecoder dec = new RpcDecoder(packed);
+            WireDecoder dec = new WireDecoder(packed);
 
             List<RpcValue> values = new List<RpcValue>();
             foreach (var type in types)
@@ -78,7 +78,7 @@ namespace NetworkTables.Native
 
         public static byte[] PackRpcDefinition(NtRpcDefinition def, out UIntPtr packedLen)
         {
-            RpcEncoder enc = new RpcEncoder();
+            WireEncoder enc = new WireEncoder();
             enc.Write8((byte)def.Version);
             enc.WriteString(def.Name);
 
