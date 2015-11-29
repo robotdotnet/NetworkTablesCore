@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace NetworkTables.Native
 {
+    [ExcludeFromCodeCoverage]
     internal sealed class Utsname
         : IEquatable<Utsname>
     {
@@ -55,6 +56,7 @@ namespace NetworkTables.Native
         }
     }
 
+    [ExcludeFromCodeCoverage]
     [StructLayout(LayoutKind.Sequential)]
     internal struct _Utsname
     {
