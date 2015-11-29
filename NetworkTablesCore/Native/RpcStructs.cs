@@ -28,22 +28,22 @@ namespace NetworkTables.Native
             return new RpcValue(val);
         }
 
-        public static RpcValue MakeRaw(byte[] val)
+        public static RpcValue MakeRaw(params byte[] val)
         {
             return new RpcValue(val);
         }
 
-        public static RpcValue MakeBooleanArray(bool[] val)
+        public static RpcValue MakeBooleanArray(params bool[] val)
         {
             return new RpcValue(val);
         }
 
-        public static RpcValue MakeDoubleArray(double[] val)
+        public static RpcValue MakeDoubleArray(params double[] val)
         {
             return new RpcValue(val);
         }
 
-        public static RpcValue MakeStringArray(string[] val)
+        public static RpcValue MakeStringArray(params string[] val)
         {
             return new RpcValue(val);
         }

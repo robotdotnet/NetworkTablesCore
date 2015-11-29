@@ -76,6 +76,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="SpecScanners\TestNativeLibraryInterface.cs" />
+    <Compile Include="TestLeb128.cs" />
     <Compile Include="TestTearDownFixture.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="TestNativeStructs.cs" />
     <Compile Include="TestNetworkTablesAPI.cs" />
     <Compile Include="TestRPC.cs" />
+    <Compile Include="TestWireEncoder.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NetworkTablesCore\NetworkTablesCore.csproj">

@@ -11,6 +11,8 @@ namespace NetworkTables.Native.Rpc
 
         public byte[] Buffer => m_buffer.ToArray();
 
+        public string Error { get; private set; }
+
         public void WriteDouble(double val)
         {
             long lVal = BitConverter.DoubleToInt64Bits(val);
@@ -18,8 +20,12 @@ namespace NetworkTables.Native.Rpc
             byte[] bytes = BitConverter.GetBytes(swappedVal);
 
             m_buffer.AddRange(bytes);
+        }
 
-            //m_buffer.AddRange(BitConverter.GetBytes(IPAddress.HostToNetworkOrder(BitConverter.DoubleToInt64Bits(val))));
+        public void Reset()
+        {
+            m_buffer.Clear();
+            Error = null;
         }
 
         public void Write8(byte val)
@@ -73,9 +79,11 @@ namespace NetworkTables.Native.Rpc
                     m_buffer.Add(0x20);
                     break;
                 default:
+                    Error = "Unrecognized Type";
                     Console.WriteLine("Unrecognized Type");
                     return;
             }
+            Error = null;
         }
         public int GetValueSize(RpcValue value)
         {
@@ -182,7 +190,7 @@ namespace NetworkTables.Native.Rpc
 
         public int GetStringSize(string str)
         {
-            return Leb128.SizeUleb128((ulong)str.Length) + str.Length;
+            return Leb128.SizeUleb128((ulong) str.Length) + str.Length; 
         }
 
         public void WriteString(string str)
