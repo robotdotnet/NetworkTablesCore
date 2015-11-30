@@ -679,8 +679,7 @@ namespace NetworkTables.Native
             bool[] bArr = new bool[iSize];
             for (int i = 0; i < iSize; i++)
             {
-                IntPtr data = new IntPtr(ptr.ToInt64() + sizeof(int) * i);
-                bArr[i] = (int)Marshal.PtrToStructure(data, typeof(int)) != 0;
+                bArr[i] = Marshal.ReadInt32(ptr, sizeof(int) * i) != 0;
             }
             return bArr;
         }
