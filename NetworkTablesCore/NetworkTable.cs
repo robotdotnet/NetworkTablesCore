@@ -177,7 +177,7 @@ namespace NetworkTables
         /// <see cref="GetTable(string)"/> if the system is a client.</remarks>
         public static void SetTeam(int team)
         {
-            SetIPAddress($"roboRIO-{team}.local");
+            SetIPAddress($"roboRIO-{team}-FRC.local");
         }
 
         /// <summary>
