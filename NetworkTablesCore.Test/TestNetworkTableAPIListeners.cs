@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using NetworkTables;
 using NetworkTables.Native;
 using NetworkTables.Tables;
@@ -208,6 +209,254 @@ namespace NetworkTablesCore.Test
 
             Assert.Pass();
         }
+
+        [Test]
+        public void TestAddTableListenerExListenerFlagsDelegate()
+        {
+            ITable Source = null;
+            string Key = null;
+            object Value = null;
+            NotifyFlags Flags = 0;
+
+            Action<ITable, string, object, NotifyFlags> listener = (s, k, v, _f) =>
+            {
+                Source = s;
+                Key = k;
+                Value = v;
+                Flags = _f;
+            };
+
+
+            NotifyFlags f = NotifyFlags.NotifyNew | NotifyFlags.NotifyLocal | NotifyFlags.NotifyImmediate;
+
+            string key = "key";
+            string value = "Value";
+
+            m_table.PutString(key, value);
+
+            m_table.AddTableListenerEx(listener, f);
+
+            Thread.Sleep(20);
+
+            Assert.That(Source, Is.EqualTo(m_table));
+            Assert.That(Key, Is.EqualTo(key));
+            Assert.That(Value, Is.EqualTo(value));
+            Assert.That(Flags, Is.EqualTo(NotifyFlags.NotifyImmediate));
+
+            string key2 = "key2";
+            string val2 = "value2";
+
+            m_table.PutString(key2, val2);
+
+            Thread.Sleep(20);
+
+            Assert.That(Source, Is.EqualTo(m_table));
+            Assert.That(Key, Is.EqualTo(key2));
+            Assert.That(Value, Is.EqualTo(val2));
+            Assert.That(Flags, Is.EqualTo(NotifyFlags.NotifyNew | NotifyFlags.NotifyLocal));
+
+            m_table.RemoveTableListener(listener);
+        }
+
+        [Test]
+        public void TestAddTableListenerExKeyListenerFlagsDelegate()
+        {
+            ITable Source = null;
+            string Key = null;
+            object Value = null;
+            NotifyFlags Flags = 0;
+
+            Action<ITable, string, object, NotifyFlags> listener = (s, k, v, _f) =>
+            {
+                Source = s;
+                Key = k;
+                Value = v;
+                Flags = _f;
+            };
+
+            NotifyFlags f = NotifyFlags.NotifyNew | NotifyFlags.NotifyLocal | NotifyFlags.NotifyImmediate;
+
+            string key = "key";
+            string value = "Value";
+
+            m_table.PutString(key, value);
+
+            m_table.AddTableListenerEx(key, listener, f);
+
+            m_table.PutString("Key2", "Value2");
+
+            Thread.Sleep(20);
+
+            Assert.That(Source, Is.EqualTo(m_table));
+            Assert.That(Key, Is.EqualTo(key));
+            Assert.That(Value, Is.EqualTo(value));
+            Assert.That(Flags, Is.EqualTo(NotifyFlags.NotifyImmediate));
+
+            m_table.RemoveTableListener(listener);
+        }
+
+        [Test]
+        public void TestAddSubTableListenerListenerLocalNotifyDelegate()
+        {
+            ITable Source = null;
+            string Key = null;
+            object Value = null;
+            NotifyFlags Flags = 0;
+
+            Action<ITable, string, object, NotifyFlags> listener = (s, k, v, f) =>
+            {
+                Source = s;
+                Key = k;
+                Value = v;
+                Flags = f;
+            };
+
+            string subTableName = "SubTable";
+
+            ITable subTable = m_table.GetSubTable("SubTable");
+
+            m_table.AddSubTableListener(listener, true);
+
+            string key = "key";
+            string value = "Value";
+
+            subTable.PutString(key, value);
+
+            Thread.Sleep(20);
+
+            Assert.That(Source, Is.EqualTo(m_table));
+            Assert.That(Key, Is.EqualTo(subTableName));
+            Assert.That(Value.ToString(), Is.EqualTo(subTable.ToString()));
+            Assert.That(Flags, Is.EqualTo(NotifyFlags.NotifyLocal | NotifyFlags.NotifyNew));
+
+            m_table.RemoveTableListener(listener);
+        }
+
+        [Test]
+        public void TestAddTableListenerEntireTableImmediateNotifyDelegate()
+        {
+            ITable Source = null;
+            string Key = null;
+            object Value = null;
+            NotifyFlags Flags = 0;
+
+            Action<ITable, string, object, NotifyFlags> listener = (s, k, v, f) =>
+            {
+                Source = s;
+                Key = k;
+                Value = v;
+                Flags = f;
+            };
+
+            m_table.AddTableListener(listener, true);
+
+            Thread.Sleep(20);
+
+            m_table.RemoveTableListener(listener);
+
+            Assert.Pass();
+        }
+
+        [Test]
+        public void TestAddTableListenerEntireTableDelegate()
+        {
+            ITable Source = null;
+            string Key = null;
+            object Value = null;
+            NotifyFlags Flags = 0;
+
+            Action<ITable, string, object, NotifyFlags> listener = (s, k, v, f) =>
+            {
+                Source = s;
+                Key = k;
+                Value = v;
+                Flags = f;
+            };
+
+            m_table.AddTableListener(listener);
+
+            Thread.Sleep(20);
+
+            m_table.RemoveTableListener(listener);
+
+            Assert.Pass();
+        }
+
+        [Test]
+        public void TestAddTableListenerKeyListenerImmediateNotifyDelegate()
+        {
+            ITable Source = null;
+            string Key = null;
+            object Value = null;
+            NotifyFlags Flags = 0;
+
+            Action<ITable, string, object, NotifyFlags> listener = (s, k, v, f) =>
+            {
+                Source = s;
+                Key = k;
+                Value = v;
+                Flags = f;
+            };
+
+            m_table.AddTableListener("key", listener, true);
+
+            Thread.Sleep(20);
+
+            m_table.RemoveTableListener(listener);
+
+            Assert.Pass();
+        }
+
+        [Test]
+        public void TestAddTableListenerKeyListenerDelegate()
+        {
+            ITable Source = null;
+            string Key = null;
+            object Value = null;
+            NotifyFlags Flags = 0;
+
+            Action<ITable, string, object, NotifyFlags> listener = (s, k, v, f) =>
+            {
+                Source = s;
+                Key = k;
+                Value = v;
+                Flags = f;
+            };
+
+            m_table.AddTableListener("key", listener);
+
+            Thread.Sleep(20);
+
+            m_table.RemoveTableListener(listener);
+
+            Assert.Pass();
+        }
+
+        [Test]
+        public void TestAddSubTableListenerNotLocalDelegate()
+        {
+            ITable Source = null;
+            string Key = null;
+            object Value = null;
+            NotifyFlags Flags = 0;
+
+            Action<ITable, string, object, NotifyFlags> listener = (s, k, v, f) =>
+            {
+                Source = s;
+                Key = k;
+                Value = v;
+                Flags = f;
+            };
+
+            m_table.AddSubTableListener(listener);
+
+            Thread.Sleep(20);
+
+            m_table.RemoveTableListener(listener);
+
+            Assert.Pass();
+        }
+
 
         [Test]
         public void TestConnectionListener()

@@ -321,7 +321,7 @@ namespace NetworkTables
                 keys.Add(relativeKey.Substring(0, endSubTable));
             }
             return keys;
-        } 
+        }
 
         /// <summary>
         /// Returns the <see cref="ITable"/> at the specified key. If there is no 
@@ -537,7 +537,7 @@ namespace NetworkTables
             else if (value is bool) return CoreMethods.SetEntryBoolean(key, (bool)value);
             else if (value is byte[])
             {
-                return CoreMethods.SetEntryRaw(key, (byte[]) value);
+                return CoreMethods.SetEntryRaw(key, (byte[])value);
             }
             else if (value is double[])
             {
@@ -803,6 +803,8 @@ namespace NetworkTables
 
         private readonly Dictionary<ITableListener, List<int>> m_listenerMap = new Dictionary<ITableListener, List<int>>();
 
+        private readonly Dictionary<Action<ITable, string, object, NotifyFlags>, List<int>> m_actionListenerMap = new Dictionary<Action<ITable, string, object, NotifyFlags>, List<int>>();
+
         /// <summary>
         /// Adds a Table Listener for the entire table, using the extended entry flags.
         /// </summary>
@@ -943,6 +945,156 @@ namespace NetworkTables
         {
             List<int> adapters;
             if (m_listenerMap.TryGetValue(listener, out adapters))
+            {
+                foreach (int t in adapters)
+                {
+                    CoreMethods.RemoveEntryListener(t);
+                }
+                adapters.Clear();
+            }
+        }
+
+
+        /// <summary>
+        /// Adds a Table Listener for the entire table, using the extended entry flags.
+        /// </summary>
+        /// <param name="listenerDelegate">The Table Listener Delegate to add.</param>
+        /// <param name="flags">The <see cref="EntryFlags"/> flags to use for the listener</param>
+        public void AddTableListenerEx(Action<ITable, string, object, NotifyFlags> listenerDelegate, NotifyFlags flags)
+        {
+            List<int> adapters;
+            if (!m_actionListenerMap.TryGetValue(listenerDelegate, out adapters))
+            {
+                adapters = new List<int>();
+                m_actionListenerMap.Add(listenerDelegate, adapters);
+            }
+
+            // ReSharper disable once InconsistentNaming
+            EntryListenerFunction func = (uid, key, value, flags_) =>
+            {
+                string relativeKey = key.Substring(m_path.Length + 1);
+                if (relativeKey.IndexOf(PathSeperatorChar) != -1)
+                {
+                    return;
+                }
+                listenerDelegate(this, relativeKey, value, flags_);
+            };
+
+            int id = CoreMethods.AddEntryListener(m_path + PathSeperatorChar, func, flags);
+
+            adapters.Add(id);
+        }
+
+        /// <summary>
+        /// Adds a Table Listener for a specified key, using the extended entry flags.
+        /// </summary>
+        /// <param name="key">The key to listen for.</param>
+        /// <param name="listenerDelegate">The Table Listener Delegate to add.</param>
+        /// <param name="flags">The <see cref="EntryFlags"/> flags to use for the listener</param>
+        public void AddTableListenerEx(string key, Action<ITable, string, object, NotifyFlags> listenerDelegate, NotifyFlags flags)
+        {
+            List<int> adapters;
+            if (!m_actionListenerMap.TryGetValue(listenerDelegate, out adapters))
+            {
+                adapters = new List<int>();
+                m_actionListenerMap.Add(listenerDelegate, adapters);
+            }
+            string fullKey = m_path + PathSeperatorChar + key;
+            // ReSharper disable once InconsistentNaming
+            EntryListenerFunction func = (uid, funcKey, value, flags_) =>
+            {
+                if (!funcKey.Equals(fullKey))
+                    return;
+                listenerDelegate(this, key, value, flags_);
+            };
+
+            int id = CoreMethods.AddEntryListener(fullKey, func, flags);
+
+            adapters.Add(id);
+        }
+
+        /// <summary>
+        /// Adds a SubTable Listener.
+        /// </summary>
+        /// <param name="listenerDelegate">The Table Listener Delegate to add.</param>
+        /// <param name="localNotify">True if we want to notify local and remote listeners,
+        /// otherwise just notify remote listeners.</param>
+        public void AddSubTableListener(Action<ITable, string, object, NotifyFlags> listenerDelegate, bool localNotify)
+        {
+            List<int> adapters;
+            if (!m_actionListenerMap.TryGetValue(listenerDelegate, out adapters))
+            {
+                adapters = new List<int>();
+                m_actionListenerMap.Add(listenerDelegate, adapters);
+            }
+            HashSet<string> notifiedTables = new HashSet<string>();
+            // ReSharper disable once InconsistentNaming
+            EntryListenerFunction func = (uid, key, value, flags_) =>
+            {
+                string relativeKey = key.Substring(m_path.Length + 1);
+                int endSubTable = relativeKey.IndexOf(PathSeperatorChar);
+                if (endSubTable == -1)
+                    return;
+                string subTableKey = relativeKey.Substring(0, endSubTable);
+                if (notifiedTables.Contains(subTableKey))
+                    return;
+                notifiedTables.Add(subTableKey);
+                listenerDelegate(this, subTableKey, GetSubTable(subTableKey), flags_);
+            };
+            NotifyFlags flags = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
+            if (localNotify)
+                flags |= NotifyFlags.NotifyLocal;
+            int id = CoreMethods.AddEntryListener(m_path + PathSeperatorChar, func, flags);
+
+            adapters.Add(id);
+        }
+
+        /// <summary>
+        /// Adds a table listener for the entire table with the default listener flags.
+        /// </summary>
+        /// <param name="listenerDelegate">The Table Listener Delegate to add.</param>
+        /// <param name="immediateNotify">True if we want to immediately notify the listener, 
+        /// otherwise false.</param>
+        public void AddTableListener(Action<ITable, string, object, NotifyFlags> listenerDelegate, bool immediateNotify = false)
+        {
+            NotifyFlags flags = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
+            if (immediateNotify)
+                flags |= NotifyFlags.NotifyImmediate;
+            AddTableListenerEx(listenerDelegate, flags);
+        }
+
+        /// <summary>
+        /// Adds a table listener for a specific key with the default listener flags.
+        /// </summary>
+        /// <param name="key">The key to listen for.</param>
+        /// <param name="listenerDelegate">The Table Listener Delegate to add.</param>
+        /// <param name="immediateNotify">True if we want to immediately notify the listener, 
+        /// otherwise false.</param>
+        public void AddTableListener(string key, Action<ITable, string, object, NotifyFlags> listenerDelegate, bool immediateNotify = false)
+        {
+            NotifyFlags flags = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
+            if (immediateNotify)
+                flags |= NotifyFlags.NotifyImmediate;
+            AddTableListenerEx(key, listenerDelegate, flags);
+        }
+
+        /// <summary>
+        /// Adds a SubTable Listener with the default flags, and without local notify.
+        /// </summary>
+        /// <param name="listenerDelegate">The Table Listener Delegate to add.</param>
+        public void AddSubTableListener(Action<ITable, string, object, NotifyFlags> listenerDelegate)
+        {
+            AddSubTableListener(listenerDelegate, false);
+        }
+
+        /// <summary>
+        /// Removes a table listener.
+        /// </summary>
+        /// <param name="listenerDelegate">The Table Listener Delegate to remove.</param>
+        public void RemoveTableListener(Action<ITable, string, object, NotifyFlags> listenerDelegate)
+        {
+            List<int> adapters;
+            if (m_actionListenerMap.TryGetValue(listenerDelegate, out adapters))
             {
                 foreach (int t in adapters)
                 {
