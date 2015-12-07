@@ -661,12 +661,7 @@ namespace NetworkTables
             return CoreMethods.GetEntryRaw(m_path + PathSeperatorChar + key, defaultValue);
         }
 
-        /// <summary>
-        /// Returns the value array that the key maps to.
-        /// </summary>
-        /// <param name="key">The key name.</param>
-        /// <param name="defaultValue">The default value if the key does not exist or is null</param>
-        /// <returns>The value array requested, or defaultValue if the key does not exist or is null.</returns>
+        ///<inheritdoc/>
         public bool[] GetBooleanArray(string key, bool[] defaultValue)
         {
             return CoreMethods.GetEntryBooleanArray(m_path + PathSeperatorChar + key, defaultValue);
@@ -676,11 +671,7 @@ namespace NetworkTables
 
         private readonly Dictionary<Action<ITable, string, object, NotifyFlags>, List<int>> m_actionListenerMap = new Dictionary<Action<ITable, string, object, NotifyFlags>, List<int>>();
 
-        /// <summary>
-        /// Adds a Table Listener for the entire table, using the extended entry flags.
-        /// </summary>
-        /// <param name="listener">The <see cref="ITableListener"/> to add.</param>
-        /// <param name="flags">The <see cref="EntryFlags"/> flags to use for the listener</param>
+        ///<inheritdoc/>
         public void AddTableListenerEx(ITableListener listener, NotifyFlags flags)
         {
             List<int> adapters;
@@ -706,12 +697,7 @@ namespace NetworkTables
             adapters.Add(id);
         }
 
-        /// <summary>
-        /// Adds a Table Listener for a specified key, using the extended entry flags.
-        /// </summary>
-        /// <param name="key">The key to listen for.</param>
-        /// <param name="listener">The <see cref="ITableListener"/> to add.</param>
-        /// <param name="flags">The <see cref="EntryFlags"/> flags to use for the listener</param>
+        ///<inheritdoc/>
         public void AddTableListenerEx(string key, ITableListener listener, NotifyFlags flags)
         {
             List<int> adapters;
@@ -734,12 +720,7 @@ namespace NetworkTables
             adapters.Add(id);
         }
 
-        /// <summary>
-        /// Adds a SubTable Listener.
-        /// </summary>
-        /// <param name="listener">The <see cref="ITableListener"/> to add.</param>
-        /// <param name="localNotify">True if we want to notify local and remote listeners,
-        /// otherwise just notify remote listeners.</param>
+        ///<inheritdoc/>
         public void AddSubTableListener(ITableListener listener, bool localNotify)
         {
             List<int> adapters;
@@ -770,12 +751,7 @@ namespace NetworkTables
             adapters.Add(id);
         }
 
-        /// <summary>
-        /// Adds a table listener for the entire table with the default listener flags.
-        /// </summary>
-        /// <param name="listener">The <see cref="ITableListener"/> to add.</param>
-        /// <param name="immediateNotify">True if we want to immediately notify the listener, 
-        /// otherwise false.</param>
+        ///<inheritdoc/>
         public void AddTableListener(ITableListener listener, bool immediateNotify = false)
         {
             NotifyFlags flags = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
@@ -784,13 +760,7 @@ namespace NetworkTables
             AddTableListenerEx(listener, flags);
         }
 
-        /// <summary>
-        /// Adds a table listener for a specific key with the default listener flags.
-        /// </summary>
-        /// <param name="key">The key to listen for.</param>
-        /// <param name="listener">The <see cref="ITableListener"/> to add.</param>
-        /// <param name="immediateNotify">True if we want to immediately notify the listener, 
-        /// otherwise false.</param>
+        ///<inheritdoc/>
         public void AddTableListener(string key, ITableListener listener, bool immediateNotify = false)
         {
             NotifyFlags flags = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
@@ -799,19 +769,13 @@ namespace NetworkTables
             AddTableListenerEx(key, listener, flags);
         }
 
-        /// <summary>
-        /// Adds a SubTable Listener with the default flags, and without local notify.
-        /// </summary>
-        /// <param name="listener">The <see cref="ITableListener"/> to add.</param>
+        ///<inheritdoc/>
         public void AddSubTableListener(ITableListener listener)
         {
             AddSubTableListener(listener, false);
         }
 
-        /// <summary>
-        /// Removes a table listener.
-        /// </summary>
-        /// <param name="listener">The <see cref="ITableListener"/> to remove.</param>
+        ///<inheritdoc/>
         public void RemoveTableListener(ITableListener listener)
         {
             List<int> adapters;
@@ -826,11 +790,7 @@ namespace NetworkTables
         }
 
 
-        /// <summary>
-        /// Adds a Table Listener for the entire table, using the extended entry flags.
-        /// </summary>
-        /// <param name="listenerDelegate">The Table Listener Delegate to add.</param>
-        /// <param name="flags">The <see cref="EntryFlags"/> flags to use for the listener</param>
+        ///<inheritdoc/>
         public void AddTableListenerEx(Action<ITable, string, object, NotifyFlags> listenerDelegate, NotifyFlags flags)
         {
             List<int> adapters;
@@ -856,12 +816,7 @@ namespace NetworkTables
             adapters.Add(id);
         }
 
-        /// <summary>
-        /// Adds a Table Listener for a specified key, using the extended entry flags.
-        /// </summary>
-        /// <param name="key">The key to listen for.</param>
-        /// <param name="listenerDelegate">The Table Listener Delegate to add.</param>
-        /// <param name="flags">The <see cref="EntryFlags"/> flags to use for the listener</param>
+        ///<inheritdoc/>
         public void AddTableListenerEx(string key, Action<ITable, string, object, NotifyFlags> listenerDelegate, NotifyFlags flags)
         {
             List<int> adapters;
@@ -884,12 +839,7 @@ namespace NetworkTables
             adapters.Add(id);
         }
 
-        /// <summary>
-        /// Adds a SubTable Listener.
-        /// </summary>
-        /// <param name="listenerDelegate">The Table Listener Delegate to add.</param>
-        /// <param name="localNotify">True if we want to notify local and remote listeners,
-        /// otherwise just notify remote listeners.</param>
+        ///<inheritdoc/>
         public void AddSubTableListener(Action<ITable, string, object, NotifyFlags> listenerDelegate, bool localNotify)
         {
             List<int> adapters;
@@ -920,12 +870,7 @@ namespace NetworkTables
             adapters.Add(id);
         }
 
-        /// <summary>
-        /// Adds a table listener for the entire table with the default listener flags.
-        /// </summary>
-        /// <param name="listenerDelegate">The Table Listener Delegate to add.</param>
-        /// <param name="immediateNotify">True if we want to immediately notify the listener, 
-        /// otherwise false.</param>
+        ///<inheritdoc/>
         public void AddTableListener(Action<ITable, string, object, NotifyFlags> listenerDelegate, bool immediateNotify = false)
         {
             NotifyFlags flags = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
@@ -934,13 +879,7 @@ namespace NetworkTables
             AddTableListenerEx(listenerDelegate, flags);
         }
 
-        /// <summary>
-        /// Adds a table listener for a specific key with the default listener flags.
-        /// </summary>
-        /// <param name="key">The key to listen for.</param>
-        /// <param name="listenerDelegate">The Table Listener Delegate to add.</param>
-        /// <param name="immediateNotify">True if we want to immediately notify the listener, 
-        /// otherwise false.</param>
+        ///<inheritdoc/>
         public void AddTableListener(string key, Action<ITable, string, object, NotifyFlags> listenerDelegate, bool immediateNotify = false)
         {
             NotifyFlags flags = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
@@ -949,19 +888,13 @@ namespace NetworkTables
             AddTableListenerEx(key, listenerDelegate, flags);
         }
 
-        /// <summary>
-        /// Adds a SubTable Listener with the default flags, and without local notify.
-        /// </summary>
-        /// <param name="listenerDelegate">The Table Listener Delegate to add.</param>
+        ///<inheritdoc/>
         public void AddSubTableListener(Action<ITable, string, object, NotifyFlags> listenerDelegate)
         {
             AddSubTableListener(listenerDelegate, false);
         }
 
-        /// <summary>
-        /// Removes a table listener.
-        /// </summary>
-        /// <param name="listenerDelegate">The Table Listener Delegate to remove.</param>
+        ///<inheritdoc/>
         public void RemoveTableListener(Action<ITable, string, object, NotifyFlags> listenerDelegate)
         {
             List<int> adapters;
@@ -978,12 +911,7 @@ namespace NetworkTables
         private readonly Dictionary<IRemoteConnectionListener, int> m_connectionListenerMap =
             new Dictionary<IRemoteConnectionListener, int>();
 
-        /// <summary>
-        /// Adds a connection listener to the network table.
-        /// </summary>
-        /// <param name="listener">The <see cref="IRemoteConnectionListener"/> to add.</param>
-        /// <param name="immediateNotify">True whether to notify the listener immediately, 
-        /// otherwise false.</param>
+        ///<inheritdoc/>
         public void AddConnectionListener(IRemoteConnectionListener listener, bool immediateNotify)
         {
 
@@ -1004,10 +932,7 @@ namespace NetworkTables
 
         }
 
-        /// <summary>
-        /// Removes a Connection Listener from the network table.
-        /// </summary>
-        /// <param name="listener">The <see cref="IRemoteConnectionListener"/> to remove.</param>
+        ///<inheritdoc/>
         public void RemoveConnectionListener(IRemoteConnectionListener listener)
         {
             int val;
