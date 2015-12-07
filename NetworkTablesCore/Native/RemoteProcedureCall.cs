@@ -113,7 +113,7 @@ namespace NetworkTables.Native
                 return new byte[0];
 
             }
-            return CoreMethods.ReadUTF8StringToByteArray(retVal, size);
+            return CoreMethods.GetRawDataFromPtr(retVal, size);
         }
 
         public static uint CallRpc(string name, params RpcValue[] rpcValues)

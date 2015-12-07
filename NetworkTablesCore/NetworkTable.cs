@@ -11,7 +11,7 @@ namespace NetworkTables
     /// This class is the Main Class for interfacing with NetworkTables.
     /// </summary>
     /// <remarks>For most users, this will be the only class that will be needed.
-    /// Any interfaces needed to work with this can be found in the NetworkTables.Tables 
+    /// Any interfaces needed to work with this can be found in the <see cref="NetworkTables.Tables"/> 
     /// namespace. </remarks>
     /// <example>
     /// The following example demonstrates creating a server:

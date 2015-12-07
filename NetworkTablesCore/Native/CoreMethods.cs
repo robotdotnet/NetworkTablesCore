@@ -516,7 +516,7 @@ namespace NetworkTables.Native
         internal static void StartServer(string fileName, string listenAddress, uint port)
         {
             UIntPtr size;
-            var fileNamePtr = string.IsNullOrEmpty(fileName) ? new []{(byte)0} : CreateUTF8String(fileName, out size);
+            var fileNamePtr = string.IsNullOrEmpty(fileName) ? new[] { (byte)0 } : CreateUTF8String(fileName, out size);
             var listenAddressPtr = string.IsNullOrEmpty(fileName) ? new[] { (byte)0 } : CreateUTF8String(listenAddress, out size);
             Interop.NT_StartServer(fileNamePtr, listenAddressPtr, port);
         }
@@ -700,14 +700,6 @@ namespace NetworkTables.Native
         #endregion
 
         #region IntPtrs To String Conversions
-        //Must be null terminated
-        internal static byte[] ReadUTF8StringToByteArray(IntPtr str, UIntPtr size)
-        {
-            int iSize = (int)size.ToUInt64();
-            byte[] data = new byte[iSize];
-            Marshal.Copy(str, data, 0, iSize);
-            return data;
-        }
 
         internal static byte[] CreateUTF8String(string str, out UIntPtr size)
         {
