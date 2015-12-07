@@ -96,6 +96,13 @@ namespace NetworkTables.Tables
         /// <param name="key">The key name.</param>
         void Delete(string key);
 
+        /// <summary>
+        /// Returns the value that the key maps to.
+        /// </summary>
+        /// <param name="key">The key name.</param>
+        /// <param name="defaultValue">The default value if the key does not exist or is null</param>
+        /// <returns>The value requested, or defaultValue if the key does not exist or is null.</returns>
+        object GetValue(string key, object defaultValue);
 
         /// <summary>
         /// Returns the value that the key maps to.
