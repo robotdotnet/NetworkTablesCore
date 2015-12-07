@@ -453,13 +453,8 @@ namespace NetworkTables
             return CoreMethods.LoadPersistent(filename);
         }
 
-        /// <summary>
-        /// Returns the value that the key maps to.
-        /// </summary>
-        /// <param name="key">The key name.</param>
-        /// <returns>The requested value.</returns>
-        /// <exception cref="TableKeyNotDefinedException">Thrown if the key does not 
-        /// exist in the table, or if the key is null.</exception>
+        ///<inheritdoc/>
+        [Obsolete("Please use the Default Value Get... Methods instead.")]
         public object GetValue(string key)
         {
             string localPath = m_path + PathSeperatorChar + key;
@@ -485,12 +480,7 @@ namespace NetworkTables
             }
         }
 
-        /// <summary>
-        /// Returns the value that the key maps to.
-        /// </summary>
-        /// <param name="key">The key name.</param>
-        /// <param name="defaultValue">The default value if the key does not exist or is null</param>
-        /// <returns>The value requested, or defaultValue if the key does not exist or is null.</returns>
+        ///<inheritdoc/>
         public object GetValue(string key, object defaultValue)
         {
             string localPath = m_path + PathSeperatorChar + key;
@@ -516,18 +506,7 @@ namespace NetworkTables
             }
         }
 
-        /// <summary>
-        /// Maps the specified key to the specified value in the table. 
-        /// </summary>
-        /// <remarks>
-        /// The key cannot be null. The value can be retreived by calling the Get method with
-        /// the key used to Put the number in.
-        /// </remarks>
-        /// <param name="key">The key to map the value to.</param>
-        /// <param name="value">The value to set.</param>
-        /// <returns>True if the key was set properly, otherwise false</returns>
-        /// <exception cref="ArgumentException">Thrown if the value is not a type supported
-        /// by the table.</exception>
+        ///<inheritdoc/>
         public bool PutValue(string key, object value)
         {
             key = m_path + PathSeperatorChar + key;
@@ -557,218 +536,109 @@ namespace NetworkTables
             }
         }
 
-        /// <summary>
-        /// Maps the specified key to the specified value in the table. 
-        /// </summary>
-        /// <remarks>
-        /// The key cannot be null. The value can be retreived by calling the Get method with
-        /// the key used to Put the number in.
-        /// </remarks>
-        /// <param name="key">The key to map the value to.</param>
-        /// <param name="value">The value to set.</param>
-        /// <returns>True if the key was set properly, otherwise false</returns>
+        ///<inheritdoc/>
         public bool PutNumber(string key, double value)
         {
             return CoreMethods.SetEntryDouble(m_path + PathSeperatorChar + key, value);
         }
 
-        /// <summary>
-        /// Returns the value that the key maps to.
-        /// </summary>
-        /// <param name="key">The key name.</param>
-        /// <param name="defaultValue">The default value if the key does not exist or is null</param>
-        /// <returns>The value requested, or defaultValue if the key does not exist or is null.</returns>
+        ///<inheritdoc/>
         public double GetNumber(string key, double defaultValue)
         {
             return CoreMethods.GetEntryDouble(m_path + PathSeperatorChar + key, defaultValue);
         }
 
-        /// <summary>
-        /// Returns the value that the key maps to.
-        /// </summary>
-        /// <param name="key">The key name.</param>
-        /// <returns>The requested value.</returns>
-        /// <exception cref="TableKeyNotDefinedException">Thrown if the key does not 
-        /// exist in the table, or if the key is null.</exception>
+        ///<inheritdoc/>
+        [Obsolete("Please use the Default Value Get... Methods instead.")]
         public double GetNumber(string key)
         {
             return CoreMethods.GetEntryDouble(m_path + PathSeperatorChar + key);
         }
 
-        /// <summary>
-        /// Maps the specified key to the specified value in the table. 
-        /// </summary>
-        /// <remarks>
-        /// The key cannot be null. The value can be retreived by calling the Get method with
-        /// the key used to Put the number in.
-        /// </remarks>
-        /// <param name="key">The key to map the value to.</param>
-        /// <param name="value">The value to set.</param>
-        /// <returns>True if the key was set properly, otherwise false</returns>
+        ///<inheritdoc/>
         public bool PutString(string key, string value)
         {
             return CoreMethods.SetEntryString(m_path + PathSeperatorChar + key, value);
         }
 
-        /// <summary>
-        /// Returns the value that the key maps to.
-        /// </summary>
-        /// <param name="key">The key name.</param>
-        /// <param name="defaultValue">The default value if the key does not exist or is null</param>
-        /// <returns>The value requested, or defaultValue if the key does not exist or is null.</returns>
+        ///<inheritdoc/>
         public string GetString(string key, string defaultValue)
         {
             return CoreMethods.GetEntryString(m_path + PathSeperatorChar + key, defaultValue);
         }
 
-        /// <summary>
-        /// Returns the value that the key maps to.
-        /// </summary>
-        /// <param name="key">The key name.</param>
-        /// <returns>The requested value.</returns>
-        /// <exception cref="TableKeyNotDefinedException">Thrown if the key does not 
-        /// exist in the table, or if the key is null.</exception>
+        ///<inheritdoc/>
+        [Obsolete("Please use the Default Value Get... Methods instead.")]
         public string GetString(string key)
         {
             return CoreMethods.GetEntryString(m_path + PathSeperatorChar + key);
         }
 
-        /// <summary>
-        /// Maps the specified key to the specified value in the table. 
-        /// </summary>
-        /// <remarks>
-        /// The key cannot be null. The value can be retreived by calling the Get method with
-        /// the key used to Put the number in.
-        /// </remarks>
-        /// <param name="key">The key to map the value to.</param>
-        /// <param name="value">The value to set.</param>
-        /// <returns>True if the key was set properly, otherwise false</returns>
+        ///<inheritdoc/>
         public bool PutBoolean(string key, bool value)
         {
             return CoreMethods.SetEntryBoolean(m_path + PathSeperatorChar + key, value);
         }
 
-        /// <summary>
-        /// Returns the value that the key maps to.
-        /// </summary>
-        /// <param name="key">The key name.</param>
-        /// <param name="defaultValue">The default value if the key does not exist or is null</param>
-        /// <returns>The value requested, or defaultValue if the key does not exist or is null.</returns>
+        ///<inheritdoc/>
         public bool GetBoolean(string key, bool defaultValue)
         {
             return CoreMethods.GetEntryBoolean(m_path + PathSeperatorChar + key, defaultValue);
         }
 
-        /// <summary>
-        /// Returns the value that the key maps to.
-        /// </summary>
-        /// <param name="key">The key name.</param>
-        /// <returns>The requested value.</returns>
-        /// <exception cref="TableKeyNotDefinedException">Thrown if the key does not 
-        /// exist in the table, or if the key is null.</exception>
+        ///<inheritdoc/>
+        [Obsolete("Please use the Default Value Get... Methods instead.")]
         public bool GetBoolean(string key)
         {
             return CoreMethods.GetEntryBoolean(m_path + PathSeperatorChar + key);
         }
 
-        /// <summary>
-        /// Maps the specified key to the specified array of values in the table. 
-        /// </summary>
-        /// <remarks>
-        /// The key cannot be null. The value can be retreived by calling the Get method with
-        /// the key used to Put the number in.
-        /// </remarks>
-        /// <param name="key">The key to map the value to.</param>
-        /// <param name="value">The value to set.</param>
-        /// <returns>True if the key was set properly, otherwise false</returns>
+        ///<inheritdoc/>
         public bool PutStringArray(string key, string[] value)
         {
             return CoreMethods.SetEntryStringArray(m_path + PathSeperatorChar + key, value);
         }
 
-        /// <summary>
-        /// Returns the value array that the key maps to.
-        /// </summary>
-        /// <param name="key">The key name.</param>
-        /// <returns>The requested value array.</returns>
-        /// <exception cref="TableKeyNotDefinedException">Thrown if the key does not 
-        /// exist in the table, or if the key is null.</exception>
+        ///<inheritdoc/>
+        [Obsolete("Please use the Default Value Get... Methods instead.")]
         public string[] GetStringArray(string key)
         {
             return CoreMethods.GetEntryStringArray(m_path + PathSeperatorChar + key);
         }
 
-        /// <summary>
-        /// Returns the value array that the key maps to.
-        /// </summary>
-        /// <param name="key">The key name.</param>
-        /// <param name="defaultValue">The default value if the key does not exist or is null</param>
-        /// <returns>The value array requested, or defaultValue if the key does not exist or is null.</returns>
+        ///<inheritdoc/>
         public string[] GetStringArray(string key, string[] defaultValue)
         {
             return CoreMethods.GetEntryStringArray(m_path + PathSeperatorChar + key, defaultValue);
         }
 
-        /// <summary>
-        /// Maps the specified key to the specified array of values in the table. 
-        /// </summary>
-        /// <remarks>
-        /// The key cannot be null. The value can be retreived by calling the Get method with
-        /// the key used to Put the number in.
-        /// </remarks>
-        /// <param name="key">The key to map the value to.</param>
-        /// <param name="value">The value to set.</param>
-        /// <returns>True if the key was set properly, otherwise false</returns>
+        ///<inheritdoc/>
         public bool PutNumberArray(string key, double[] value)
         {
             return CoreMethods.SetEntryDoubleArray(m_path + PathSeperatorChar + key, value);
         }
 
-        /// <summary>
-        /// Returns the value array that the key maps to.
-        /// </summary>
-        /// <param name="key">The key name.</param>
-        /// <returns>The requested value array.</returns>
-        /// <exception cref="TableKeyNotDefinedException">Thrown if the key does not 
-        /// exist in the table, or if the key is null.</exception>
+        ///<inheritdoc/>
+        [Obsolete("Please use the Default Value Get... Methods instead.")]
         public double[] GetNumberArray(string key)
         {
             return CoreMethods.GetEntryDoubleArray(m_path + PathSeperatorChar + key);
         }
 
-        /// <summary>
-        /// Returns the value array that the key maps to.
-        /// </summary>
-        /// <param name="key">The key name.</param>
-        /// <param name="defaultValue">The default value if the key does not exist or is null</param>
-        /// <returns>The value array requested, or defaultValue if the key does not exist or is null.</returns>
+        ///<inheritdoc/>
         public double[] GetNumberArray(string key, double[] defaultValue)
         {
             return CoreMethods.GetEntryDoubleArray(m_path + PathSeperatorChar + key, defaultValue);
         }
 
-        /// <summary>
-        /// Maps the specified key to the specified array of values in the table. 
-        /// </summary>
-        /// <remarks>
-        /// The key cannot be null. The value can be retreived by calling the Get method with
-        /// the key used to Put the number in.
-        /// </remarks>
-        /// <param name="key">The key to map the value to.</param>
-        /// <param name="value">The value to set.</param>
-        /// <returns>True if the key was set properly, otherwise false</returns>
+        ///<inheritdoc/>
         public bool PutBooleanArray(string key, bool[] value)
         {
             return CoreMethods.SetEntryBooleanArray(m_path + PathSeperatorChar + key, value);
         }
 
-        /// <summary>
-        /// Returns the value array that the key maps to.
-        /// </summary>
-        /// <param name="key">The key name.</param>
-        /// <returns>The requested value array.</returns>
-        /// <exception cref="TableKeyNotDefinedException">Thrown if the key does not 
-        /// exist in the table, or if the key is null.</exception>
+        ///<inheritdoc/>
+        [Obsolete("Please use the Default Value Get... Methods instead.")]
         public bool[] GetBooleanArray(string key)
         {
             return CoreMethods.GetEntryBooleanArray(m_path + PathSeperatorChar + key);
@@ -780,6 +650,7 @@ namespace NetworkTables
             return CoreMethods.SetEntryRaw(m_path + PathSeperatorChar + key, value);
         }
         ///<inheritdoc/>
+        [Obsolete("Please use the Default Value Get... Methods instead.")]
         public byte[] GetRaw(string key)
         {
             return CoreMethods.GetEntryRaw(m_path + PathSeperatorChar + key);
