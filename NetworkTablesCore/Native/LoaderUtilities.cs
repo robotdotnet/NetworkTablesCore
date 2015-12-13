@@ -1,5 +1,4 @@
-﻿//#define NativeDebug //Uncomment this to enable easy native debugging. Then change the DebugxWindows to be the native lib location
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
 
@@ -35,7 +34,7 @@ namespace NetworkTables.Native
                 try
                 {
                     //Try to grab uname. On android this fails, so we can assume android
-                    int r = Uname.uname(out uname);
+                    Uname.uname(out uname);
                 }
                 catch
                 {
@@ -131,18 +130,8 @@ namespace NetworkTables.Native
             }
 #endif
         }
-
-#if NativeDebug
-        private const string DebugLocation = @"C:\Users\thad\Documents\GitHub\PeterJohnson\ntcore\build\binaries\ntcoreSharedLibrary\x64\ntcore.dll";
-#endif
-
         internal static void GetLibraryName(OsType type, out string embeddedResourceLocation, out string extractLocation)
         {
-#if NativeDebug
-            embeddedResourceLocation = null;
-            extractLocation = DebugLocation;
-            return;
-#endif
             switch (type)
             {
                 case OsType.Windows32:

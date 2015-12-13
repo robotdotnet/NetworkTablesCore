@@ -8,7 +8,7 @@ namespace NetworkTables.Native
 {
     internal class ExcludeFromCodeCoverageAttribute : Attribute
     {
-        
+
     }
 
     [SuppressUnmanagedCodeSecurity]
@@ -27,25 +27,45 @@ namespace NetworkTables.Native
             {
                 try
                 {
+                    bool useCommandLineFile = false;
+                    string extractedLocation = null;
+
+                    string[] commandArgs = Environment.GetCommandLineArgs();
+                    foreach (var commandArg in commandArgs)
+                    {
+                        //search for a line with the prefix "-ntcore:"
+                        if (commandArg.ToLower().Contains("-ntcore:"))
+                        {
+                            //Split line to get the library.
+                            int splitLoc = commandArg.IndexOf(':');
+                            string file = commandArg.Substring(splitLoc + 1);
+
+                            //If the file exists, just return it so dlopen can load it.
+                            if (File.Exists(file))
+                            {
+                                extractedLocation = file;
+                                useCommandLineFile = true;
+                            }
+                        }
+                    }
                     OsType type = LoaderUtilities.GetOsType();
-                    if (!LoaderUtilities.CheckOsValid(type))
-                        throw new InvalidOperationException("OS Not Supported");
 
-                    string embeddedResourceLocation, extractedLocation;
-                    LoaderUtilities.GetLibraryName(type, out embeddedResourceLocation, out extractedLocation);
-
-                    bool successfullyExtracted;
-
-                    //Null if we are in debug mode and running preextracted
-                    if (embeddedResourceLocation == null)
+                    if (!useCommandLineFile)
                     {
-                        successfullyExtracted = true;
+                        
+                        if (!LoaderUtilities.CheckOsValid(type))
+                            throw new InvalidOperationException("OS Not Supported");
+
+                        string embeddedResourceLocation;
+                        LoaderUtilities.GetLibraryName(type, out embeddedResourceLocation, out extractedLocation);
+
+                        bool successfullyExtracted = LoaderUtilities.ExtractLibrary(embeddedResourceLocation,
+                            extractedLocation);
+
+                        if (!successfullyExtracted)
+                            throw new FileNotFoundException(
+                                "Library file could not be found in the resorces. Please contact RobotDotNet for support for this issue");
                     }
-                    else
-                    {
-                        successfullyExtracted = LoaderUtilities.ExtractLibrary(embeddedResourceLocation, extractedLocation);
-                    }
-                    if (!successfullyExtracted) throw new FileNotFoundException("Library file could not be found in the resorces. Please contact RobotDotNet for support for this issue");
 
                     s_library = LoaderUtilities.LoadLibrary(extractedLocation, type, out s_loader);
 
