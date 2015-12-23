@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace NetworkTablesCore.Test
 {
     [TestFixture]
-    [Ignore("Still trying to debug multiple shutdowns. They certainly are not liked.")]
+    //[Ignore("Still trying to debug multiple shutdowns. They certainly are not liked.")]
     public class TestNetworkTablesStaticApi : TestBase
     {
         [TestFixtureSetUp]

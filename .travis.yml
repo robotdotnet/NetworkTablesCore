@@ -3,6 +3,7 @@ solution: NetworkTablesCore.sln
 
 os:
   - linux
+  - osx
 
 addons:
   apt:
