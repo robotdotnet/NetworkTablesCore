@@ -79,7 +79,9 @@
   </Choose>
   <ItemGroup>
     <Compile Include="SpecScanners\TestNativeLibraryInterface.cs" />
+    <Compile Include="TestInfoStructures.cs" />
     <Compile Include="TestLeb128.cs" />
+    <Compile Include="TestNetworkTablesStaticAPI.cs" />
     <Compile Include="TestTearDownFixture.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -25,6 +25,7 @@ namespace NetworkTablesCore.Test
             string key2 = "testKey2";
             double toWrite2 = 3.58;
             CoreMethods.SetEntryDouble(key2, toWrite2);
+            CoreMethods.SetEntryFlags(key2, EntryFlags.Persistent);
 
             string key3 = "testKey3";
             bool toWrite3 = true;
@@ -36,14 +37,20 @@ namespace NetworkTablesCore.Test
 
             Assert.That(entries[0].Name, Is.EqualTo(key1));
             Assert.That(entries[0].Type, Is.EqualTo(NtType.String));
+            Assert.That(entries[0].Flags, Is.EqualTo(EntryFlags.None));
+            Assert.That(entries[0].LastChange, Is.GreaterThan(0));
             Assert.That(entries[1].Name, Is.EqualTo(key2));
             Assert.That(entries[1].Type, Is.EqualTo(NtType.Double));
+            Assert.That(entries[1].Flags, Is.EqualTo(EntryFlags.Persistent));
+            Assert.That(entries[1].LastChange, Is.GreaterThan(0));
             Assert.That(entries[2].Name, Is.EqualTo(key3));
             Assert.That(entries[2].Type, Is.EqualTo(NtType.Boolean));
+            Assert.That(entries[2].Flags, Is.EqualTo(EntryFlags.None));
+            Assert.That(entries[2].LastChange, Is.GreaterThan(0));
         }
 
         [Test]
-        public void TestGetEntriesOnlyPersistent()
+        public void TestGetEntriesOnlyString()
         {
             string key1 = "testKey";
             string toWrite1 = "written";
@@ -65,6 +72,8 @@ namespace NetworkTablesCore.Test
 
             Assert.That(entries[0].Name, Is.EqualTo(key1));
             Assert.That(entries[0].Type, Is.EqualTo(NtType.String));
+            Assert.That(entries[0].Flags, Is.EqualTo(EntryFlags.None));
+            Assert.That(entries[0].LastChange, Is.GreaterThan(0));
         }
 
         [Test]

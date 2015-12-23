@@ -81,16 +81,16 @@ namespace NetworkTables
         public const char PathSeperatorChar = '/';
         /// <summary>The default port NetworkTables listens on.</summary>
         public const uint DefaultPort = 1735;
-        private static uint s_mPort = DefaultPort;
-        private static string s_ipAddress = "";
-        private static bool s_client;
-        private static bool s_running;
+        internal static uint Port { get; private set; } = DefaultPort;
+        internal static string IPAddress { get; private set; } = "";
+        internal static bool Client { get; private set; }
+        internal static bool Running { get; private set; }
 
         private static string s_persistentFilename = "networktables.ini";
 
         private static void CheckInit()
         {
-            if (s_running)
+            if (Running)
                 throw new InvalidOperationException("Network Tables has already been initialized");
         }
 
@@ -104,17 +104,17 @@ namespace NetworkTables
         /// </remarks>
         public static void Initialize()
         {
-            if (s_running)
+            if (Running)
                 Shutdown();
-            if (s_client)
+            if (Client)
             {
-                CoreMethods.StartClient(s_ipAddress, s_mPort);
+                CoreMethods.StartClient(IPAddress, Port);
             }
             else
             {
-                CoreMethods.StartServer(s_persistentFilename, "", s_mPort);
+                CoreMethods.StartServer(s_persistentFilename, "", Port);
             }
-            s_running = true;
+            Running = true;
         }
 
         /// <summary>
@@ -122,9 +122,9 @@ namespace NetworkTables
         /// </summary>
         public static void Shutdown()
         {
-            if (!s_running)
+            if (!Running)
                 return;
-            if (s_client)
+            if (Client)
             {
                 CoreMethods.StopClient();
             }
@@ -132,7 +132,7 @@ namespace NetworkTables
             {
                 CoreMethods.StopServer();
             }
-            s_running = false;
+            Running = false;
         }
 
         /// <summary>
@@ -147,10 +147,10 @@ namespace NetworkTables
         /// before <see cref="Initialize"/> or <see cref="GetTable(string)"/></remarks>
         public static void SetClientMode()
         {
-            if (s_client)
+            if (Client)
                 return;
             CheckInit();
-            s_client = true;
+            Client = true;
         }
 
         /// <summary> 
@@ -162,10 +162,10 @@ namespace NetworkTables
         /// before <see cref="Initialize"/> or <see cref="GetTable(string)"/></remarks>
         public static void SetServerMode()
         {
-            if (!s_client)
+            if (!Client)
                 return;
             CheckInit();
-            s_client = false;
+            Client = false;
         }
 
         /// <summary>
@@ -186,10 +186,10 @@ namespace NetworkTables
         /// <param name="address">The IP address to connect to in client mode</param>
         public static void SetIPAddress(string address)
         {
-            if (s_ipAddress == address)
+            if (IPAddress == address)
                 return;
             CheckInit();
-            s_ipAddress = address;
+            IPAddress = address;
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace NetworkTables
         /// <returns>The <see cref="NetworkTable"/> requested.</returns>
         public static NetworkTable GetTable(string key)
         {
-            if (!s_running) Initialize();
+            if (!Running) Initialize();
             if (key == "")
                 return new NetworkTable(key);
             return new NetworkTable(PathSeperatorChar + key);
@@ -214,10 +214,10 @@ namespace NetworkTables
         /// <param name="port">The port number to listen on or connect to.</param>
         public static void SetPort(int port)
         {
-            if (port == s_mPort)
+            if (port == Port)
                 return;
             CheckInit();
-            s_mPort = (uint)port;
+            Port = (uint)port;
         }
 
         /// <summary>
@@ -971,6 +971,6 @@ namespace NetworkTables
         /// <summary>
         /// Gets if the NetworkTables instance is a Server.
         /// </summary>
-        public bool IsServer => !s_client;
+        public bool IsServer => !Client;
     }
 }
