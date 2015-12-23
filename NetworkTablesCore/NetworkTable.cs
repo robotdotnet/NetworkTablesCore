@@ -81,12 +81,14 @@ namespace NetworkTables
         public const char PathSeperatorChar = '/';
         /// <summary>The default port NetworkTables listens on.</summary>
         public const uint DefaultPort = 1735;
+
+        public const string DefaultPersistentFileName = "networktables.ini";
         internal static uint Port { get; private set; } = DefaultPort;
         internal static string IPAddress { get; private set; } = "";
         internal static bool Client { get; private set; }
         internal static bool Running { get; private set; }
 
-        private static string s_persistentFilename = "networktables.ini";
+        internal static string PersistentFilename = DefaultPersistentFileName;
 
         private static void CheckInit()
         {
@@ -112,7 +114,7 @@ namespace NetworkTables
             }
             else
             {
-                CoreMethods.StartServer(s_persistentFilename, "", Port);
+                CoreMethods.StartServer(PersistentFilename, "", Port);
             }
             Running = true;
         }
@@ -227,10 +229,10 @@ namespace NetworkTables
         /// for automatic loading and saving of persistent values.</param>
         public static void SetPersistentFilename(string filename)
         {
-            if (s_persistentFilename == filename)
+            if (PersistentFilename == filename)
                 return;
             CheckInit();
-            s_persistentFilename = filename;
+            PersistentFilename = filename;
         }
 
         /// <summary>

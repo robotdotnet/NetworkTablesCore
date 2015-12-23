@@ -10,7 +10,6 @@ using NUnit.Framework;
 namespace NetworkTablesCore.Test
 {
     [TestFixture]
-    //[Ignore("Still trying to debug multiple shutdowns. They certainly are not liked.")]
     public class TestNetworkTablesStaticApi : TestBase
     {
         [TestFixtureSetUp]
@@ -22,12 +21,11 @@ namespace NetworkTablesCore.Test
         [TestFixtureTearDown]
         public void FixtureTeardown()
         {
-            Thread.Sleep(10);
             NetworkTable.Shutdown();
             NetworkTable.SetIPAddress("127.0.0.1");
+            NetworkTable.SetPersistentFilename(NetworkTable.DefaultPersistentFileName);
             NetworkTable.SetPort(10000);
             NetworkTable.SetServerMode();
-            Thread.Sleep(10);
             NetworkTable.Initialize();
         }
 
@@ -109,6 +107,26 @@ namespace NetworkTablesCore.Test
             NetworkTable.SetIPAddress("127.0.0.1");
             NetworkTable.SetIPAddress("10.12.34.2");
             Assert.That(NetworkTable.IPAddress, Is.EqualTo("10.12.34.2"));
+        }
+
+        [Test]
+        public void TestGetTableCausesInitialization()
+        {
+            Assert.That(NetworkTable.Running, Is.False);
+            NetworkTable.GetTable("empty");
+            Assert.That(NetworkTable.Running, Is.True);
+        }
+
+        [Test]
+        public void TestSetPersistentFilename()
+        {
+            NetworkTable.SetPersistentFilename(NetworkTable.DefaultPersistentFileName);
+            NetworkTable.SetPersistentFilename(NetworkTable.DefaultPersistentFileName);
+            Assert.That(NetworkTable.PersistentFilename, Is.EqualTo(NetworkTable.DefaultPersistentFileName));
+            NetworkTable.SetPersistentFilename("TestFile.txt");
+            Assert.That(NetworkTable.PersistentFilename, Is.EqualTo("TestFile.txt"));
+            NetworkTable.SetPersistentFilename(NetworkTable.DefaultPersistentFileName);
+            Assert.That(NetworkTable.PersistentFilename, Is.EqualTo(NetworkTable.DefaultPersistentFileName));
         }
     }
 }
