@@ -81,6 +81,9 @@ namespace NetworkTables
         /// <summary>The default port NetworkTables listens on.</summary>
         public const uint DefaultPort = 1735;
 
+        /// <summary>
+        /// The default file name used for Persistent Storage.
+        /// </summary>
         public const string DefaultPersistentFileName = "networktables.ini";
         internal static uint Port { get; private set; } = DefaultPort;
         internal static string IPAddress { get; private set; } = "";
@@ -137,15 +140,12 @@ namespace NetworkTables
         }
 
         /// <summary>
-        /// Sets NetworkTables to be a client
+        /// Sets NetworkTables to be a client.
         /// </summary>
         /// <exception cref="InvalidOperationException">This is thrown if Network Tables
         /// has already been initialized.</exception>
-        /// /// <summary>
-        /// Sets that network tables should be in client mode.
-        /// </summary>
         /// <remarks>This or <see cref="SetServerMode"/> must be called
-        /// before <see cref="Initialize"/> or <see cref="GetTable(string)"/></remarks>
+        /// before <see cref="Initialize"/> or <see cref="GetTable(string)"/>.</remarks>
         public static void SetClientMode()
         {
             if (Client)
