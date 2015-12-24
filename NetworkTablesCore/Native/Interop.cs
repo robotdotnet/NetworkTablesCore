@@ -3,6 +3,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
 // ReSharper disable InconsistentNaming
+// ReSharper disable NotAccessedField.Global
 
 namespace NetworkTables.Native
 {

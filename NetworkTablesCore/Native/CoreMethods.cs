@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Text;
 using NetworkTables.Native.Exceptions;
@@ -622,7 +621,7 @@ namespace NetworkTables.Native
         internal static bool ContainsKey(string key)
         {
             NtType val = GetType(key);
-            return GetType(key) != NtType.Unassigned;
+            return val != NtType.Unassigned;
         }
 
         internal static long Now()

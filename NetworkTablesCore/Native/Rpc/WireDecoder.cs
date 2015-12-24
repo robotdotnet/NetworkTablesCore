@@ -15,7 +15,7 @@ namespace NetworkTables.Native.Rpc
         private readonly byte[] m_buffer;
         private int m_count;
 
-        public string Error { get; private set; } = null;
+        public string Error { get; private set; }
 
         public WireDecoder(byte[] buffer)
         {
@@ -190,7 +190,7 @@ namespace NetworkTables.Native.Rpc
             return true;
         }
 
-        public bool ReadUleb128(ref ulong val)
+        public bool ReadUleb128(out ulong val)
         {
             return Leb128.ReadUleb128(m_buffer, ref m_count, out val) != 0;
         }

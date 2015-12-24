@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace NetworkTables.Native
@@ -41,8 +39,7 @@ namespace NetworkTables.Native
         // Generate string in /etc/passwd format
         public override string ToString()
         {
-            return string.Format("{0} {1} {2} {3} {4}",
-                sysname, nodename, release, version, machine);
+            return $"{sysname} {nodename} {release} {version} {machine}";
         }
 
         public static bool operator ==(Utsname lhs, Utsname rhs)
@@ -76,13 +73,15 @@ namespace NetworkTables.Native
         {
             try
             {
-                to = new Utsname();
-                to.sysname = Marshal.PtrToStringAnsi(from.sysname);
-                to.nodename = Marshal.PtrToStringAnsi(from.nodename);
-                to.release = Marshal.PtrToStringAnsi(from.release);
-                to.version = Marshal.PtrToStringAnsi(from.version);
-                to.machine = Marshal.PtrToStringAnsi(from.machine);
-                to.domainname = Marshal.PtrToStringAnsi(from.domainname);
+                to = new Utsname
+                {
+                    sysname = Marshal.PtrToStringAnsi(@from.sysname),
+                    nodename = Marshal.PtrToStringAnsi(@from.nodename),
+                    release = Marshal.PtrToStringAnsi(@from.release),
+                    version = Marshal.PtrToStringAnsi(@from.version),
+                    machine = Marshal.PtrToStringAnsi(@from.machine),
+                    domainname = Marshal.PtrToStringAnsi(@from.domainname)
+                };
             }
             finally
             {

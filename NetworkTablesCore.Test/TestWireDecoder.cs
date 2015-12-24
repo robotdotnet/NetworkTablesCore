@@ -166,16 +166,16 @@ namespace NetworkTablesCore.Test
             byte[] rawData = { 0x00, 0x7f, 0x80, 0x01, 0x80 };
             WireDecoder d = new WireDecoder(rawData);
             ulong val = 0;
-            Assert.That(d.ReadUleb128(ref val));
+            Assert.That(d.ReadUleb128(out val));
             Assert.That(val, Is.EqualTo(0));
 
-            Assert.That(d.ReadUleb128(ref val));
+            Assert.That(d.ReadUleb128(out val));
             Assert.That(val, Is.EqualTo(0x7f));
 
-            Assert.That(d.ReadUleb128(ref val));
+            Assert.That(d.ReadUleb128(out val));
             Assert.That(val, Is.EqualTo(0x80));
 
-            Assert.That(!d.ReadUleb128(ref val));
+            Assert.That(!d.ReadUleb128(out val));
 
             Assert.That(d.Error, Is.Null);
         }

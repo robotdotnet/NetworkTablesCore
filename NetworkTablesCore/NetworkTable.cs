@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using NetworkTables.Native;
 using NetworkTables.Native.Exceptions;
 using NetworkTables.Tables;
@@ -88,7 +87,7 @@ namespace NetworkTables
         internal static bool Client { get; private set; }
         internal static bool Running { get; private set; }
 
-        internal static string PersistentFilename = DefaultPersistentFileName;
+        internal static string PersistentFilename { get; private set; } = DefaultPersistentFileName;
 
         private static void CheckInit()
         {

@@ -44,7 +44,7 @@ namespace NetworkTables.Native
 
                 Console.WriteLine(uname.ToString());
 
-                bool mac = (uname.sysname == "Darwin");
+                bool mac = uname.sysname == "Darwin";
                 bool armv6 = uname.machine.ToLower().Contains("armv6");
                 bool armv7 = uname.machine.ToLower().Contains("armv7");
 
