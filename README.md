@@ -1,6 +1,6 @@
 **Build Status**
 
-| Windows                 |  Linux                  | Code Coverage         |
+| Windows                 |  Linux/Mac                  | Code Coverage         |
 | ------------------------|-------------------------|-----------------------|
 | [![Build status][1]][2] | [![Build Status][3]][4] | [![codecov.io][5]][6] |
 
@@ -31,7 +31,7 @@ Supported Platforms
 * Windows 64 Bit (CI Tested)
 * Linux 32 Bit - Mono won't let you switch between 32 and 64 bit, so if you have a 64 bit system it will run in 64 bit mode.
 * Linux 64 Bit (CI Tested)
-* Mac OSX 32 Bit
+* Mac OSX 32 Bit (CI Tested) 
 * Mac OSX 64 Bit
 * Arm v6 Hard Float (i.e Raspberry Pi 1)
 * Arm v7 Hard Float (i.e BeagleBoneBlack)
@@ -39,7 +39,7 @@ Supported Platforms
  
 Future Supported Platforms
 --------------------------
-* Android (Has issues with the Arm v7 Hard Float binary. Need a compiled native library)
+* Android (Binary builds properly, however it doesn't work right in xamarin release mode)
 
 Installation
 ------------
