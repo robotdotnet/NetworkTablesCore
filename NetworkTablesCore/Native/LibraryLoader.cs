@@ -62,13 +62,13 @@ namespace NetworkTables.Native
             return result;
         }
 
-        [DllImport("/system/lib/libdl.so")]
+        [DllImport("libdl.so")]
         private static extern IntPtr dlopen(string fileName, int flags);
 
-        [DllImport("/system/lib/libdl.so")]
+        [DllImport("libdl.so")]
         private static extern IntPtr dlsym(IntPtr handle, string symbol);
 
-        [DllImport("/system/lib/libdl.so")]
+        [DllImport("libdl.so")]
         private static extern IntPtr dlerror();
     }
 
