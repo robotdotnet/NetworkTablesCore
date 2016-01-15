@@ -228,7 +228,7 @@ namespace NetworkTables
             lock (s_lockObject)
             {
                 if (!Running) Initialize();
-                if (key == "")
+                if (key == "" || key[0] == PathSeperatorChar)
                     return new NetworkTable(key);
                 return new NetworkTable(PathSeperatorChar + key);
             }
