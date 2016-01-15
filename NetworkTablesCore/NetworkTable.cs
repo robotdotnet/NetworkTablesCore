@@ -81,6 +81,8 @@ namespace NetworkTables
         /// <summary>The default port NetworkTables listens on.</summary>
         public const uint DefaultPort = 1735;
 
+        private static object s_lockObject = new object();
+
         /// <summary>
         /// The default file name used for Persistent Storage.
         /// </summary>
@@ -94,8 +96,11 @@ namespace NetworkTables
 
         private static void CheckInit()
         {
-            if (Running)
-                throw new InvalidOperationException("Network Tables has already been initialized");
+            lock (s_lockObject)
+            {
+                if (Running)
+                    throw new InvalidOperationException("Network Tables has already been initialized");
+            }
         }
 
         /// <summary>
@@ -108,17 +113,20 @@ namespace NetworkTables
         /// </remarks>
         public static void Initialize()
         {
-            if (Running)
-                Shutdown();
-            if (Client)
+            lock (s_lockObject)
             {
-                CoreMethods.StartClient(IPAddress, Port);
+                if (Running)
+                    Shutdown();
+                if (Client)
+                {
+                    CoreMethods.StartClient(IPAddress, Port);
+                }
+                else
+                {
+                    CoreMethods.StartServer(PersistentFilename, "", Port);
+                }
+                Running = true;
             }
-            else
-            {
-                CoreMethods.StartServer(PersistentFilename, "", Port);
-            }
-            Running = true;
         }
 
         /// <summary>
@@ -126,17 +134,20 @@ namespace NetworkTables
         /// </summary>
         public static void Shutdown()
         {
-            if (!Running)
-                return;
-            if (Client)
+            lock (s_lockObject)
             {
-                CoreMethods.StopClient();
+                if (!Running)
+                    return;
+                if (Client)
+                {
+                    CoreMethods.StopClient();
+                }
+                else
+                {
+                    CoreMethods.StopServer();
+                }
+                Running = false;
             }
-            else
-            {
-                CoreMethods.StopServer();
-            }
-            Running = false;
         }
 
         /// <summary>
@@ -148,10 +159,13 @@ namespace NetworkTables
         /// before <see cref="Initialize"/> or <see cref="GetTable(string)"/>.</remarks>
         public static void SetClientMode()
         {
-            if (Client)
-                return;
-            CheckInit();
-            Client = true;
+            lock (s_lockObject)
+            {
+                if (Client)
+                    return;
+                CheckInit();
+                Client = true;
+            }
         }
 
         /// <summary> 
@@ -163,10 +177,13 @@ namespace NetworkTables
         /// before <see cref="Initialize"/> or <see cref="GetTable(string)"/></remarks>
         public static void SetServerMode()
         {
-            if (!Client)
-                return;
-            CheckInit();
-            Client = false;
+            lock (s_lockObject)
+            {
+                if (!Client)
+                    return;
+                CheckInit();
+                Client = false;
+            }
         }
 
         /// <summary>
@@ -178,7 +195,10 @@ namespace NetworkTables
         /// <see cref="GetTable(string)"/> if the system is a client.</remarks>
         public static void SetTeam(int team)
         {
-            SetIPAddress($"roboRIO-{team}-FRC.local");
+            lock (s_lockObject)
+            {
+                SetIPAddress($"roboRIO-{team}-FRC.local");
+            }
         }
 
         /// <summary>
@@ -187,10 +207,13 @@ namespace NetworkTables
         /// <param name="address">The IP address to connect to in client mode</param>
         public static void SetIPAddress(string address)
         {
-            if (IPAddress == address)
-                return;
-            CheckInit();
-            IPAddress = address;
+            lock (s_lockObject)
+            {
+                if (IPAddress == address)
+                    return;
+                CheckInit();
+                IPAddress = address;
+            }
         }
 
         /// <summary>
@@ -202,10 +225,13 @@ namespace NetworkTables
         /// <returns>The <see cref="NetworkTable"/> requested.</returns>
         public static NetworkTable GetTable(string key)
         {
-            if (!Running) Initialize();
-            if (key == "")
-                return new NetworkTable(key);
-            return new NetworkTable(PathSeperatorChar + key);
+            lock (s_lockObject)
+            {
+                if (!Running) Initialize();
+                if (key == "")
+                    return new NetworkTable(key);
+                return new NetworkTable(PathSeperatorChar + key);
+            }
         }
 
         /// <summary>
