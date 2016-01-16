@@ -68,6 +68,15 @@ namespace NetworkTables.Native
                                 "Library file could not be found in the resorces. Please contact RobotDotNet for support for this issue");
                     }
 
+                    if (type == OsType.Armv7HardFloat)
+                    {
+                        string resourceLocation = "NetworkTables.NativeLibraries.armv7.libstdc++.so.6";
+                        string extractLoc = "libstdc++.so.6";
+                        LoaderUtilities.ExtractLibrary(resourceLocation, extractLoc);
+                        ILibraryLoader loader;
+                        IntPtr libstdc = LoaderUtilities.LoadLibrary(extractLoc, type, out loader);
+                    }
+
                     s_library = LoaderUtilities.LoadLibrary(extractedLocation, type, out s_loader);
 
                     if (s_library == IntPtr.Zero) throw new BadImageFormatException($"Library file {extractedLocation} could not be loaded successfully.");
