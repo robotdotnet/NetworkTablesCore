@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
 // ReSharper disable InconsistentNaming
@@ -70,11 +71,8 @@ namespace NetworkTables.Native
 
                     if (type == OsType.Armv7HardFloat)
                     {
-                        string resourceLocation = "NetworkTables.NativeLibraries.armv7.libstdc++.so.6";
+                        string resourceLocation = "NetworkTables.NativeLibraries.armv7.libstdc++.so";
                         string extractLoc = "libstdc++.so.6";
-                        LoaderUtilities.ExtractLibrary(resourceLocation, extractLoc);
-                        ILibraryLoader loader;
-                        IntPtr libstdc = LoaderUtilities.LoadLibrary(extractLoc, type, out loader);
                     }
 
                     s_library = LoaderUtilities.LoadLibrary(extractedLocation, type, out s_loader);

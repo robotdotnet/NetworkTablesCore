@@ -91,7 +91,7 @@
     <EmbeddedResource Condition=" '$(Configuration)' != 'ArmStandalone' " Include="NativeLibraries\amd64\libntcore.dylib" />
     <EmbeddedResource Condition=" '$(Configuration)' != 'ArmStandalone' " Include="NativeLibraries\x86\libntcore.dylib" />
     <EmbeddedResource Condition=" '$(Configuration)' == 'ArmStandalone' " Include="NativeLibraries\armv7\libntcore.so" />
-    <EmbeddedResource Condition=" '$(Configuration)' == 'ArmStandalone' " Include="NativeLibraries\armv7\libstdc++.so.6" />
+    <EmbeddedResource Condition=" '$(Configuration)' == 'ArmStandalone' " Include="NativeLibraries\armv7\libstdc++.so" />
     <EmbeddedResource Condition=" '$(Configuration)' == 'ArmStandalone' " Include="NativeLibraries\armv6\libntcore.so" />
     <EmbeddedResource Condition=" '$(Configuration)' == 'ArmStandalone' " Include="NativeLibraries\android\libntcore.so" />
   </ItemGroup>
