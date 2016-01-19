@@ -525,6 +525,9 @@ namespace NetworkTables.Native
             StopRpcServer();
             StopNotifier();
             Interop.NT_StopClient();
+            //Clear callback dictionaries
+            s_entryCallbacks.Clear();
+            s_connectionCallbacks.Clear();
         }
 
         internal static void StopServer()
@@ -532,6 +535,9 @@ namespace NetworkTables.Native
             StopRpcServer();
             StopNotifier();
             Interop.NT_StopServer();
+            //Clear callback dictionaries
+            s_entryCallbacks.Clear();
+            s_connectionCallbacks.Clear();
         }
 
         internal static void StopNotifier()
