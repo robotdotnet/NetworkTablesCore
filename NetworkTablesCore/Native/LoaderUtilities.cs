@@ -12,7 +12,7 @@ namespace NetworkTables.Native
         Linux64,
         MacOs32,
         MacOs64,
-        Armv6HardFloat,
+        Armv6HardFloat, //Raspberry Pi 1. Has a library, but probably won't update.
         Armv7HardFloat,
         Android,
         RoboRio//RoboRIO is Armv7 Soft Float
@@ -92,6 +92,7 @@ namespace NetworkTables.Native
                 case OsType.MacOs64:
                     return false;
                 case OsType.Armv6HardFloat:
+                    Console.WriteLine("Raspberry Pi 1 does work, however the library will not be often updated and will probably be out of date.");
                     return true;
                 case OsType.Armv7HardFloat:
                     return true;
