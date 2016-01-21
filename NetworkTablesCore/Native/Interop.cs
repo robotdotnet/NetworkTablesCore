@@ -54,7 +54,7 @@ namespace NetworkTables.Native
 
                     if (!useCommandLineFile)
                     {
-                        
+
                         if (!LoaderUtilities.CheckOsValid(type))
                             throw new InvalidOperationException("OS Not Supported");
 
@@ -71,13 +71,30 @@ namespace NetworkTables.Native
 
                     if (type == OsType.Armv7HardFloat)
                     {
+                        //Make sure the proper libstdc++.so.6 gets extracted.
                         string resourceLocation = "NetworkTables.NativeLibraries.armv7.libstdc++.so";
                         string extractLoc = "libstdc++.so.6";
+                        LoaderUtilities.ExtractLibrary(resourceLocation, extractLoc);
                     }
 
                     s_library = LoaderUtilities.LoadLibrary(extractedLocation, type, out s_loader);
 
-                    if (s_library == IntPtr.Zero) throw new BadImageFormatException($"Library file {extractedLocation} could not be loaded successfully.");
+                    if (s_library == IntPtr.Zero)
+                    {
+                        if (type == OsType.Armv7HardFloat)
+                        {
+                            //We are arm v7. We might need the special libstdc++.so.6;
+                            Console.WriteLine("You are on an Arm V7 device. On most of these devices, a " 
+                                + "special library needs to be loaded. This library has been extracted" +
+                                " to the current directory. Please prepend your run command with\n" + 
+                                "env LD_LIBRARY_PATH=.:LD_LIBRARY_PATH yourcommand\nand run again.");
+                            throw new InvalidOperationException("Follow the instructions printed above to solve this error.");
+                        }
+                        else
+                        {
+                            throw new BadImageFormatException($"Library file {extractedLocation} could not be loaded successfully.");
+                        }
+                    }
 
                     InitializeDelegates(s_library, s_loader);
                 }
