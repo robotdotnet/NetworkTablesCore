@@ -183,8 +183,8 @@ namespace NetworkTables.Native
         }
 
 
-        internal static bool ExtractLibrary(string embeddedResourceLocation, string extractLocation)
-        {           
+        internal static bool ExtractLibrary(string embeddedResourceLocation, ref string extractLocation)
+        {
             byte[] bytes;
             //Load our resource file into memory
             using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedResourceLocation))
@@ -195,42 +195,53 @@ namespace NetworkTables.Native
                 s.Read(bytes, 0, (int)s.Length);
             }
             bool isFileSame = true;
-
-            //If file exists
-            if (File.Exists(extractLocation))
+            try
             {
-                //Load existing file into memory
-                byte[] existingFile = File.ReadAllBytes(extractLocation);
-                //If files are different length they are different,
-                //and we can automatically assume they are different.
-                if (existingFile.Length != bytes.Length)
+
+
+                //If file exists
+                if (File.Exists(extractLocation))
                 {
-                    isFileSame = false;
-                }
-                else
-                {
-                    //Otherwise directly compare the files
-                    //I first tried hashing, but that took 1.5-2.0 seconds,
-                    //wheras this took 0.3 seconds.
-                    for (int i = 0; i < existingFile.Length; i++)
+                    //Load existing file into memory
+                    byte[] existingFile = File.ReadAllBytes(extractLocation);
+                    //If files are different length they are different,
+                    //and we can automatically assume they are different.
+                    if (existingFile.Length != bytes.Length)
                     {
-                        if (bytes[i] != existingFile[i])
+                        isFileSame = false;
+                    }
+                    else
+                    {
+                        //Otherwise directly compare the files
+                        //I first tried hashing, but that took 1.5-2.0 seconds,
+                        //wheras this took 0.3 seconds.
+                        for (int i = 0; i < existingFile.Length; i++)
                         {
-                            isFileSame = false;
+                            if (bytes[i] != existingFile[i])
+                            {
+                                isFileSame = false;
+                            }
                         }
                     }
                 }
-            }
-            else
-            {
-                isFileSame = false;
-            }
+                else
+                {
+                    isFileSame = false;
+                }
 
-            //If file is different write the new file
-            if (!isFileSame)
+                //If file is different write the new file
+                if (!isFileSame)
+                {
+                    if (File.Exists(extractLocation))
+                        File.Delete(extractLocation);
+                    File.WriteAllBytes(extractLocation, bytes);
+                }
+
+            }
+            //If IO exception, means something else is using ntcore. Write to unique file.
+            catch (IOException)
             {
-                if (File.Exists(extractLocation))
-                    File.Delete(extractLocation);
+                extractLocation = Path.GetTempFileName();
                 File.WriteAllBytes(extractLocation, bytes);
             }
             //Force a garbage collection, since we just wasted about 12 MB of RAM.

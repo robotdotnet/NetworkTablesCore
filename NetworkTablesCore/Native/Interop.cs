@@ -62,7 +62,7 @@ namespace NetworkTables.Native
                         LoaderUtilities.GetLibraryName(type, out embeddedResourceLocation, out extractedLocation);
 
                         bool successfullyExtracted = LoaderUtilities.ExtractLibrary(embeddedResourceLocation,
-                            extractedLocation);
+                            ref extractedLocation);
 
                         if (!successfullyExtracted)
                             throw new FileNotFoundException(
@@ -74,7 +74,7 @@ namespace NetworkTables.Native
                         //Make sure the proper libstdc++.so.6 gets extracted.
                         string resourceLocation = "NetworkTables.NativeLibraries.armv7.libstdc++.so";
                         string extractLoc = "libstdc++.so.6";
-                        LoaderUtilities.ExtractLibrary(resourceLocation, extractLoc);
+                        LoaderUtilities.ExtractLibrary(resourceLocation, ref extractLoc);
                     }
 
                     s_library = LoaderUtilities.LoadLibrary(extractedLocation, type, out s_loader);
