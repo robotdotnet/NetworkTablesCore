@@ -137,49 +137,49 @@ namespace NetworkTables.Native
             {
                 case OsType.Windows32:
                     embeddedResourceLocation = "NetworkTables.NativeLibraries.x86.ntcore.dll";
-                    extractLocation = "ntcore.dll";
+                    //extractLocation = "ntcore.dll";
                     break;
                 case OsType.Windows64:
                     embeddedResourceLocation = "NetworkTables.NativeLibraries.amd64.ntcore.dll";
-                    extractLocation = "ntcore.dll";
+                    //extractLocation = "ntcore.dll";
                     break;
                 case OsType.Linux32:
                     embeddedResourceLocation = "NetworkTables.NativeLibraries.x86.libntcore.so";
-                    extractLocation = "libntcore.so";
+                    //extractLocation = "libntcore.so";
                     break;
                 case OsType.Linux64:
                     embeddedResourceLocation = "NetworkTables.NativeLibraries.amd64.libntcore.so";
-                    extractLocation = "libntcore.so";
+                    //extractLocation = "libntcore.so";
                     break;
                 case OsType.MacOs32:
                     embeddedResourceLocation = "NetworkTables.NativeLibraries.x86.libntcore.dylib";
-                    extractLocation = "libntcore.dylib";
+                    //extractLocation = "libntcore.dylib";
                     break;
                 case OsType.MacOs64:
                     embeddedResourceLocation = "NetworkTables.NativeLibraries.amd64.libntcore.dylib";
-                    extractLocation = "libntcore.dylib";
+                    //extractLocation = "libntcore.dylib";
                     break;
                 case OsType.RoboRio:
                     embeddedResourceLocation = "NetworkTables.NativeLibraries.roborio.libntcore.so";
-                    extractLocation = "libntcore.so";
+                    //extractLocation = "libntcore.so";
                     break;
                 case OsType.Armv6HardFloat:
                     embeddedResourceLocation = "NetworkTables.NativeLibraries.armv6.libntcore.so";
-                    extractLocation = "libntcore.so";
+                    //extractLocation = "libntcore.so";
                     break;
                 // Android is only Arm Android. Don't currently have a way to detect otherwise.
                 case OsType.Android:
                     embeddedResourceLocation = "NetworkTables.NativeLibraries.android.libntcore.so";
-                    extractLocation = "libntcore.so";
+                    //extractLocation = "libntcore.so";
                     break;
                 case OsType.Armv7HardFloat:
                     embeddedResourceLocation = "NetworkTables.NativeLibraries.armv7.libntcore.so";
-                    extractLocation = "libntcore.so";
+                    //extractLocation = "libntcore.so";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
-            extractLocation = Path.GetTempPath() + extractLocation;
+            extractLocation = Path.GetTempFileName();
         }
 
 
@@ -194,11 +194,11 @@ namespace NetworkTables.Native
                 bytes = new byte[(int)s.Length];
                 s.Read(bytes, 0, (int)s.Length);
             }
+            File.WriteAllBytes(extractLocation, bytes);
+            /*
             bool isFileSame = true;
             try
             {
-
-
                 //If file exists
                 if (File.Exists(extractLocation))
                 {
@@ -243,7 +243,7 @@ namespace NetworkTables.Native
             {
                 extractLocation = Path.GetTempFileName();
                 File.WriteAllBytes(extractLocation, bytes);
-            }
+            }*/
             //Force a garbage collection, since we just wasted about 12 MB of RAM.
             GC.Collect();
 

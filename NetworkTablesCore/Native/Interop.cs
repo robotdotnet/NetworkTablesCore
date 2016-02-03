@@ -23,6 +23,7 @@ namespace NetworkTables.Native
         private static readonly ILibraryLoader s_loader;
         private static readonly OsType s_osType;
         private static string s_libraryLocation = null;
+        private static bool s_useCommandLineFile = false;
         // ReSharper restore PrivateFieldCanBeConvertedToLocalVariable
 
         static Interop()
@@ -31,7 +32,6 @@ namespace NetworkTables.Native
             {
                 try
                 {
-                    bool useCommandLineFile = false;
 
                     string[] commandArgs = Environment.GetCommandLineArgs();
                     foreach (var commandArg in commandArgs)
@@ -47,13 +47,13 @@ namespace NetworkTables.Native
                             if (File.Exists(file))
                             {
                                 s_libraryLocation = file;
-                                useCommandLineFile = true;
+                                s_useCommandLineFile = true;
                             }
                         }
                     }
                     s_osType = LoaderUtilities.GetOsType();
 
-                    if (!useCommandLineFile)
+                    if (!s_useCommandLineFile)
                     {
 
                         if (!LoaderUtilities.CheckOsValid(s_osType))
@@ -128,8 +128,8 @@ namespace NetworkTables.Native
 
             try
             {
-                //Don't delete the file on the RoboRIO. It takes too long to extract.
-                if (s_osType != OsType.RoboRio && File.Exists(s_libraryLocation))
+                //Don't delete file if we are using a specified file.
+                if (!s_useCommandLineFile && File.Exists(s_libraryLocation))
                 {
                     File.Delete(s_libraryLocation);
                 }
