@@ -21,6 +21,8 @@ namespace NetworkTables.Native
         // ReSharper disable PrivateFieldCanBeConvertedToLocalVariable
         private static readonly IntPtr s_library;
         private static readonly ILibraryLoader s_loader;
+        private static readonly OsType s_osType;
+        private static string s_libraryLocation = null;
         // ReSharper restore PrivateFieldCanBeConvertedToLocalVariable
 
         static Interop()
@@ -30,7 +32,6 @@ namespace NetworkTables.Native
                 try
                 {
                     bool useCommandLineFile = false;
-                    string extractedLocation = null;
 
                     string[] commandArgs = Environment.GetCommandLineArgs();
                     foreach (var commandArg in commandArgs)
@@ -45,31 +46,31 @@ namespace NetworkTables.Native
                             //If the file exists, just return it so dlopen can load it.
                             if (File.Exists(file))
                             {
-                                extractedLocation = file;
+                                s_libraryLocation = file;
                                 useCommandLineFile = true;
                             }
                         }
                     }
-                    OsType type = LoaderUtilities.GetOsType();
+                    s_osType = LoaderUtilities.GetOsType();
 
                     if (!useCommandLineFile)
                     {
 
-                        if (!LoaderUtilities.CheckOsValid(type))
+                        if (!LoaderUtilities.CheckOsValid(s_osType))
                             throw new InvalidOperationException("OS Not Supported");
 
                         string embeddedResourceLocation;
-                        LoaderUtilities.GetLibraryName(type, out embeddedResourceLocation, out extractedLocation);
+                        LoaderUtilities.GetLibraryName(s_osType, out embeddedResourceLocation, out s_libraryLocation);
 
                         bool successfullyExtracted = LoaderUtilities.ExtractLibrary(embeddedResourceLocation,
-                            ref extractedLocation);
+                            ref s_libraryLocation);
 
                         if (!successfullyExtracted)
                             throw new FileNotFoundException(
                                 "Library file could not be found in the resorces. Please contact RobotDotNet for support for this issue");
                     }
 
-                    if (type == OsType.Armv7HardFloat)
+                    if (s_osType == OsType.Armv7HardFloat)
                     {
                         //Make sure the proper libstdc++.so.6 gets extracted.
                         string resourceLocation = "NetworkTables.NativeLibraries.armv7.libstdc++.so";
@@ -77,11 +78,11 @@ namespace NetworkTables.Native
                         LoaderUtilities.ExtractLibrary(resourceLocation, ref extractLoc);
                     }
 
-                    s_library = LoaderUtilities.LoadLibrary(extractedLocation, type, out s_loader);
+                    s_library = LoaderUtilities.LoadLibrary(s_libraryLocation, s_osType, out s_loader);
 
                     if (s_library == IntPtr.Zero)
                     {
-                        if (type == OsType.Armv7HardFloat)
+                        if (s_osType == OsType.Armv7HardFloat)
                         {
                             //We are arm v7. We might need the special libstdc++.so.6;
                             Console.WriteLine("You are on an Arm V7 device. On most of these devices, a " 
@@ -92,7 +93,7 @@ namespace NetworkTables.Native
                         }
                         else
                         {
-                            throw new BadImageFormatException($"Library file {extractedLocation} could not be loaded successfully.");
+                            throw new BadImageFormatException($"Library file {s_libraryLocation} could not be loaded successfully.");
                         }
                     }
 
@@ -124,6 +125,20 @@ namespace NetworkTables.Native
             NT_StopNotifier();
 
             s_loader.UnloadLibrary(s_library);
+
+            try
+            {
+                //Don't delete the file on the RoboRIO. It takes too long to extract.
+                if (s_osType != OsType.RoboRio && File.Exists(s_libraryLocation))
+                {
+                    File.Delete(s_libraryLocation);
+                }
+            }
+            catch
+            {
+                //Any errors just ignore.
+            }
+            
         }
 
         private static void InitializeDelegates(IntPtr library, ILibraryLoader loader)
