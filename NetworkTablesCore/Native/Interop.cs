@@ -106,8 +106,10 @@ namespace NetworkTables.Native
                 }
                 s_libraryLoaded = true;
 
-                //Adds our unload code.
+                //Adds our unload code. OK to set both as only 1
+                //Will ever get called.
                 AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
+                AppDomain.CurrentDomain.DomainUnload += OnProcessExit;
             }
         }
 
@@ -120,6 +122,8 @@ namespace NetworkTables.Native
             NT_StopServer();
             NT_StopRpcServer();
             NT_StopNotifier();
+
+            s_loader.UnloadLibrary(s_library);
         }
 
         private static void InitializeDelegates(IntPtr library, ILibraryLoader loader)
