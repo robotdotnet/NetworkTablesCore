@@ -7,6 +7,8 @@ namespace NetworkTables.Native
     {
         IntPtr LoadLibrary(string filename);
         IntPtr GetProcAddress(IntPtr dllHandle, string name);
+
+        void UnloadLibrary(IntPtr handle);
     }
 
     [ExcludeFromCodeCoverage]
@@ -28,11 +30,19 @@ namespace NetworkTables.Native
             return addr;
         }
 
+        void ILibraryLoader.UnloadLibrary(IntPtr handle)
+        {
+            FreeLibrary(handle);
+        }
+
         [DllImport("kernel32")]
         private static extern IntPtr LoadLibrary(string fileName);
 
         [DllImport("kernel32.dll")]
         private static extern IntPtr GetProcAddress(IntPtr handle, string procedureName);
+
+        [DllImport("kernel32")]
+        private static extern bool FreeLibrary(IntPtr handle);
     }
 
     [ExcludeFromCodeCoverage]
@@ -62,6 +72,11 @@ namespace NetworkTables.Native
             return result;
         }
 
+        void ILibraryLoader.UnloadLibrary(IntPtr handle)
+        {
+            dlclose(handle);
+        }
+
         [DllImport("libdl.so")]
         private static extern IntPtr dlopen(string fileName, int flags);
 
@@ -70,6 +85,9 @@ namespace NetworkTables.Native
 
         [DllImport("libdl.so")]
         private static extern IntPtr dlerror();
+
+        [DllImport("libdl.so")]
+        private static extern int dlclose(IntPtr handle);
     }
 
 
@@ -100,6 +118,11 @@ namespace NetworkTables.Native
             return result;
         }
 
+        void ILibraryLoader.UnloadLibrary(IntPtr handle)
+        {
+            dlclose(handle);
+        }
+
         [DllImport("dl")]
         private static extern IntPtr dlopen(string fileName, int flags);
 
@@ -108,6 +131,9 @@ namespace NetworkTables.Native
 
         [DllImport("dl")]
         private static extern IntPtr dlerror();
+
+        [DllImport("dl")]
+        private static extern int dlclose(IntPtr handle);
     }
 
 
@@ -138,6 +164,11 @@ namespace NetworkTables.Native
             return result;
         }
 
+        void ILibraryLoader.UnloadLibrary(IntPtr handle)
+        {
+            dlclose(handle);
+        }
+
         [DllImport("dl")]
         private static extern IntPtr dlopen(string fileName, int flags);
 
@@ -146,6 +177,9 @@ namespace NetworkTables.Native
 
         [DllImport("dl")]
         private static extern IntPtr dlerror();
+
+        [DllImport("dl")]
+        private static extern int dlclose(IntPtr handle);
     }
 
     [ExcludeFromCodeCoverage]
@@ -175,6 +209,11 @@ namespace NetworkTables.Native
             return result;
         }
 
+        void ILibraryLoader.UnloadLibrary(IntPtr handle)
+        {
+            dlclose(handle);
+        }
+
         [DllImport("libdl-2.20.so")]
         private static extern IntPtr dlopen(string fileName, int flags);
 
@@ -183,5 +222,8 @@ namespace NetworkTables.Native
 
         [DllImport("libdl-2.20.so")]
         private static extern IntPtr dlerror();
+
+        [DllImport("libdl-2.20.so")]
+        private static extern int dlclose(IntPtr handle);
     }
 }
