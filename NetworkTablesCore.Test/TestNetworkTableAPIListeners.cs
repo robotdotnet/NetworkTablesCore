@@ -27,12 +27,12 @@ namespace NetworkTablesCore.Test
         public IRemote ConnectedRemote = null;
         public IRemote DisconnectedRemote = null;
 
-        public void Connected(IRemote remote)
+        public void Connected(IRemote remote, ConnectionInfo info)
         {
             ConnectedRemote = remote;
         }
 
-        public void Disconnected(IRemote remote)
+        public void Disconnected(IRemote remote, ConnectionInfo info)
         {
             DisconnectedRemote = remote;
         }
