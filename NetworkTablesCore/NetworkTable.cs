@@ -938,6 +938,9 @@ namespace NetworkTables
         private readonly Dictionary<IRemoteConnectionListener, int> m_connectionListenerMap =
             new Dictionary<IRemoteConnectionListener, int>();
 
+        private readonly Dictionary<Action<IRemote, ConnectionInfo, bool>, int> m_actionConnectionListenerMap
+            = new Dictionary<Action<IRemote, ConnectionInfo, bool>, int>();
+
         ///<inheritdoc/>
         public void AddConnectionListener(IRemoteConnectionListener listener, bool immediateNotify)
         {
@@ -949,8 +952,8 @@ namespace NetworkTables
 
             ConnectionListenerFunction func = (uid, connected, conn) =>
             {
-                if (connected) listener.Connected(this);
-                else listener.Disconnected(this);
+                if (connected) listener.Connected(this, conn);
+                else listener.Disconnected(this, conn);
             };
 
             int id = CoreMethods.AddConnectionListener(func, immediateNotify);
@@ -964,6 +967,34 @@ namespace NetworkTables
         {
             int val;
             if (m_connectionListenerMap.TryGetValue(listener, out val))
+            {
+                CoreMethods.RemoveConnectionListener(val);
+            }
+        }
+
+        /// <inheritdoc/>
+        public void AddConnectionListener(Action<IRemote, ConnectionInfo, bool> listener, bool immediateNotify)
+        {
+            if (m_actionConnectionListenerMap.ContainsKey(listener))
+            {
+                throw new ArgumentException("Cannot add the same listener twice", nameof(listener));
+            }
+
+            ConnectionListenerFunction func = (uid, connected, conn) =>
+            {
+                listener(this, conn, connected);
+            };
+
+            int id = CoreMethods.AddConnectionListener(func, immediateNotify);
+
+            m_actionConnectionListenerMap.Add(listener, id);
+        }
+
+        /// <inheritdoc/>
+        public void RemoveConnectionListener(Action<IRemote, ConnectionInfo, bool> listener)
+        {
+            int val;
+            if (m_actionConnectionListenerMap.TryGetValue(listener, out val))
             {
                 CoreMethods.RemoveConnectionListener(val);
             }
