@@ -184,5 +184,18 @@ namespace NetworkTablesCore.Test
             };
             Assert.That(!CoreMethods.SetEntryStringArray(key, secondWrite));
         }
+
+        public void TestSetNullBooleanArray()
+        {
+            
+        }
+
+        [Test]
+        public void TestSetNullDoubleArray()
+        {
+            string key = "MyKey";
+
+            //Assert.That(!CoreMethods.SetEntryStringArray(key, null));
+        }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NetworkTables.Native;
 using NetworkTables.Native.Exceptions;
 using NetworkTables.Tables;
+using JetBrains.Annotations;
 
 namespace NetworkTables
 {
@@ -81,7 +82,7 @@ namespace NetworkTables
         /// <summary>The default port NetworkTables listens on.</summary>
         public const uint DefaultPort = 1735;
 
-        private static object s_lockObject = new object();
+        private static readonly object s_lockObject = new object();
 
         /// <summary>
         /// The default file name used for Persistent Storage.
@@ -205,7 +206,7 @@ namespace NetworkTables
         /// Sets the IP address that will be connected to in client mode.
         /// </summary>
         /// <param name="address">The IP address to connect to in client mode</param>
-        public static void SetIPAddress(string address)
+        public static void SetIPAddress([NotNull] string address)
         {
             lock (s_lockObject)
             {
@@ -223,7 +224,7 @@ namespace NetworkTables
         /// This will automatically initialize network tables if it has not been already.</remarks>
         /// <param name="key">The network table key to request.</param>
         /// <returns>The <see cref="NetworkTable"/> requested.</returns>
-        public static NetworkTable GetTable(string key)
+        public static NetworkTable GetTable([NotNull] string key)
         {
             lock (s_lockObject)
             {
@@ -252,7 +253,7 @@ namespace NetworkTables
         /// </summary>
         /// <param name="filename">The filename that the NetworkTables server uses
         /// for automatic loading and saving of persistent values.</param>
-        public static void SetPersistentFilename(string filename)
+        public static void SetPersistentFilename([NotNull] string filename)
         {
             if (PersistentFilename == filename)
                 return;
@@ -264,7 +265,7 @@ namespace NetworkTables
         /// Sets the Network Identity
         /// </summary>
         /// <param name="name">The name to identify this program as on the network.</param>
-        public static void SetNetworkIdentity(string name)
+        public static void SetNetworkIdentity([NotNull] string name)
         {
             CoreMethods.SetNetworkIdentity(name);
         }
@@ -287,7 +288,7 @@ namespace NetworkTables
         /// </summary>
         /// <param name="key">The key to be checked.</param>
         /// <returns>True if the table contains the key, otherwise false.</returns>
-        public bool ContainsKey(string key)
+        public bool ContainsKey([NotNull] string key)
         {
             return CoreMethods.ContainsKey(m_path + PathSeperatorChar + key);
         }
@@ -297,7 +298,7 @@ namespace NetworkTables
         /// </summary>
         /// <param name="key">The sub-table to check for</param>
         /// <returns>True if the table contains the sub-table, otherwise false</returns>
-        public bool ContainsSubTable(string key)
+        public bool ContainsSubTable([NotNull] string key)
         {
             EntryInfo[] array = CoreMethods.GetEntries(m_path + PathSeperatorChar + key + PathSeperatorChar, 0);
             return array.Length != 0;
@@ -356,7 +357,7 @@ namespace NetworkTables
         /// </summary>
         /// <param name="key">The key name.</param>
         /// <returns>The <see cref="ITable"/> to be returned.</returns>
-        public ITable GetSubTable(string key)
+        public ITable GetSubTable([NotNull] string key)
         {
             return new NetworkTable(m_path + PathSeperatorChar + key);
         }
@@ -365,7 +366,7 @@ namespace NetworkTables
         /// Makes a key's value persistent through program restarts.
         /// </summary>
         /// <param name="key">The key name (cannot be null).</param>
-        public void SetPersistent(string key)
+        public void SetPersistent([NotNull] string key)
         {
             SetFlags(key, EntryFlags.Persistent);
         }
@@ -374,7 +375,7 @@ namespace NetworkTables
         /// Stop making a key's value persistent through program restarts.
         /// </summary>
         /// <param name="key">The key name (cannot be null).</param>
-        public void ClearPersistent(string key)
+        public void ClearPersistent([NotNull] string key)
         {
             ClearFlags(key, EntryFlags.Persistent);
         }
@@ -384,7 +385,7 @@ namespace NetworkTables
         /// </summary>
         /// <param name="key">The key name (cannot be null).</param>
         /// <returns>True if the value is persistent.</returns>
-        public bool IsPersistent(string key)
+        public bool IsPersistent([NotNull] string key)
         {
             return GetFlags(key).HasFlag(EntryFlags.Persistent);
         }
@@ -394,7 +395,7 @@ namespace NetworkTables
         /// </summary>
         /// <param name="key">The key name.</param>
         /// <param name="flags">The flags to set. (Bitmask)</param>
-        public void SetFlags(string key, EntryFlags flags)
+        public void SetFlags([NotNull] string key, EntryFlags flags)
         {
             CoreMethods.SetEntryFlags(m_path + PathSeperatorChar + key, GetFlags(key) | flags);
         }
@@ -404,7 +405,7 @@ namespace NetworkTables
         /// </summary>
         /// <param name="key">The key name.</param>
         /// <param name="flags">The flags to clear. (Bitmask)</param>
-        public void ClearFlags(string key, EntryFlags flags)
+        public void ClearFlags([NotNull] string key, EntryFlags flags)
         {
             CoreMethods.SetEntryFlags(m_path + PathSeperatorChar + key, GetFlags(key) & ~flags);
         }
@@ -414,7 +415,7 @@ namespace NetworkTables
         /// </summary>
         /// <param name="key">The key name.</param>
         /// <returns>The flags attached to the key.</returns>
-        public EntryFlags GetFlags(string key)
+        public EntryFlags GetFlags([NotNull] string key)
         {
             return CoreMethods.GetEntryFlags(m_path + PathSeperatorChar + key);
         }
@@ -423,7 +424,7 @@ namespace NetworkTables
         /// Deletes the specifed key in this table.
         /// </summary>
         /// <param name="key">The key name.</param>
-        public void Delete(string key)
+        public void Delete([NotNull] string key)
         {
             CoreMethods.DeleteEntry(m_path + PathSeperatorChar + key);
         }
@@ -463,7 +464,7 @@ namespace NetworkTables
         /// <param name="filename">The file name.</param>
         /// <exception cref="PersistentException">Thrown if there is an error
         /// saving the file.</exception>
-        public static void SavePersistent(string filename)
+        public static void SavePersistent([NotNull] string filename)
         {
             CoreMethods.SavePersistent(filename);
         }
@@ -475,14 +476,14 @@ namespace NetworkTables
         /// <returns>A List of warnings (errors result in an exception instead.)</returns>
         /// <exception cref="PersistentException">Thrown if there is an error
         /// loading the file.</exception>
-        public static string[] LoadPersistent(string filename)
+        public static string[] LoadPersistent([NotNull] string filename)
         {
             return CoreMethods.LoadPersistent(filename);
         }
 
         ///<inheritdoc/>
         [Obsolete("Please use the Default Value Get... Methods instead.")]
-        public object GetValue(string key)
+        public object GetValue([NotNull] string key)
         {
             string localPath = m_path + PathSeperatorChar + key;
             NtType type = CoreMethods.GetType(localPath);
@@ -508,7 +509,7 @@ namespace NetworkTables
         }
 
         ///<inheritdoc/>
-        public object GetValue(string key, object defaultValue)
+        public object GetValue([NotNull] string key, object defaultValue)
         {
             string localPath = m_path + PathSeperatorChar + key;
             NtType type = CoreMethods.GetType(localPath);
@@ -534,7 +535,7 @@ namespace NetworkTables
         }
 
         ///<inheritdoc/>
-        public bool PutValue(string key, object value)
+        public bool PutValue([NotNull] string key, object value)
         {
             key = m_path + PathSeperatorChar + key;
             //TODO: Make number accept all numbers.
@@ -564,132 +565,132 @@ namespace NetworkTables
         }
 
         ///<inheritdoc/>
-        public bool PutNumber(string key, double value)
+        public bool PutNumber([NotNull] string key, double value)
         {
             return CoreMethods.SetEntryDouble(m_path + PathSeperatorChar + key, value);
         }
 
         ///<inheritdoc/>
-        public double GetNumber(string key, double defaultValue)
+        public double GetNumber([NotNull] string key, double defaultValue)
         {
             return CoreMethods.GetEntryDouble(m_path + PathSeperatorChar + key, defaultValue);
         }
 
         ///<inheritdoc/>
         [Obsolete("Please use the Default Value Get... Methods instead.")]
-        public double GetNumber(string key)
+        public double GetNumber([NotNull] string key)
         {
             return CoreMethods.GetEntryDouble(m_path + PathSeperatorChar + key);
         }
 
         ///<inheritdoc/>
-        public bool PutString(string key, string value)
+        public bool PutString([NotNull] string key, [NotNull] string value)
         {
             return CoreMethods.SetEntryString(m_path + PathSeperatorChar + key, value);
         }
 
         ///<inheritdoc/>
-        public string GetString(string key, string defaultValue)
+        public string GetString([NotNull] string key, string defaultValue)
         {
             return CoreMethods.GetEntryString(m_path + PathSeperatorChar + key, defaultValue);
         }
 
         ///<inheritdoc/>
         [Obsolete("Please use the Default Value Get... Methods instead.")]
-        public string GetString(string key)
+        public string GetString([NotNull] string key)
         {
             return CoreMethods.GetEntryString(m_path + PathSeperatorChar + key);
         }
 
         ///<inheritdoc/>
-        public bool PutBoolean(string key, bool value)
+        public bool PutBoolean([NotNull] string key, bool value)
         {
             return CoreMethods.SetEntryBoolean(m_path + PathSeperatorChar + key, value);
         }
 
         ///<inheritdoc/>
-        public bool GetBoolean(string key, bool defaultValue)
+        public bool GetBoolean([NotNull] string key, bool defaultValue)
         {
             return CoreMethods.GetEntryBoolean(m_path + PathSeperatorChar + key, defaultValue);
         }
 
         ///<inheritdoc/>
         [Obsolete("Please use the Default Value Get... Methods instead.")]
-        public bool GetBoolean(string key)
+        public bool GetBoolean([NotNull] string key)
         {
             return CoreMethods.GetEntryBoolean(m_path + PathSeperatorChar + key);
         }
 
         ///<inheritdoc/>
-        public bool PutStringArray(string key, string[] value)
+        public bool PutStringArray([NotNull] string key, [NotNull] string[] value)
         {
             return CoreMethods.SetEntryStringArray(m_path + PathSeperatorChar + key, value);
         }
 
         ///<inheritdoc/>
         [Obsolete("Please use the Default Value Get... Methods instead.")]
-        public string[] GetStringArray(string key)
+        public string[] GetStringArray([NotNull] string key)
         {
             return CoreMethods.GetEntryStringArray(m_path + PathSeperatorChar + key);
         }
 
         ///<inheritdoc/>
-        public string[] GetStringArray(string key, string[] defaultValue)
+        public string[] GetStringArray([NotNull] string key, string[] defaultValue)
         {
             return CoreMethods.GetEntryStringArray(m_path + PathSeperatorChar + key, defaultValue);
         }
 
         ///<inheritdoc/>
-        public bool PutNumberArray(string key, double[] value)
+        public bool PutNumberArray([NotNull] string key, [NotNull] double[] value)
         {
             return CoreMethods.SetEntryDoubleArray(m_path + PathSeperatorChar + key, value);
         }
 
         ///<inheritdoc/>
         [Obsolete("Please use the Default Value Get... Methods instead.")]
-        public double[] GetNumberArray(string key)
+        public double[] GetNumberArray([NotNull] string key)
         {
             return CoreMethods.GetEntryDoubleArray(m_path + PathSeperatorChar + key);
         }
 
         ///<inheritdoc/>
-        public double[] GetNumberArray(string key, double[] defaultValue)
+        public double[] GetNumberArray([NotNull] string key, double[] defaultValue)
         {
             return CoreMethods.GetEntryDoubleArray(m_path + PathSeperatorChar + key, defaultValue);
         }
 
         ///<inheritdoc/>
-        public bool PutBooleanArray(string key, bool[] value)
+        public bool PutBooleanArray([NotNull] string key, [NotNull] bool[] value)
         {
             return CoreMethods.SetEntryBooleanArray(m_path + PathSeperatorChar + key, value);
         }
 
         ///<inheritdoc/>
         [Obsolete("Please use the Default Value Get... Methods instead.")]
-        public bool[] GetBooleanArray(string key)
+        public bool[] GetBooleanArray([NotNull] string key)
         {
             return CoreMethods.GetEntryBooleanArray(m_path + PathSeperatorChar + key);
         }
 
         ///<inheritdoc/>
-        public bool PutRaw(string key, byte[] value)
+        public bool PutRaw([NotNull] string key, [NotNull] byte[] value)
         {
             return CoreMethods.SetEntryRaw(m_path + PathSeperatorChar + key, value);
         }
         ///<inheritdoc/>
         [Obsolete("Please use the Default Value Get... Methods instead.")]
-        public byte[] GetRaw(string key)
+        public byte[] GetRaw([NotNull] string key)
         {
             return CoreMethods.GetEntryRaw(m_path + PathSeperatorChar + key);
         }
         ///<inheritdoc/>
-        public byte[] GetRaw(string key, byte[] defaultValue)
+        public byte[] GetRaw([NotNull] string key, byte[] defaultValue)
         {
             return CoreMethods.GetEntryRaw(m_path + PathSeperatorChar + key, defaultValue);
         }
 
         ///<inheritdoc/>
-        public bool[] GetBooleanArray(string key, bool[] defaultValue)
+        public bool[] GetBooleanArray([NotNull] string key, bool[] defaultValue)
         {
             return CoreMethods.GetEntryBooleanArray(m_path + PathSeperatorChar + key, defaultValue);
         }
@@ -699,7 +700,7 @@ namespace NetworkTables
         private readonly Dictionary<Action<ITable, string, object, NotifyFlags>, List<int>> m_actionListenerMap = new Dictionary<Action<ITable, string, object, NotifyFlags>, List<int>>();
 
         ///<inheritdoc/>
-        public void AddTableListenerEx(ITableListener listener, NotifyFlags flags)
+        public void AddTableListenerEx([NotNull] ITableListener listener, NotifyFlags flags)
         {
             List<int> adapters;
             if (!m_listenerMap.TryGetValue(listener, out adapters))
@@ -725,7 +726,7 @@ namespace NetworkTables
         }
 
         ///<inheritdoc/>
-        public void AddTableListenerEx(string key, ITableListener listener, NotifyFlags flags)
+        public void AddTableListenerEx([NotNull] string key, [NotNull] ITableListener listener, NotifyFlags flags)
         {
             List<int> adapters;
             if (!m_listenerMap.TryGetValue(listener, out adapters))
@@ -748,7 +749,7 @@ namespace NetworkTables
         }
 
         ///<inheritdoc/>
-        public void AddSubTableListener(ITableListener listener, bool localNotify)
+        public void AddSubTableListener([NotNull] ITableListener listener, bool localNotify)
         {
             List<int> adapters;
             if (!m_listenerMap.TryGetValue(listener, out adapters))
@@ -779,7 +780,7 @@ namespace NetworkTables
         }
 
         ///<inheritdoc/>
-        public void AddTableListener(ITableListener listener, bool immediateNotify = false)
+        public void AddTableListener([NotNull] ITableListener listener, bool immediateNotify = false)
         {
             NotifyFlags flags = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
             if (immediateNotify)
@@ -788,7 +789,7 @@ namespace NetworkTables
         }
 
         ///<inheritdoc/>
-        public void AddTableListener(string key, ITableListener listener, bool immediateNotify = false)
+        public void AddTableListener([NotNull] string key, [NotNull] ITableListener listener, bool immediateNotify = false)
         {
             NotifyFlags flags = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
             if (immediateNotify)
@@ -797,13 +798,13 @@ namespace NetworkTables
         }
 
         ///<inheritdoc/>
-        public void AddSubTableListener(ITableListener listener)
+        public void AddSubTableListener([NotNull] ITableListener listener)
         {
             AddSubTableListener(listener, false);
         }
 
         ///<inheritdoc/>
-        public void RemoveTableListener(ITableListener listener)
+        public void RemoveTableListener([NotNull] ITableListener listener)
         {
             List<int> adapters;
             if (m_listenerMap.TryGetValue(listener, out adapters))
@@ -818,7 +819,7 @@ namespace NetworkTables
 
 
         ///<inheritdoc/>
-        public void AddTableListenerEx(Action<ITable, string, object, NotifyFlags> listenerDelegate, NotifyFlags flags)
+        public void AddTableListenerEx([NotNull] Action<ITable, string, object, NotifyFlags> listenerDelegate, NotifyFlags flags)
         {
             List<int> adapters;
             if (!m_actionListenerMap.TryGetValue(listenerDelegate, out adapters))
@@ -844,7 +845,7 @@ namespace NetworkTables
         }
 
         ///<inheritdoc/>
-        public void AddTableListenerEx(string key, Action<ITable, string, object, NotifyFlags> listenerDelegate, NotifyFlags flags)
+        public void AddTableListenerEx([NotNull] string key, [NotNull] Action<ITable, string, object, NotifyFlags> listenerDelegate, NotifyFlags flags)
         {
             List<int> adapters;
             if (!m_actionListenerMap.TryGetValue(listenerDelegate, out adapters))
@@ -867,7 +868,7 @@ namespace NetworkTables
         }
 
         ///<inheritdoc/>
-        public void AddSubTableListener(Action<ITable, string, object, NotifyFlags> listenerDelegate, bool localNotify)
+        public void AddSubTableListener([NotNull] Action<ITable, string, object, NotifyFlags> listenerDelegate, bool localNotify)
         {
             List<int> adapters;
             if (!m_actionListenerMap.TryGetValue(listenerDelegate, out adapters))
@@ -898,7 +899,7 @@ namespace NetworkTables
         }
 
         ///<inheritdoc/>
-        public void AddTableListener(Action<ITable, string, object, NotifyFlags> listenerDelegate, bool immediateNotify = false)
+        public void AddTableListener([NotNull] Action<ITable, string, object, NotifyFlags> listenerDelegate, bool immediateNotify = false)
         {
             NotifyFlags flags = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
             if (immediateNotify)
@@ -907,7 +908,7 @@ namespace NetworkTables
         }
 
         ///<inheritdoc/>
-        public void AddTableListener(string key, Action<ITable, string, object, NotifyFlags> listenerDelegate, bool immediateNotify = false)
+        public void AddTableListener([NotNull] string key, [NotNull] Action<ITable, string, object, NotifyFlags> listenerDelegate, bool immediateNotify = false)
         {
             NotifyFlags flags = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
             if (immediateNotify)
@@ -916,13 +917,13 @@ namespace NetworkTables
         }
 
         ///<inheritdoc/>
-        public void AddSubTableListener(Action<ITable, string, object, NotifyFlags> listenerDelegate)
+        public void AddSubTableListener([NotNull] Action<ITable, string, object, NotifyFlags> listenerDelegate)
         {
             AddSubTableListener(listenerDelegate, false);
         }
 
         ///<inheritdoc/>
-        public void RemoveTableListener(Action<ITable, string, object, NotifyFlags> listenerDelegate)
+        public void RemoveTableListener([NotNull] Action<ITable, string, object, NotifyFlags> listenerDelegate)
         {
             List<int> adapters;
             if (m_actionListenerMap.TryGetValue(listenerDelegate, out adapters))
@@ -942,7 +943,7 @@ namespace NetworkTables
             = new Dictionary<Action<IRemote, ConnectionInfo, bool>, int>();
 
         ///<inheritdoc/>
-        public void AddConnectionListener(IRemoteConnectionListener listener, bool immediateNotify)
+        public void AddConnectionListener([NotNull] IRemoteConnectionListener listener, bool immediateNotify)
         {
 
             if (m_connectionListenerMap.ContainsKey(listener))
@@ -963,7 +964,7 @@ namespace NetworkTables
         }
 
         ///<inheritdoc/>
-        public void RemoveConnectionListener(IRemoteConnectionListener listener)
+        public void RemoveConnectionListener([NotNull] IRemoteConnectionListener listener)
         {
             int val;
             if (m_connectionListenerMap.TryGetValue(listener, out val))
@@ -973,7 +974,7 @@ namespace NetworkTables
         }
 
         /// <inheritdoc/>
-        public void AddConnectionListener(Action<IRemote, ConnectionInfo, bool> listener, bool immediateNotify)
+        public void AddConnectionListener([NotNull] Action<IRemote, ConnectionInfo, bool> listener, bool immediateNotify)
         {
             if (m_actionConnectionListenerMap.ContainsKey(listener))
             {
@@ -991,7 +992,7 @@ namespace NetworkTables
         }
 
         /// <inheritdoc/>
-        public void RemoveConnectionListener(Action<IRemote, ConnectionInfo, bool> listener)
+        public void RemoveConnectionListener([NotNull] Action<IRemote, ConnectionInfo, bool> listener)
         {
             int val;
             if (m_actionConnectionListenerMap.TryGetValue(listener, out val))

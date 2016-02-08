@@ -28,6 +28,12 @@ namespace NetworkTablesCore.Test
         }
 
         [Test]
+        public void TestGetNullTable()
+        {
+            //NetworkTable.GetTable(null);
+        }
+
+        [Test]
         public void TestToString()
         {
             Assert.That(m_table.ToString(), Is.EqualTo("NetworkTable: /Table"));
