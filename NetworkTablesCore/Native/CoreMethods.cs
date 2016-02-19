@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using NetworkTables.Native.Exceptions;
+using NetworkTables;
 
 namespace NetworkTables.Native
 {
@@ -344,7 +345,7 @@ namespace NetworkTables.Native
 
         #region EntryInfo
 
-        internal static EntryInfo[] GetEntries(string prefix, NtType types)
+        internal static List<EntryInfo> GetEntries(string prefix, NtType types)
         {
             UIntPtr size;
             byte[] str = CreateUTF8String(prefix, out size);
@@ -352,13 +353,13 @@ namespace NetworkTables.Native
             IntPtr arr = Interop.NT_GetEntryInfo(str, size, (uint)types, ref arrSize);
             int entryInfoSize = Marshal.SizeOf(typeof(NtEntryInfo));
             int arraySize = (int)arrSize.ToUInt64();
-            EntryInfo[] entryArray = new EntryInfo[arraySize];
+            List<EntryInfo> entryArray = new List<EntryInfo>(arraySize);
 
             for (int i = 0; i < arraySize; i++)
             {
                 IntPtr data = new IntPtr(arr.ToInt64() + entryInfoSize * i);
                 NtEntryInfo info = (NtEntryInfo)Marshal.PtrToStructure(data, typeof(NtEntryInfo));
-                entryArray[i] = new EntryInfo(info.name.ToString(), info.type, (EntryFlags)info.flags, (long)info.last_change);
+                entryArray.Add(new EntryInfo(info.name.ToString(), info.type, (EntryFlags)info.flags, (long)info.last_change));
             }
             Interop.NT_DisposeEntryInfoArray(arr, arrSize);
             return entryArray;
@@ -367,20 +368,20 @@ namespace NetworkTables.Native
 
         #region ConnectionInfo
 
-        internal static ConnectionInfo[] GetConnections()
+        internal static List<ConnectionInfo> GetConnections()
         {
             UIntPtr count = UIntPtr.Zero;
             IntPtr connections = Interop.NT_GetConnections(ref count);
             int connectionInfoSize = Marshal.SizeOf(typeof(NtConnectionInfo));
             int arraySize = (int)count.ToUInt64();
 
-            ConnectionInfo[] connectionsArray = new ConnectionInfo[arraySize];
+            List<ConnectionInfo> connectionsArray = new List<ConnectionInfo>(arraySize);
 
             for (int i = 0; i < arraySize; i++)
             {
                 IntPtr data = new IntPtr(connections.ToInt64() + connectionInfoSize * i);
                 var con = (NtConnectionInfo)Marshal.PtrToStructure(data, typeof(NtConnectionInfo));
-                connectionsArray[i] = new ConnectionInfo(con.RemoteId.ToString(), ReadUTF8String(con.RemoteName), (int)con.RemotePort, (long)con.LastUpdate, (int)con.ProtocolVersion);
+                connectionsArray.Add(new ConnectionInfo(con.RemoteId.ToString(), ReadUTF8String(con.RemoteName), (int)con.RemotePort, (long)con.LastUpdate, (int)con.ProtocolVersion));
             }
             Interop.NT_DisposeConnectionInfoArray(connections, count);
             return connectionsArray;
@@ -391,13 +392,13 @@ namespace NetworkTables.Native
         private static readonly Dictionary<int, Interop.NT_EntryListenerCallback> s_entryCallbacks =
             new Dictionary<int, Interop.NT_EntryListenerCallback>();
 
-        internal static int AddEntryListener(string prefix, EntryListenerFunction listener, NotifyFlags flags)
+        internal static int AddEntryListener(string prefix, EntryListenerCallback listener, NotifyFlags flags)
         {
             // ReSharper disable once InconsistentNaming
             Interop.NT_EntryListenerCallback modCallback = (uid, data, name, len, value, flags_) =>
             {
                 NtType type = Interop.NT_GetValueType(value);
-                object obj;
+                Value obj;
                 ulong lastChange = 0;
                 UIntPtr size = UIntPtr.Zero;
                 IntPtr ptr;
@@ -409,36 +410,36 @@ namespace NetworkTables.Native
                     case NtType.Boolean:
                         int boolean = 0;
                         Interop.NT_GetValueBoolean(value, ref lastChange, ref boolean);
-                        obj = boolean != 0;
+                        obj = Value.MakeBoolean(boolean != 0);
                         break;
                     case NtType.Double:
                         double val = 0;
                         Interop.NT_GetValueDouble(value, ref lastChange, ref val);
-                        obj = val;
+                        obj = Value.MakeDouble(val);
                         break;
                     case NtType.String:
                         ptr = Interop.NT_GetValueString(value, ref lastChange, ref size);
-                        obj = ReadUTF8String(ptr, size);
+                        obj = Value.MakeString(ReadUTF8String(ptr, size));
                         break;
                     case NtType.Raw:
                         ptr = Interop.NT_GetValueRaw(value, ref lastChange, ref size);
-                        obj = GetRawDataFromPtr(ptr, size);
+                        obj = Value.MakeRaw(GetRawDataFromPtr(ptr, size));
                         break;
                     case NtType.BooleanArray:
                         ptr = Interop.NT_GetValueBooleanArray(value, ref lastChange, ref size);
-                        obj = GetBooleanArrayFromPtr(ptr, size);
+                        obj = Value.MakeBooleanArray(GetBooleanArrayFromPtr(ptr, size));
                         break;
                     case NtType.DoubleArray:
                         ptr = Interop.NT_GetValueDoubleArray(value, ref lastChange, ref size);
-                        obj = GetDoubleArrayFromPtr(ptr, size);
+                        obj = Value.MakeDoubleArray(GetDoubleArrayFromPtr(ptr, size));
                         break;
                     case NtType.StringArray:
                         ptr = Interop.NT_GetValueStringArray(value, ref lastChange, ref size);
-                        obj = GetStringArrayFromPtr(ptr, size);
+                        obj = Value.MakeStringArray(GetStringArrayFromPtr(ptr, size));
                         break;
                     case NtType.Rpc:
                         ptr = Interop.NT_GetValueRaw(value, ref lastChange, ref size);
-                        obj = GetRawDataFromPtr(ptr, size);
+                        obj = Value.MakeRpc(GetRawDataFromPtr(ptr, size));
                         break;
                     default:
                         obj = null;
@@ -468,7 +469,7 @@ namespace NetworkTables.Native
         private static readonly Dictionary<int, Interop.NT_ConnectionListenerCallback> s_connectionCallbacks =
             new Dictionary<int, Interop.NT_ConnectionListenerCallback>();
 
-        internal static int AddConnectionListener(ConnectionListenerFunction callback, bool immediateNotify)
+        internal static int AddConnectionListener(ConnectionListenerCallback callback, bool immediateNotify)
         {
             Interop.NT_ConnectionListenerCallback modCallback =
                 (uint uid, IntPtr data, int connected, ref NtConnectionInfo conn) =>
@@ -646,14 +647,14 @@ namespace NetworkTables.Native
         /// </summary>
         /// <param name="func">The log function to assign.</param>
         /// <param name="minLevel">The minimum level to log.</param>
-        public static void SetLogger(LoggerFunction func, LogLevel minLevel)
+        public static void SetLogger(LogFunc func, LogLevel minLevel)
         {
             s_nativeLog = (level, file, line, msg) =>
             {
                 string message = ReadUTF8String(msg);
                 string fileName = ReadUTF8String(file);
 
-                func((int)level, fileName, (int)line, message);
+                func((LogLevel)level, fileName, (int)line, message);
             };
 
             Interop.NT_SetLogger(s_nativeLog, (uint)minLevel);

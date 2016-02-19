@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 
-namespace NetworkTables.Native.Rpc
+namespace NetworkTables.Native
 {
     internal class WireEncoder
     {
@@ -22,6 +23,22 @@ namespace NetworkTables.Native.Rpc
             m_buffer.AddRange(bytes);
         }
 
+        public int Size() => m_buffer.Count;
+
+        private uint m_protoRev;
+
+        public uint ProtoRev => m_protoRev;
+
+        internal void SetProtoRev(uint protoRev)
+        {
+            m_protoRev = protoRev;
+        }
+
+        public WireEncoder(uint protoRev)
+        {
+            m_protoRev = protoRev;
+        }
+
         public void Reset()
         {
             m_buffer.Clear();
@@ -33,14 +50,15 @@ namespace NetworkTables.Native.Rpc
             m_buffer.Add(val);
         }
 
-        public void Write16(short val)
+        public void Write16(ushort val)
         {
-            m_buffer.AddRange(BitConverter.GetBytes(IPAddress.HostToNetworkOrder(val)));
+            var tmp = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)val));
+            m_buffer.AddRange(tmp);
         }
 
-        public void Write32(int val)
+        public void Write32(uint val)
         {
-            m_buffer.AddRange(BitConverter.GetBytes(IPAddress.HostToNetworkOrder(val)));
+            m_buffer.AddRange(BitConverter.GetBytes(IPAddress.HostToNetworkOrder((int)val)));
         }
 
         public void WriteUleb128(ulong val)
@@ -62,7 +80,11 @@ namespace NetworkTables.Native.Rpc
                     m_buffer.Add(0x02);
                     break;
                 case NtType.Raw:
-                    //We will only ever call this from a 3.0 protocol. So we don't need to check;
+                    if (m_protoRev < 0x0300u)
+                    {
+                        Error = "raw type not supported in protocol < 3.0";
+                        return;
+                    }
                     m_buffer.Add(0x03);
                     break;
                 case NtType.BooleanArray:
@@ -75,17 +97,20 @@ namespace NetworkTables.Native.Rpc
                     m_buffer.Add(0x12);
                     break;
                 case NtType.Rpc:
-                    //We will only ever call this from a 3.0 protocol. So we don't need to check;
+                    if (m_protoRev < 0x0300u)
+                    {
+                        Error = "RPC type not supported in protocol < 3.0";
+                        return;
+                    }
                     m_buffer.Add(0x20);
                     break;
                 default:
-                    Error = "Unrecognized Type";
-                    Console.WriteLine("Unrecognized Type");
+                    Error = "unrecognized Type";
                     return;
             }
             Error = null;
         }
-        public int GetValueSize(RpcValue value)
+        public int GetValueSize(Value value)
         {
             if (value == null) return 0;
             int size;
@@ -96,20 +121,23 @@ namespace NetworkTables.Native.Rpc
                 case NtType.Double:
                     return 8;
                 case NtType.Raw:
-                    return GetRawSize((byte[])value.Value);
+                    if (m_protoRev < 0x0300u) return 0;
+                    return GetRawSize((byte[])value.Val);
                 case NtType.Rpc:
+                    if (m_protoRev < 0x0300u) return 0;
+                    return GetRawSize((byte[])value.Val);
                 case NtType.String:
-                    return GetStringSize((string)value.Value);
+                    return GetStringSize((string)value.Val);
                 case NtType.BooleanArray:
-                    size = ((bool[])value.Value).Length;
+                    size = ((bool[])value.Val).Length;
                     if (size > 0xff) size = 0xff;
                     return 1 + size;
                 case NtType.DoubleArray:
-                    size = ((double[])value.Value).Length;
+                    size = ((double[])value.Val).Length;
                     if (size > 0xff) size = 0xff;
                     return 1 + size * 8;
                 case NtType.StringArray:
-                    string[] v = (string[])value.Value;
+                    string[] v = (string[])value.Val;
                     size = v.Length;
                     if (size > 0xff) size = 0xff;
                     int len = 1;
@@ -123,7 +151,7 @@ namespace NetworkTables.Native.Rpc
             }
         }
 
-        public void WriteValue(RpcValue value)
+        public void WriteValue(Value value)
         {
             if (value == null)
             {
@@ -133,20 +161,32 @@ namespace NetworkTables.Native.Rpc
             switch (value.Type)
             {
                 case NtType.Boolean:
-                    Write8((bool)value.Value ? (byte)1 : (byte)0);
+                    Write8((bool)value.Val ? (byte)1 : (byte)0);
                     break;
                 case NtType.Double:
-                    WriteDouble((double)value.Value);
+                    WriteDouble((double)value.Val);
                     break;
                 case NtType.Raw:
-                    WriteRaw((byte[])value.Value);
+                    if (m_protoRev < 0x0300u)
+                    {
+                        Error = "Raw values not supported in protocol < 3.0";
+                        return;
+                    }
+                    WriteRaw((byte[])value.Val);
                     break;
                 case NtType.String:
+                    WriteString((string)value.Val);
+                    break;
                 case NtType.Rpc:
-                    WriteString((string)value.Value);
+                    if (m_protoRev < 0x0300u)
+                    {
+                        Error = "RPC values not supported in protocol < 3.0";
+                        return;
+                    }
+                    WriteRaw((byte[])value.Val);
                     break;
                 case NtType.BooleanArray:
-                    var vB = (bool[])value.Value;
+                    var vB = (bool[])value.Val;
                     int sizeB = vB.Length;
                     if (sizeB > 0xff) sizeB = 0xff;
                     Write8((byte)sizeB);
@@ -156,7 +196,7 @@ namespace NetworkTables.Native.Rpc
                     }
                     break;
                 case NtType.DoubleArray:
-                    var vD = (double[])value.Value;
+                    var vD = (double[])value.Val;
                     int sizeD = vD.Length;
                     if (sizeD > 0xff) sizeD = 0xff;
                     Write8((byte)sizeD);
@@ -166,7 +206,7 @@ namespace NetworkTables.Native.Rpc
                     }
                     break;
                 case NtType.StringArray:
-                    var vS = (string[])value.Value;
+                    var vS = (string[])value.Val;
                     int sizeS = vS.Length;
                     if (sizeS > 0xff) sizeS = 0xff;
                     Write8((byte)sizeS);
@@ -196,15 +236,43 @@ namespace NetworkTables.Native.Rpc
 
         public int GetStringSize(string str)
         {
-            return Leb128.SizeUleb128((ulong) str.Length) + str.Length; 
+            if (m_protoRev < 0x0300u)
+            {
+                int len = str.Length;
+                if (len > 0xffff) len = 0xffff;
+                return 2 + len;
+            }
+            return Leb128.SizeUleb128((ulong)str.Length) + str.Length;
         }
 
         public void WriteString(string str)
         {
             int len = str.Length;
-            WriteUleb128((ulong)len);
+            if (m_protoRev < 0x0300u)
+            {
+                if (len > 0xffff) len = 0xffff;
 
-            m_buffer.AddRange(Encoding.UTF8.GetBytes(str));
+                Write16((ushort)len);
+                byte[] b = Encoding.UTF8.GetBytes(str);
+                byte[] bytes = null;
+                if (b.Length > len)
+                {
+                    bytes = new byte[len];
+                    Array.Copy(b, bytes, len);
+                }
+                else
+                {
+                    bytes = b;
+                }
+                m_buffer.AddRange(bytes);
+            }
+            else
+            {
+                WriteUleb128((ulong)len);
+                m_buffer.AddRange(Encoding.UTF8.GetBytes(str));
+            }
+
+
         }
     }
 }

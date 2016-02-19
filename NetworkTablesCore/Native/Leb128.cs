@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NetworkTables.Native.Rpc
+namespace NetworkTables.Native
 {
     internal static class Leb128
     {
@@ -53,6 +53,28 @@ namespace NetworkTables.Native.Rpc
             }
             ret = result;
             return count;
+        }
+
+        public static bool ReadUleb128(IInputStream istream, out ulong ret)
+        {
+            ulong result = 0;
+            int shift = 0;
+            ret = 0;
+
+            while (true)
+            {
+                byte[] b = new byte[1];
+                b[0] = 0;
+                if (!istream.Read(b, 1)) return false;
+                result |= (uint)((byte)(b[0] & 0x7f) << shift);
+                shift += 7;
+
+                if ((b[0] & 0x80) == 0) break;
+            }
+
+            ret = result;
+
+            return true;
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using NetworkTables.Native.Rpc;
+using NetworkTables.Native;
 using NUnit.Framework;
 
 namespace NetworkTablesCore.Test

@@ -299,8 +299,8 @@ namespace NetworkTables
         /// <returns>True if the table contains the sub-table, otherwise false</returns>
         public bool ContainsSubTable(string key)
         {
-            EntryInfo[] array = CoreMethods.GetEntries(m_path + PathSeperatorChar + key + PathSeperatorChar, 0);
-            return array.Length != 0;
+            var array = CoreMethods.GetEntries(m_path + PathSeperatorChar + key + PathSeperatorChar, 0);
+            return array.Count != 0;
         }
 
         /// <summary>
@@ -709,7 +709,7 @@ namespace NetworkTables
             }
 
             // ReSharper disable once InconsistentNaming
-            EntryListenerFunction func = (uid, key, value, flags_) =>
+            EntryListenerCallback func = (uid, key, value, flags_) =>
             {
                 string relativeKey = key.Substring(m_path.Length + 1);
                 if (relativeKey.IndexOf(PathSeperatorChar) != -1)
@@ -735,7 +735,7 @@ namespace NetworkTables
             }
             string fullKey = m_path + PathSeperatorChar + key;
             // ReSharper disable once InconsistentNaming
-            EntryListenerFunction func = (uid, funcKey, value, flags_) =>
+            EntryListenerCallback func = (uid, funcKey, value, flags_) =>
             {
                 if (!funcKey.Equals(fullKey))
                     return;
@@ -758,7 +758,7 @@ namespace NetworkTables
             }
             HashSet<string> notifiedTables = new HashSet<string>();
             // ReSharper disable once InconsistentNaming
-            EntryListenerFunction func = (uid, key, value, flags_) =>
+            EntryListenerCallback func = (uid, key, value, flags_) =>
             {
                 string relativeKey = key.Substring(m_path.Length + 1);
                 int endSubTable = relativeKey.IndexOf(PathSeperatorChar);
@@ -828,7 +828,7 @@ namespace NetworkTables
             }
 
             // ReSharper disable once InconsistentNaming
-            EntryListenerFunction func = (uid, key, value, flags_) =>
+            EntryListenerCallback func = (uid, key, value, flags_) =>
             {
                 string relativeKey = key.Substring(m_path.Length + 1);
                 if (relativeKey.IndexOf(PathSeperatorChar) != -1)
@@ -854,7 +854,7 @@ namespace NetworkTables
             }
             string fullKey = m_path + PathSeperatorChar + key;
             // ReSharper disable once InconsistentNaming
-            EntryListenerFunction func = (uid, funcKey, value, flags_) =>
+            EntryListenerCallback func = (uid, funcKey, value, flags_) =>
             {
                 if (!funcKey.Equals(fullKey))
                     return;
@@ -877,7 +877,7 @@ namespace NetworkTables
             }
             HashSet<string> notifiedTables = new HashSet<string>();
             // ReSharper disable once InconsistentNaming
-            EntryListenerFunction func = (uid, key, value, flags_) =>
+            EntryListenerCallback func = (uid, key, value, flags_) =>
             {
                 string relativeKey = key.Substring(m_path.Length + 1);
                 int endSubTable = relativeKey.IndexOf(PathSeperatorChar);
@@ -950,7 +950,7 @@ namespace NetworkTables
                 throw new ArgumentException("Cannot add the same listener twice", nameof(listener));
             }
 
-            ConnectionListenerFunction func = (uid, connected, conn) =>
+            ConnectionListenerCallback func = (uid, connected, conn) =>
             {
                 if (connected) listener.Connected(this, conn);
                 else listener.Disconnected(this, conn);
@@ -980,7 +980,7 @@ namespace NetworkTables
                 throw new ArgumentException("Cannot add the same listener twice", nameof(listener));
             }
 
-            ConnectionListenerFunction func = (uid, connected, conn) =>
+            ConnectionListenerCallback func = (uid, connected, conn) =>
             {
                 listener(this, conn, connected);
             };
@@ -1007,8 +1007,8 @@ namespace NetworkTables
         {
             get
             {
-                ConnectionInfo[] conns = CoreMethods.GetConnections();
-                return conns.Length > 0;
+                var conns = CoreMethods.GetConnections();
+                return conns.Count > 0;
             }
         }
 
@@ -1021,7 +1021,7 @@ namespace NetworkTables
         /// all connections to itself.
         /// </remarks>
         /// <returns>An array of all connections attached to this instance.</returns>
-        public static ConnectionInfo[] Connections()
+        public static List<ConnectionInfo> Connections()
         {
             return CoreMethods.GetConnections();
         }

@@ -13,6 +13,7 @@ using NetworkTables.Native;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using NUnit.Framework;
+using NetworkTables;
 
 namespace NetworkTablesCore.Test.SpecScanners
 {
