@@ -696,7 +696,7 @@ namespace NetworkTables
 
         private readonly Dictionary<ITableListener, List<int>> m_listenerMap = new Dictionary<ITableListener, List<int>>();
 
-        private readonly Dictionary<Action<ITable, string, object, NotifyFlags>, List<int>> m_actionListenerMap = new Dictionary<Action<ITable, string, object, NotifyFlags>, List<int>>();
+        private readonly Dictionary<Action<ITable, string, Value, NotifyFlags>, List<int>> m_actionListenerMap = new Dictionary<Action<ITable, string, Value, NotifyFlags>, List<int>>();
 
         ///<inheritdoc/>
         public void AddTableListenerEx(ITableListener listener, NotifyFlags flags)
@@ -768,7 +768,7 @@ namespace NetworkTables
                 if (notifiedTables.Contains(subTableKey))
                     return;
                 notifiedTables.Add(subTableKey);
-                listener.ValueChanged(this, subTableKey, GetSubTable(subTableKey), flags_);
+                listener.ValueChanged(this, subTableKey, null, flags_);
             };
             NotifyFlags flags = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
             if (localNotify)
@@ -818,7 +818,7 @@ namespace NetworkTables
 
 
         ///<inheritdoc/>
-        public void AddTableListenerEx(Action<ITable, string, object, NotifyFlags> listenerDelegate, NotifyFlags flags)
+        public void AddTableListenerEx(Action<ITable, string, Value, NotifyFlags> listenerDelegate, NotifyFlags flags)
         {
             List<int> adapters;
             if (!m_actionListenerMap.TryGetValue(listenerDelegate, out adapters))
@@ -844,7 +844,7 @@ namespace NetworkTables
         }
 
         ///<inheritdoc/>
-        public void AddTableListenerEx(string key, Action<ITable, string, object, NotifyFlags> listenerDelegate, NotifyFlags flags)
+        public void AddTableListenerEx(string key, Action<ITable, string, Value, NotifyFlags> listenerDelegate, NotifyFlags flags)
         {
             List<int> adapters;
             if (!m_actionListenerMap.TryGetValue(listenerDelegate, out adapters))
@@ -867,7 +867,7 @@ namespace NetworkTables
         }
 
         ///<inheritdoc/>
-        public void AddSubTableListener(Action<ITable, string, object, NotifyFlags> listenerDelegate, bool localNotify)
+        public void AddSubTableListener(Action<ITable, string, Value, NotifyFlags> listenerDelegate, bool localNotify)
         {
             List<int> adapters;
             if (!m_actionListenerMap.TryGetValue(listenerDelegate, out adapters))
@@ -887,7 +887,7 @@ namespace NetworkTables
                 if (notifiedTables.Contains(subTableKey))
                     return;
                 notifiedTables.Add(subTableKey);
-                listenerDelegate(this, subTableKey, GetSubTable(subTableKey), flags_);
+                listenerDelegate(this, subTableKey, null, flags_);
             };
             NotifyFlags flags = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
             if (localNotify)
@@ -898,7 +898,7 @@ namespace NetworkTables
         }
 
         ///<inheritdoc/>
-        public void AddTableListener(Action<ITable, string, object, NotifyFlags> listenerDelegate, bool immediateNotify = false)
+        public void AddTableListener(Action<ITable, string, Value, NotifyFlags> listenerDelegate, bool immediateNotify = false)
         {
             NotifyFlags flags = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
             if (immediateNotify)
@@ -907,7 +907,7 @@ namespace NetworkTables
         }
 
         ///<inheritdoc/>
-        public void AddTableListener(string key, Action<ITable, string, object, NotifyFlags> listenerDelegate, bool immediateNotify = false)
+        public void AddTableListener(string key, Action<ITable, string, Value, NotifyFlags> listenerDelegate, bool immediateNotify = false)
         {
             NotifyFlags flags = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
             if (immediateNotify)
@@ -916,13 +916,13 @@ namespace NetworkTables
         }
 
         ///<inheritdoc/>
-        public void AddSubTableListener(Action<ITable, string, object, NotifyFlags> listenerDelegate)
+        public void AddSubTableListener(Action<ITable, string, Value, NotifyFlags> listenerDelegate)
         {
             AddSubTableListener(listenerDelegate, false);
         }
 
         ///<inheritdoc/>
-        public void RemoveTableListener(Action<ITable, string, object, NotifyFlags> listenerDelegate)
+        public void RemoveTableListener(Action<ITable, string, Value, NotifyFlags> listenerDelegate)
         {
             List<int> adapters;
             if (m_actionListenerMap.TryGetValue(listenerDelegate, out adapters))

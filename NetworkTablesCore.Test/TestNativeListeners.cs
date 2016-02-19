@@ -29,7 +29,7 @@ namespace NetworkTablesCore.Test
 
             int count = 0;
             string recievedKey = "";
-            object recievedValue = null;
+            Value recievedValue = null;
             NotifyFlags receivedFlags = 0;
 
             NotifyFlags f = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
@@ -53,8 +53,8 @@ namespace NetworkTablesCore.Test
             Assert.That(recievedKey, Is.EqualTo(key1));
             Assert.That(recievedValue, Is.Not.Null);
 
-            string retValue = recievedValue as string;
-            Assert.That(retValue, Is.Not.Null);
+            Assert.That(recievedValue.IsString());
+            string retValue = recievedValue.GetString();
             Assert.That(retValue, Is.EqualTo(toWrite2));
 
             Assert.That(receivedFlags.HasFlag(NotifyFlags.NotifyLocal));
@@ -71,7 +71,7 @@ namespace NetworkTablesCore.Test
 
             int count = 0;
             string recievedKey = "";
-            object recievedValue = null;
+            Value receivedValue = null;
             NotifyFlags receivedFlags = 0;
 
             NotifyFlags f = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
@@ -82,7 +82,7 @@ namespace NetworkTablesCore.Test
             {
                 count++;
                 recievedKey = key;
-                recievedValue = value;
+                receivedValue = value;
                 receivedFlags = flags;
             }, f);
 
@@ -90,9 +90,10 @@ namespace NetworkTablesCore.Test
 
             Assert.That(count, Is.EqualTo(1));
             Assert.That(recievedKey, Is.EqualTo(key1));
-            Assert.That(recievedValue, Is.Not.Null);
+            Assert.That(receivedValue, Is.Not.Null);
 
-            string retValue = recievedValue as string;
+            Assert.That(receivedValue.IsString());
+            string retValue = receivedValue.GetString();
             Assert.That(retValue, Is.Not.Null);
             Assert.That(retValue, Is.EqualTo(toWrite1));
 
@@ -115,7 +116,7 @@ namespace NetworkTablesCore.Test
 
             int count = 0;
             string recievedKey = "";
-            object recievedValue = null;
+            Value recievedValue = null;
             NotifyFlags receivedFlags = 0;
 
             NotifyFlags f = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
@@ -138,21 +139,23 @@ namespace NetworkTablesCore.Test
 
             if (val is double)
             {
-                double retValue = (double)recievedValue;
+                Assert.That(recievedValue.IsDouble());
+                double retValue = recievedValue.GetDouble();
                 Assert.That(retValue, Is.EqualTo((double)val));
                 Assert.That(receivedFlags.HasFlag(NotifyFlags.NotifyImmediate));
             }
             else if (val is bool)
             {
-                bool retValue = (bool) recievedValue;
+                Assert.That(recievedValue.IsBoolean());
+                bool retValue = recievedValue.GetBoolean();
                 Assert.That(retValue, Is.EqualTo((bool)val));
 
                 Assert.That(receivedFlags.HasFlag(NotifyFlags.NotifyImmediate));
             }
             else if (val is string)
             {
-                string retValue = recievedValue as string;
-                Assert.That(retValue, Is.Not.Null);
+                Assert.That(recievedValue.IsString());
+                string retValue = recievedValue.GetString();
                 Assert.That(retValue, Is.EqualTo((string)val));
 
                 Assert.That(receivedFlags.HasFlag(NotifyFlags.NotifyImmediate));
@@ -176,7 +179,7 @@ namespace NetworkTablesCore.Test
 
             int count = 0;
             string recievedKey = "";
-            object recievedValue = null;
+            Value receivedValue = null;
             NotifyFlags receivedFlags = 0;
 
             NotifyFlags f = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
@@ -187,7 +190,7 @@ namespace NetworkTablesCore.Test
             {
                 count++;
                 recievedKey = key;
-                recievedValue = value;
+                receivedValue = value;
                 receivedFlags = flags;
             }, f);
 
@@ -195,9 +198,10 @@ namespace NetworkTablesCore.Test
 
             Assert.That(count, Is.EqualTo(1));
             Assert.That(recievedKey, Is.EqualTo(key1));
-            Assert.That(recievedValue, Is.Not.Null);
+            Assert.That(receivedValue, Is.Not.Null);
 
-            string[] retValue = recievedValue as string[];
+            Assert.That(receivedValue.IsStringArray());
+            string[] retValue = receivedValue.GetStringArray();
             Assert.That(retValue, Is.Not.Null);
 
             for (int i = 0; i < retValue.Length; i++)
@@ -220,7 +224,7 @@ namespace NetworkTablesCore.Test
 
             int count = 0;
             string recievedKey = "";
-            object recievedValue = null;
+            Value receivedValue = null;
             NotifyFlags receivedFlags = 0;
 
             NotifyFlags f = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
@@ -231,7 +235,7 @@ namespace NetworkTablesCore.Test
             {
                 count++;
                 recievedKey = key;
-                recievedValue = value;
+                receivedValue = value;
                 receivedFlags = flags;
             }, f);
 
@@ -239,9 +243,10 @@ namespace NetworkTablesCore.Test
 
             Assert.That(count, Is.EqualTo(1));
             Assert.That(recievedKey, Is.EqualTo(key1));
-            Assert.That(recievedValue, Is.Not.Null);
+            Assert.That(receivedValue, Is.Not.Null);
 
-            byte[] retValue = recievedValue as byte[];
+            Assert.That(receivedValue.IsRaw());
+            byte[] retValue = receivedValue.GetRaw();
             Assert.That(retValue, Is.Not.Null);
 
             for (int i = 0; i < retValue.Length; i++)
@@ -263,7 +268,7 @@ namespace NetworkTablesCore.Test
 
             int count = 0;
             string recievedKey = "";
-            object recievedValue = null;
+            Value receivedValue = null;
             NotifyFlags receivedFlags = 0;
 
             NotifyFlags f = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
@@ -274,7 +279,7 @@ namespace NetworkTablesCore.Test
             {
                 count++;
                 recievedKey = key;
-                recievedValue = value;
+                receivedValue = value;
                 receivedFlags = flags;
             }, f);
 
@@ -282,9 +287,10 @@ namespace NetworkTablesCore.Test
 
             Assert.That(count, Is.EqualTo(1));
             Assert.That(recievedKey, Is.EqualTo(key1));
-            Assert.That(recievedValue, Is.Not.Null);
+            Assert.That(receivedValue, Is.Not.Null);
 
-            double[] retValue = recievedValue as double[];
+            Assert.That(receivedValue.IsDoubleArray());
+            double[] retValue = receivedValue.GetDoubleArray();
             Assert.That(retValue, Is.Not.Null);
 
             for (int i = 0; i < retValue.Length; i++)
@@ -307,7 +313,7 @@ namespace NetworkTablesCore.Test
 
             int count = 0;
             string recievedKey = "";
-            object recievedValue = null;
+            Value receivedValue = null;
             NotifyFlags receivedFlags = 0;
 
             NotifyFlags f = NotifyFlags.NotifyNew | NotifyFlags.NotifyUpdate;
@@ -318,7 +324,7 @@ namespace NetworkTablesCore.Test
             {
                 count++;
                 recievedKey = key;
-                recievedValue = value;
+                receivedValue = value;
                 receivedFlags = flags;
             }, f);
 
@@ -326,9 +332,10 @@ namespace NetworkTablesCore.Test
 
             Assert.That(count, Is.EqualTo(1));
             Assert.That(recievedKey, Is.EqualTo(key1));
-            Assert.That(recievedValue, Is.Not.Null);
+            Assert.That(receivedValue, Is.Not.Null);
 
-            bool[] retValue = recievedValue as bool[];
+            Assert.That(receivedValue.IsBooleanArray());
+            bool[] retValue = receivedValue.GetBooleanArray();
             Assert.That(retValue, Is.Not.Null);
 
             for (int i = 0; i < retValue.Length; i++)

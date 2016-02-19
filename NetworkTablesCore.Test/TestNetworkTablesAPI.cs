@@ -935,7 +935,7 @@ namespace NetworkTablesCore.Test
         [Test]
         public void TestGetConnections()
         {
-            Assert.That(NetworkTable.Connections(), Has.Length.EqualTo(0));
+            Assert.That(NetworkTable.Connections(), Has.Count.EqualTo(0));
         }
 
         [Test]

@@ -399,7 +399,7 @@ namespace NetworkTables.Tables
         /// </summary>
         /// <param name="listenerDelegate">The Table Listener Delegate to add.</param>
         /// <param name="flags">The <see cref="EntryFlags"/> flags to use for the listener</param>
-        void AddTableListenerEx(Action<ITable, string, object, NotifyFlags> listenerDelegate, NotifyFlags flags);
+        void AddTableListenerEx(Action<ITable, string, Value, NotifyFlags> listenerDelegate, NotifyFlags flags);
 
         /// <summary>
         /// Add a listener for changes to a specific key in the table.
@@ -407,7 +407,7 @@ namespace NetworkTables.Tables
         /// <param name="key">The key to listen for</param>
         /// <param name="listenerDelegate">The Table Listener Delegate to add.</param>
         /// <param name="flags">The <see cref="EntryFlags"/> flags to use for the listener</param>
-        void AddTableListenerEx(string key, Action<ITable, string, object, NotifyFlags> listenerDelegate, NotifyFlags flags);
+        void AddTableListenerEx(string key, Action<ITable, string, Value, NotifyFlags> listenerDelegate, NotifyFlags flags);
 
         /// <summary>
         /// Adds a SubTable Listener.
@@ -415,14 +415,14 @@ namespace NetworkTables.Tables
         /// <param name="listenerDelegate">The Table Listener Delegate to add.</param>
         /// <param name="localNotify">True if we want to notify local and remote listeners,
         /// otherwise just notify remote listeners.</param>
-        void AddSubTableListener(Action<ITable, string, object, NotifyFlags> listenerDelegate, bool localNotify);
+        void AddSubTableListener(Action<ITable, string, Value, NotifyFlags> listenerDelegate, bool localNotify);
 
         /// <summary>
         /// Add a listener to changes to the table.
         /// </summary>
         /// <param name="listenerDelegate">The Table Listener Delegate to add.</param>
         /// <param name="immediateNotify">If true then this listener will be notified of all current entries (marked as new)</param>
-        void AddTableListener(Action<ITable, string, object, NotifyFlags> listenerDelegate, bool immediateNotify = false);
+        void AddTableListener(Action<ITable, string, Value, NotifyFlags> listenerDelegate, bool immediateNotify = false);
 
         /// <summary>
         /// Add a listener for changes to a specific key in the table.
@@ -430,18 +430,18 @@ namespace NetworkTables.Tables
         /// <param name="key">The key to listen for</param>
         /// <param name="listenerDelegate">The Table Listener Delegate to add.</param>
         /// <param name="immediateNotify">If true then this listener will be notified of all current entries (marked as new)</param>
-        void AddTableListener(string key, Action<ITable, string, object, NotifyFlags> listenerDelegate, bool immediateNotify);
+        void AddTableListener(string key, Action<ITable, string, Value, NotifyFlags> listenerDelegate, bool immediateNotify);
 
         /// <summary>
         /// Adds a SubTable Listener with the default flags, and without local notify.
         /// </summary>
         /// <param name="listenerDelegate">The Table Listener Delegate to add.</param>
-        void AddSubTableListener(Action<ITable, string, object, NotifyFlags> listenerDelegate);
+        void AddSubTableListener(Action<ITable, string, Value, NotifyFlags> listenerDelegate);
 
         /// <summary>
         /// Remove a listener from receiving table events.
         /// </summary>
         /// <param name="listenerDelegate">The Table Listener Delegate to remove.</param>
-        void RemoveTableListener(Action<ITable, string, object, NotifyFlags> listenerDelegate);
+        void RemoveTableListener(Action<ITable, string, Value, NotifyFlags> listenerDelegate);
     }
 }
