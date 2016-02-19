@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NetworkTables
 {
-    public static class NtCore
+ /*   public static class NtCore
     {
         public static Value GetEntryValue(string name)
         {
@@ -53,10 +53,6 @@ namespace NetworkTables
         {
             CoreMethods.Flush();
         }
-
-        public delegate void EntryListenerCallback(int uid, string name, Value value, NotifyFlags flags);
-
-        public delegate void ConnectionListenerCallback(int uid, bool connected, ConnectionInfo conn);
 
 
 
@@ -157,4 +153,5 @@ namespace NetworkTables
             CoreMethods.SetLogger(func, minLevel);
         }
     }
+    */
 }

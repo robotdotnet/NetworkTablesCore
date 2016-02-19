@@ -345,7 +345,7 @@ namespace NetworkTablesCore.Test
         [Test]
         public void TestAddRemoveConnectionListener()
         {
-            ConnectionListenerFunction callback = (uid, connected, conn) =>
+            ConnectionListenerCallback callback = (uid, connected, conn) =>
             {
 
             };

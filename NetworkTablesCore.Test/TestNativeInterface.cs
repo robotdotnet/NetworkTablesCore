@@ -31,9 +31,9 @@ namespace NetworkTablesCore.Test
             bool toWrite3 = true;
             CoreMethods.SetEntryBoolean(key3, toWrite3);
 
-            EntryInfo[] entries = CoreMethods.GetEntries("", 0);
+            var entries = CoreMethods.GetEntries("", 0);
 
-            Assert.That(3, Is.EqualTo(entries.Length));
+            Assert.That(3, Is.EqualTo(entries.Count));
 
             Assert.That(entries[0].Name, Is.EqualTo(key1));
             Assert.That(entries[0].Type, Is.EqualTo(NtType.String));
@@ -66,9 +66,9 @@ namespace NetworkTablesCore.Test
 
             Thread.Sleep(20);
 
-            EntryInfo[] entries = CoreMethods.GetEntries("", NtType.String);
+            var entries = CoreMethods.GetEntries("", NtType.String);
 
-            Assert.That(1, Is.EqualTo(entries.Length));
+            Assert.That(1, Is.EqualTo(entries.Count));
 
             Assert.That(entries[0].Name, Is.EqualTo(key1));
             Assert.That(entries[0].Type, Is.EqualTo(NtType.String));
@@ -79,8 +79,8 @@ namespace NetworkTablesCore.Test
         [Test]
         public void TestGetConnections()
         {
-            ConnectionInfo[] connection = CoreMethods.GetConnections();
-            Assert.That(connection.Length, Is.EqualTo(0));
+            var connection = CoreMethods.GetConnections();
+            Assert.That(connection.Count, Is.EqualTo(0));
         }
 
         [Test]
@@ -138,9 +138,9 @@ namespace NetworkTablesCore.Test
 
             Assert.That(errors.Length, Is.EqualTo(0));
 
-            EntryInfo[] entries = CoreMethods.GetEntries("", 0);
+            var entries = CoreMethods.GetEntries("", 0);
 
-            Assert.That(entries.Length, Is.EqualTo(2));
+            Assert.That(entries.Count, Is.EqualTo(2));
 
             Assert.That(CoreMethods.GetEntryString(key1, ""), Is.EqualTo(val1));
             Assert.That(CoreMethods.GetEntryBoolean(key2, false), Is.EqualTo(true));
@@ -186,11 +186,11 @@ namespace NetworkTablesCore.Test
             double toWrite2 = 3.58;
             CoreMethods.SetEntryDouble(key2, toWrite2);
 
-            Assert.That(CoreMethods.GetEntries("", 0).Length, Is.EqualTo(2));
+            Assert.That(CoreMethods.GetEntries("", 0).Count, Is.EqualTo(2));
 
             CoreMethods.DeleteEntry(key1);
 
-            Assert.That(CoreMethods.GetEntries("", 0).Length, Is.EqualTo(1));
+            Assert.That(CoreMethods.GetEntries("", 0).Count, Is.EqualTo(1));
 
             const string err = "error";
             Assert.That(CoreMethods.GetEntryString(key1, err), Is.EqualTo(err));
@@ -207,11 +207,11 @@ namespace NetworkTablesCore.Test
             double toWrite2 = 3.58;
             CoreMethods.SetEntryDouble(key2, toWrite2);
 
-            Assert.That(CoreMethods.GetEntries("", 0).Length, Is.EqualTo(2));
+            Assert.That(CoreMethods.GetEntries("", 0).Count, Is.EqualTo(2));
 
             CoreMethods.DeleteAllEntries();
 
-            Assert.That(CoreMethods.GetEntries("", 0).Length, Is.EqualTo(0));
+            Assert.That(CoreMethods.GetEntries("", 0).Count, Is.EqualTo(0));
 
             const string err = "error";
             Assert.That(CoreMethods.GetEntryString(key1, err), Is.EqualTo(err));
