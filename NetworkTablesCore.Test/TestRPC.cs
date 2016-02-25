@@ -32,10 +32,6 @@ namespace NetworkTablesCore.Test
         [Test]
         public void TestRpcLocal()
         {
-            CoreMethods.SetLogger((level, file, line, message) =>
-            {
-                //Console.Error.WriteLine(message);
-            }, 0);
 
             var def = new NtRpcDefinition(1, "myfunc1", new[] { new NtRpcParamDef("param1", RpcValue.MakeDouble(0.0)) }, new[] { new NtRpcResultDef("result1", NtType.Double) });
 
@@ -56,10 +52,6 @@ namespace NetworkTablesCore.Test
         [Test]
         public void TestRpcSpeed()
         {
-            CoreMethods.SetLogger((level, file, line, message) =>
-            {
-                //Console.Error.WriteLine(message);
-            }, 0);
 
             var def = new NtRpcDefinition(1, "myfunc1", new[] { new NtRpcParamDef("param1", RpcValue.MakeDouble(0.0)) }, new[] { new NtRpcResultDef("result1", NtType.Double) });
 
@@ -115,10 +107,6 @@ namespace NetworkTablesCore.Test
         [Test]
         public void TestRpcAllTypes()
         {
-            CoreMethods.SetLogger((level, file, line, message) =>
-            {
-                //Console.Error.WriteLine(message);
-            }, 0);
 
             var def = new NtRpcDefinition(1, "myfunc1", new[]
             {
