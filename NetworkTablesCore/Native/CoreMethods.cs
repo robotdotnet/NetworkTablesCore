@@ -543,6 +543,8 @@ namespace NetworkTables.Native
         internal static void StopNotifier()
         {
             Interop.NT_StopNotifier();
+            s_entryCallbacks.Clear();
+            s_connectionCallbacks.Clear();
         }
 
         internal static void StopRpcServer()
