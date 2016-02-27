@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NetworkTables;
+using NetworkTables.Native;
 using NUnit.Framework;
 
 namespace NetworkTablesCore.Test
@@ -34,6 +35,10 @@ namespace NetworkTablesCore.Test
         {
             NetworkTable.Shutdown();
             NetworkTable.SetIPAddress("127.0.0.1");
+            CoreMethods.SetLogger(((level, file, line, message) =>
+            {
+                Console.WriteLine(message);
+            }), 0);
         }
 
         [Test]
