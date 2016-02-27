@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using NetworkTables;
+using NetworkTables.Native;
 using NUnit.Framework;
 
 namespace NetworkTablesCore.Test
@@ -11,15 +13,26 @@ namespace NetworkTablesCore.Test
         [TestFixtureSetUp]
         public void ClassSetUp()
         {
-            if (!s_started)
+
+            CoreMethods.SetLogger(((level, file, line, msg) =>
             {
-                Console.WriteLine(Environment.Is64BitProcess ? "Tests running in 64 Bit mode" : "Tests running in 32 Bit mode.");
-                NetworkTable.SetIPAddress("127.0.0.1");
-                NetworkTable.SetPort(10000);
-                NetworkTable.SetServerMode();
-                NetworkTable.Initialize();
-                s_started = true;
-            }
+                if (level == (int)LogLevel.LogInfo)
+                {
+                    Console.Error.WriteLine($"NT: {msg}");
+                }
+
+                string levelmsg = "";
+                if (level >= (int)LogLevel.LogCritical)
+                    levelmsg = "CRITICAL";
+                else if (level >= (int)LogLevel.LogError)
+                    levelmsg = "ERROR";
+                else if (level >= (int)LogLevel.LogWarning)
+                    levelmsg = "WARNING";
+                else
+                    return;
+                string fname = Path.GetFileName(file);
+                Console.Error.WriteLine($"NT: {levelmsg}: {msg} ({fname}:{line})");
+            }), 0);
         }
     }
 }

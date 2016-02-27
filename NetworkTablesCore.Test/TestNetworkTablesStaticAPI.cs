@@ -23,23 +23,15 @@ namespace NetworkTablesCore.Test
         public void FixtureTeardown()
         {
             NetworkTable.Shutdown();
-            NetworkTable.SetIPAddress("127.0.0.1");
+            NetworkTable.SetIPAddress("localhost");
             NetworkTable.SetPersistentFilename(NetworkTable.DefaultPersistentFileName);
-            NetworkTable.SetPort(10000);
-            NetworkTable.SetServerMode();
-            NetworkTable.Initialize();
         }
 
         [SetUp]
         public void Setup()
         {
             NetworkTable.Shutdown();
-            NetworkTable.SetIPAddress("127.0.0.1");
-            NetworkTable.SetPort(4488);
-            CoreMethods.SetLogger(((level, file, line, message) =>
-            {
-                Console.WriteLine(message);
-            }), 0);
+            NetworkTable.SetIPAddress("localhost");
         }
 
         [Test]
