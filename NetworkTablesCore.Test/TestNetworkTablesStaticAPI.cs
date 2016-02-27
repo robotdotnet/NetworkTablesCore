@@ -35,6 +35,7 @@ namespace NetworkTablesCore.Test
         {
             NetworkTable.Shutdown();
             NetworkTable.SetIPAddress("127.0.0.1");
+            NetworkTable.SetPort(4488);
             CoreMethods.SetLogger(((level, file, line, message) =>
             {
                 Console.WriteLine(message);
